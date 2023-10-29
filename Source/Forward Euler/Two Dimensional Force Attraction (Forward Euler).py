@@ -29,5 +29,5 @@ plt.xlabel('Time in Seconds (t)')
 plt.ylabel('Vertical Position in Meters (m)')
 plt.show()
 
-plt.plot(t,y[:,1])
-plt.show()
+# plt.plot(t,y[:,1])
+# plt.show()
