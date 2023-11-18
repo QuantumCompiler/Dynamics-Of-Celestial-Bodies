@@ -10,7 +10,7 @@ AU=1.5e11
 DS=24.0*60*60 
 GC=G*Ma*Mb 
 
-#################### Initital Conditions
+#################### Initial Conditions
 ##### Mass a Parameters
 xa=0.0 
 ya=0.0 
