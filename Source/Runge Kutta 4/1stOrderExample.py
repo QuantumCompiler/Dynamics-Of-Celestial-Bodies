@@ -1,5 +1,4 @@
 from RK4 import *
-import matplotlib.pyplot as plt
 
 # Initial conditions and parameters
 y0 = 0.0

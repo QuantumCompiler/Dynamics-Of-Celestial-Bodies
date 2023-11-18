@@ -1,5 +1,6 @@
 # Modules
 import numpy as np
+import matplotlib.pyplot as plt
 
 # RK41st - Runge Kutta 4 ODE Solver (Of the form da / db) 
 # Input:
@@ -36,12 +37,6 @@ def RK41st(ODE, a0, b0, bn, h):
         k4 = h * ODE(a + k3, b + h)
         a_values[i + 1] = a + (1/6) * (k1 + 2 * k2 + 2 * k3 + k4)
     return a_values, b_values
-
-# Define the system of ODEs
-# u' = v
-# v' = f(t, u, v)
-def system_of_odes(t, u, v):
-    return v, -9.81  # Example: free-fall under gravity
 
 # RK42nd - Runge Kutta 4 ODE Solver For A Second Order ODE (Of the form d^2a / dc^2)
 # Input:
@@ -84,3 +79,68 @@ def RK42nd(ODE, a0, b0, c0, cn, h):
         a_values[i + 1] = a + (1/6) * (k1_a + 2 * k2_a + 2 * k3_a + k4_a)
         b_values[i + 1] = b + (1/6) * (k1_b + 2 * k2_b + 2 * k3_b + k4_b)
     return a_values, b_values, c_values
+
+# RK4TwoBody - ODE That Solves The Force Attraction Between Two Bodies In Space
+# Input:
+#   ODE - This is the ODE that is fed into the method to be solved
+#   ic - Matrix of initial conditions
+#   t0 - Initial time
+#   tn - Final time
+#   h - Step size
+# Algorithm:
+#   * Calculate the number of points
+#   * Initialize lists for the positions, velocities, and time
+#   * Set the initial values for all the lists
+#   * Iterate over the total number of points
+#       * Calculate the updated values for positions and velocities respectively
+#   * Return the lists
+# Output:
+#   mass1Pos - List of positions for mass 1
+#   mass2Pos - List of positions for mass 2
+#   mass1Vel - List of velocities for mass 1
+#   mass2Vel - List of velocities for mass 2
+#   time_vals - List of time points in model
+def RK4TwoBody(ODE, massList, ic, t0, tn, h):
+    n = int((tn - t0) / h)
+    m1_x_vals = np.zeros(n + 1)
+    m1_y_vals = np.zeros(n + 1)
+    m1_z_vals = np.zeros(n + 1)
+    m2_x_vals = np.zeros(n + 1)
+    m2_y_vals = np.zeros(n + 1)
+    m2_z_vals = np.zeros(n + 1)
+    m1_vx_vals = np.zeros(n + 1)
+    m1_vy_vals = np.zeros(n + 1)
+    m1_vz_vals = np.zeros(n + 1)
+    m2_vx_vals = np.zeros(n + 1)
+    m2_vy_vals = np.zeros(n + 1)
+    m2_vz_vals = np.zeros(n + 1)
+    time_vals = np.linspace(t0, tn, n + 1)
+    m1_x_vals[0] = ic[0][0]
+    m1_y_vals[0] = ic[0][1]
+    m1_z_vals[0] = ic[0][2]
+    m2_x_vals[0] = ic[1][0]
+    m2_y_vals[0] = ic[1][1]
+    m2_z_vals[0] = ic[1][2]
+    m1_vx_vals[0] = ic[2][0]
+    m1_vy_vals[0] = ic[2][1]
+    m1_vz_vals[0] = ic[2][2]
+    m2_vx_vals[0] = ic[3][0]
+    m2_vy_vals[0] = ic[3][1]
+    m2_vz_vals[0] = ic[3][2]
+    for i in range(n):
+        state = (m1_x_vals[i], m1_y_vals[i], m1_z_vals[i], m2_x_vals[i], m2_y_vals[i], m2_z_vals[i], m1_vx_vals[i], m1_vy_vals[i], m1_vz_vals[i], m2_vx_vals[i], m2_vy_vals[i], m2_vz_vals[i])
+        t = time_vals[i]
+        k1 = np.array(ODE(t, massList, *state))
+        k2 = np.array(ODE(t + 0.5 * h, massList, *(np.add(state, 0.5 * h * k1))))
+        k3 = np.array(ODE(t + 0.5 * h, massList, *(np.add(state, 0.5 * h * k2))))
+        k4 = np.array(ODE(t + h, massList, *(np.add(state, h * k3))))
+        next_state = np.add(state, (h / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4))
+        (m1_x_vals[i + 1], m1_y_vals[i + 1], m1_z_vals[i + 1],
+        m2_x_vals[i + 1], m2_y_vals[i + 1], m2_z_vals[i + 1],
+        m1_vx_vals[i + 1], m1_vy_vals[i + 1], m1_vz_vals[i + 1],
+        m2_vx_vals[i + 1], m2_vy_vals[i + 1], m2_vz_vals[i + 1]) = next_state
+    mass1Pos = [m1_x_vals, m1_y_vals, m1_z_vals]
+    mass1Vel = [m1_vx_vals, m1_vy_vals, m1_vz_vals]
+    mass2Pos = [m2_x_vals, m2_y_vals, m2_z_vals]
+    mass2Vel = [m2_vx_vals, m2_vy_vals, m2_vz_vals]
+    return mass1Pos, mass2Pos, mass1Vel, mass2Vel, time_vals

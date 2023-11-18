@@ -1,5 +1,4 @@
 from RK4 import *
-import matplotlib.pyplot as plt
 
 # dy^2/dt^2 = -9.81
 def Grav(t,x,v):
