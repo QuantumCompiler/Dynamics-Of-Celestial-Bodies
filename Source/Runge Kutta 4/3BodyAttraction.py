@@ -70,7 +70,7 @@ plt.title('Sun-Earth-Moon Orbit\'s 2D Plot')
 plt.xlabel('Position (m)')
 plt.ylabel('Position (m)')
 plt.legend()
-# plt.savefig('Sun-Earth-Moon Orbit\'s 2D Plot.png', dpi = 500)
+plt.savefig('Sun-Earth-Moon Orbit\'s 2D Plot.png', dpi = 500)
 plt.show()
 
 # 2D Animation
@@ -108,7 +108,7 @@ ax.set_ylabel('Position (m)')
 ax.set_title('Sun-Earth-Moon Orbit\'s 2D Simulation')
 ax.legend()
 plt.show()
-# ani.save('Sun-Earth-Moon Orbit\'s 2D Simulation.mp4', writer='ffmpeg', fps= len(earthPos[0]) // 10)
+ani.save('Sun-Earth-Moon Orbit\'s 2D Simulation.mp4', writer='ffmpeg', fps= len(earthPos[0]) // 10)
 
 # 3D Plot
 
@@ -122,7 +122,7 @@ ax.set_ylabel('Position (m)')
 ax.set_zlabel('Position (m)')
 ax.set_title('Sun-Earth-Moon Orbit\'s 3D Plot')
 ax.legend()
-# plt.savefig('Sun-Earth-Moon Orbit\'s 3D Plot.png', dpi = 500)
+plt.savefig('Sun-Earth-Moon Orbit\'s 3D Plot.png', dpi = 500)
 plt.show()
 
 # 3D Animation
@@ -171,7 +171,7 @@ ax.set_zlabel('Position (m)')
 ax.set_title('Sun-Earth-Moon Orbit\'s 3D Simulation')
 ax.legend()
 plt.show()
-# ani.save('Sun-Earth-Moon Orbit\'s 3D Simulation.mp4', writer='ffmpeg', fps= len(earthPos[0]) // 10)
+ani.save('Sun-Earth-Moon Orbit\'s 3D Simulation.mp4', writer='ffmpeg', fps= len(earthPos[0]) // 10)
 
 # Random Bodies 2D Plot
 
@@ -202,7 +202,7 @@ plt.title('3 Celestial Bodies Orbit\'s 2D Plot')
 plt.xlabel('Position (m)')
 plt.ylabel('Position (m)')
 plt.legend()
-# plt.savefig('3 Celestial Bodies Orbit\'s 2D Plot.png', dpi = 500)
+plt.savefig('3 Celestial Bodies Orbit\'s 2D Plot.png', dpi = 500)
 plt.show()
 
 # Random Bodies 2D Animation
@@ -241,7 +241,7 @@ ax.set_xlim(-1*AU, 8*AU)
 ax.set_ylim(-5*AU, 8*AU)
 ax.legend()
 plt.show()
-# ani.save('3 Celestial Bodies Orbit\'s 2D Simulation.mp4', writer='ffmpeg', fps= len(m1Pos[0]) // 10)
+ani.save('3 Celestial Bodies Orbit\'s 2D Simulation.mp4', writer='ffmpeg', fps= len(m1Pos[0]) // 10)
 
 # Random Bodies 3D Plot
 
@@ -255,7 +255,7 @@ ax.set_ylabel('Position (m)')
 ax.set_zlabel('Position (m)')
 ax.set_title('3 Celestial Bodies Orbit\'s 3D Plot')
 ax.legend()
-# plt.savefig('3 Celestial Bodies Orbit\'s 3D Plot.png', dpi = 500)
+plt.savefig('3 Celestial Bodies Orbit\'s 3D Plot.png', dpi = 500)
 plt.show()
 
 # Random Bodies 3D Animation
@@ -307,4 +307,4 @@ ax.set_zlabel('Position (m)')
 ax.set_title('3 Celestial Bodies Orbit\'s 3D Simulation')
 ax.legend()
 plt.show()
-# ani.save('3 Celestial Bodies Orbit\'s 3D Simulation.mp4', writer='ffmpeg', fps= len(m1Pos[0]) // 10)
+ani.save('3 Celestial Bodies Orbit\'s 3D Simulation.mp4', writer='ffmpeg', fps= len(m1Pos[0]) // 10)
