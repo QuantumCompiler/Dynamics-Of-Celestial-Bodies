@@ -1,6 +1,11 @@
 # Imports
 from ModelFunctions import *
 
+masses = [MSUN, MEARTH]
+ic = [SUNPOS, EARTHPOS, SUNVEL, EARTHVEL]
+
+CoupledTwoBody2DPlotPos(masses, ic, 0, EARTHPERIOD, 0, 1, "Sun", "Earth")
+
 # class MainWindow(QMainWindow):
 #     # Constructor
 #     def __init__(self):
