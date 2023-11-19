@@ -116,7 +116,6 @@ def RK4TwoBody(ODE, massList, ic, t0, tn, h):
     m2_vx_vals = np.zeros(n + 1)
     m2_vy_vals = np.zeros(n + 1)
     m2_vz_vals = np.zeros(n + 1)
-    time_vals = np.linspace(t0, tn, n + 1)
     m1_x_vals[0] = ic[0][0]
     m1_y_vals[0] = ic[0][1]
     m1_z_vals[0] = ic[0][2]
@@ -129,8 +128,12 @@ def RK4TwoBody(ODE, massList, ic, t0, tn, h):
     m2_vx_vals[0] = ic[3][0]
     m2_vy_vals[0] = ic[3][1]
     m2_vz_vals[0] = ic[3][2]
+    time_vals = np.linspace(t0, tn, n + 1)
     for i in range(n):
-        state = (m1_x_vals[i], m1_y_vals[i], m1_z_vals[i], m2_x_vals[i], m2_y_vals[i], m2_z_vals[i], m1_vx_vals[i], m1_vy_vals[i], m1_vz_vals[i], m2_vx_vals[i], m2_vy_vals[i], m2_vz_vals[i])
+        state = (m1_x_vals[i], m1_y_vals[i], m1_z_vals[i], 
+                m2_x_vals[i], m2_y_vals[i], m2_z_vals[i], 
+                m1_vx_vals[i], m1_vy_vals[i], m1_vz_vals[i], 
+                m2_vx_vals[i], m2_vy_vals[i], m2_vz_vals[i])
         t = time_vals[i]
         k1 = np.array(ODE(t, massList, *state))
         k2 = np.array(ODE(t + 0.5 * h, massList, *(np.add(state, 0.5 * h * k1))))
@@ -146,3 +149,69 @@ def RK4TwoBody(ODE, massList, ic, t0, tn, h):
     mass2Pos = [m2_x_vals, m2_y_vals, m2_z_vals]
     mass2Vel = [m2_vx_vals, m2_vy_vals, m2_vz_vals]
     return mass1Pos, mass2Pos, mass1Vel, mass2Vel, time_vals
+
+def RK4ThreeBody(ODE, massList, ic, t0, tn, h):
+    n = int((tn - t0) / h)
+    m1_x_vals = np.zeros(n + 1)
+    m1_y_vals = np.zeros(n + 1)
+    m1_z_vals = np.zeros(n + 1)
+    m2_x_vals = np.zeros(n + 1)
+    m2_y_vals = np.zeros(n + 1)
+    m2_z_vals = np.zeros(n + 1)
+    m3_x_vals = np.zeros(n + 1)
+    m3_y_vals = np.zeros(n + 1)
+    m3_z_vals = np.zeros(n + 1)
+    m1_vx_vals = np.zeros(n + 1)
+    m1_vy_vals = np.zeros(n + 1)
+    m1_vz_vals = np.zeros(n + 1)
+    m2_vx_vals = np.zeros(n + 1)
+    m2_vy_vals = np.zeros(n + 1)
+    m2_vz_vals = np.zeros(n + 1)
+    m3_vx_vals = np.zeros(n + 1)
+    m3_vy_vals = np.zeros(n + 1)
+    m3_vz_vals = np.zeros(n + 1)
+    m1_x_vals[0] = ic[0][0]
+    m1_y_vals[0] = ic[0][1]
+    m1_z_vals[0] = ic[0][2]
+    m2_x_vals[0] = ic[1][0]
+    m2_y_vals[0] = ic[1][1]
+    m2_z_vals[0] = ic[1][2]
+    m3_x_vals[0] = ic[2][0]
+    m3_y_vals[0] = ic[2][1]
+    m3_z_vals[0] = ic[2][2]
+    m1_vx_vals[0] = ic[3][0]
+    m1_vy_vals[0] = ic[3][1]
+    m1_vz_vals[0] = ic[3][2]
+    m2_vx_vals[0] = ic[4][0]
+    m2_vy_vals[0] = ic[4][1]
+    m2_vz_vals[0] = ic[4][2]
+    m3_vx_vals[0] = ic[5][0]
+    m3_vy_vals[0] = ic[5][1]
+    m3_vz_vals[0] = ic[5][2]
+    time_vals = np.linspace(t0, tn, n + 1)
+    for i in range(n):
+        state = (m1_x_vals[i], m1_y_vals[i], m1_z_vals[i],
+                m2_x_vals[i], m2_y_vals[i], m2_z_vals[i],
+                m3_x_vals[i], m3_y_vals[i], m3_z_vals[i],
+                m1_vx_vals[i], m1_vy_vals[i], m1_vz_vals[i],
+                m2_vx_vals[i], m2_vy_vals[i], m2_vz_vals[i],
+                m3_vx_vals[i], m3_vy_vals[i], m3_vz_vals[i])
+        t = time_vals[i]
+        k1 = np.array(ODE(t, massList, *state))
+        k2 = np.array(ODE(t + 0.5 * h, massList, *(np.add(state, 0.5 * h * k1))))
+        k3 = np.array(ODE(t + 0.5 * h, massList, *(np.add(state, 0.5 * h * k2))))
+        k4 = np.array(ODE(t + h, massList, *(np.add(state, h * k3))))
+        next_state = np.add(state, (h / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4))
+        (m1_x_vals[i + 1], m1_y_vals[i + 1], m1_z_vals[i + 1],
+        m2_x_vals[i + 1], m2_y_vals[i + 1], m2_z_vals[i + 1],
+        m3_x_vals[i + 1], m3_y_vals[i + 1], m3_z_vals[i + 1],
+        m1_vx_vals[i + 1], m1_vy_vals[i + 1], m1_vz_vals[i + 1],
+        m2_vx_vals[i + 1], m2_vy_vals[i + 1], m2_vz_vals[i + 1],
+        m3_vx_vals[i + 1], m3_vy_vals[i + 1], m3_vz_vals[i + 1]) = next_state
+    mass1Pos = [m1_x_vals, m1_y_vals, m1_z_vals]
+    mass1Vel = [m1_vx_vals, m1_vy_vals, m1_vz_vals]
+    mass2Pos = [m2_x_vals, m2_y_vals, m2_z_vals]
+    mass2Vel = [m2_vx_vals, m2_vy_vals, m2_vz_vals]
+    mass3Pos = [m3_x_vals, m3_y_vals, m3_z_vals]
+    mass3Vel = [m3_vx_vals, m3_vy_vals, m3_vz_vals]
+    return mass1Pos, mass2Pos, mass3Pos, mass1Vel, mass2Vel, mass3Vel
