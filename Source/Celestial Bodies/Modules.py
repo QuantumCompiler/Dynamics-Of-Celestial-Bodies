@@ -15,11 +15,11 @@ AU = 1.5e11 # Astronomical unit
 DS = pow(pow(24, 60), 60) # Number of seconds in one earth day
 
 # Earth Constants
-M_earth = 5.972e24
-R_earth = 6.3781*10**6
-X0_earth = 1 * AU
-Y0_earth = 0
-Z0_earth = 0
-Vx_earth = 0
-Vy_earth = 29784.8
-Vz_earth = 0
+MEARTH = 5.972e24
+REARTH = 6.3781e6
+X0EARTH = 1 * AU
+Y0EARTH = 0
+Z0EARTH = 0
+VXEARTH = 0
+VYEARTH = 29784.8
+VZEARTH = 0
