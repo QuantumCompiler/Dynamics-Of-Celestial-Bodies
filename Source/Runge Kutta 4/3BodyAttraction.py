@@ -57,7 +57,7 @@ ic = [
 ]
 t0 = 0
 tn = 365.25 * daySec
-h = 1200
+h = daySec / 5
 
 # 2D Plot
 
@@ -66,10 +66,11 @@ sunPos, earthPos, moonPos, sunVel, earthVel, moonVel = RK4ThreeBody(CoupledBodie
 plt.plot(sunPos[0], sunPos[1], color = 'orange', linewidth = '5', label = 'Sun')
 plt.plot(earthPos[0], earthPos[1], color = 'blue', label = 'Earth')
 plt.plot(moonPos[0], moonPos[1], color = 'grey', label = 'Moon')
-plt.title('Earth Orbiting The Sun And The Moon Orbiting Earth')
-plt.xlabel('Position In Meters')
-plt.ylabel('Position In Meters')
+plt.title('Sun-Earth-Moon Orbit\'s 2D Plot')
+plt.xlabel('Position (m)')
+plt.ylabel('Position (m)')
 plt.legend()
+# plt.savefig('Sun-Earth-Moon Orbit\'s 2D Plot.png', dpi = 500)
 plt.show()
 
 # 2D Animation
@@ -102,10 +103,26 @@ def animate(i):
     return sun, earth, moon, earthTrail, moonTrail
 
 ani = FuncAnimation(fig, animate, init_func=init, frames=len(earthPos[0]), interval=1e-5, blit=True, repeat=True)
-ax.set_xlabel('Position In Meters')
-ax.set_ylabel('Position In Meters')
-ax.set_title("Sun-Earth-Moon System Simulation")
+ax.set_xlabel('Position (m)')
+ax.set_ylabel('Position (m)')
+ax.set_title('Sun-Earth-Moon Orbit\'s 2D Simulation')
 ax.legend()
+plt.show()
+# ani.save('Sun-Earth-Moon Orbit\'s 2D Simulation.mp4', writer='ffmpeg', fps= len(earthPos[0]) // 10)
+
+# 3D Plot
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot(sunPos[0], sunPos[1], sunPos[2], color='orange', linewidth=5, label='Sun')
+ax.plot(earthPos[0], earthPos[1], earthPos[2], color='blue', linewidth=2, label='Earth')
+ax.plot(moonPos[0], moonPos[1], moonPos[2], color='grey', linewidth=1, label='Moon')
+ax.set_xlabel('Position (m)')
+ax.set_ylabel('Position (m)')
+ax.set_zlabel('Position (m)')
+ax.set_title('Sun-Earth-Moon Orbit\'s 3D Plot')
+ax.legend()
+# plt.savefig('Sun-Earth-Moon Orbit\'s 3D Plot.png', dpi = 500)
 plt.show()
 
 # 3D Animation
@@ -148,9 +165,146 @@ def animate(i):
     return sun_plot, earth_plot, moon_plot, earthTrail, moonTrail
 
 ani = FuncAnimation(fig, animate, init_func=init, frames=len(earthPos[0]), interval=1e-5, blit=True, repeat=True)
-ax.set_xlabel('Position In Meters')
-ax.set_ylabel('Position In Meters')
-ax.set_zlabel('Position In Meters')
-ax.set_title("3D Animation of Sun-Earth-Moon System")
+ax.set_xlabel('Position (m)')
+ax.set_ylabel('Position (m)')
+ax.set_zlabel('Position (m)')
+ax.set_title('Sun-Earth-Moon Orbit\'s 3D Simulation')
 ax.legend()
 plt.show()
+# ani.save('Sun-Earth-Moon Orbit\'s 3D Simulation.mp4', writer='ffmpeg', fps= len(earthPos[0]) // 10)
+
+# Random Bodies 2D Plot
+
+mass1 = 1.989e30
+mass2 = 5.972e28
+mass3 = 7.348e26
+
+# Initial Conditions
+masses = [mass1, mass2, mass3]
+ic = [
+    [0, 0, 0],  # Mass 1 position
+    [2*AU, 0.5*AU, 0],  # Mass 2 position
+    [4*AU, -0.5*AU, 0],  # Mass 3 position
+    [2000, 1000, 500],  # Mass 1 velocity
+    [0, 15000, 0],  # Mass 2 velocity
+    [0, -10000, 0]  # Mass 3 velocity
+]
+t0 = 0
+tn = 10 * 365.25 * daySec
+h = daySec
+
+m1Pos, m2Pos, m3Pos, m1Vel, m2Vel, m3Vel = RK4ThreeBody(CoupledBodies, masses, ic, t0, tn, h)
+
+plt.plot(m1Pos[0], m1Pos[1], color = 'orange', label = 'Mass 1')
+plt.plot(m2Pos[0], m2Pos[1], color = 'blue', label = 'Mass 2')
+plt.plot(m3Pos[0], m3Pos[1], color = 'red', label = 'Mass 3')
+plt.title('3 Celestial Bodies Orbit\'s 2D Plot')
+plt.xlabel('Position (m)')
+plt.ylabel('Position (m)')
+plt.legend()
+# plt.savefig('3 Celestial Bodies Orbit\'s 2D Plot.png', dpi = 500)
+plt.show()
+
+# Random Bodies 2D Animation
+
+fig, ax = plt.subplots()
+Mass1, = ax.plot([], [], 'o', color='orange', markersize=8, label='Mass 1')
+Mass2, = ax.plot([], [], 'o', color='blue', markersize=2, label='Mass 2')
+Mass3, = ax.plot([], [], 'o', color='red', markersize=1, label='Mass 3')
+Mass1Trail, = ax.plot([], [], '-', color='orange', linewidth=1, alpha=0.5)
+Mass2Trail, = ax.plot([], [], '-', color='blue', linewidth=1, alpha=0.5)
+Mass3Trail, = ax.plot([], [], '-', color='red', linewidth=1, alpha=0.5)
+
+def init():
+    Mass1.set_data([], [])
+    Mass2.set_data([], [])
+    Mass3.set_data([], [])
+    Mass1Trail.set_data([], [])
+    Mass2Trail.set_data([], [])
+    Mass3Trail.set_data([], [])
+    return Mass1, Mass2, Mass3, Mass1Trail, Mass2Trail, Mass3Trail
+
+def animate(i):
+    Mass1.set_data([m1Pos[0][i]], [m1Pos[1][i]])
+    Mass2.set_data([m2Pos[0][i]], [m2Pos[1][i]])
+    Mass3.set_data([m3Pos[0][i]], [m3Pos[1][i]])
+    Mass1Trail.set_data(m1Pos[0][:i+1], m1Pos[1][:i+1])
+    Mass2Trail.set_data(m2Pos[0][:i+1], m2Pos[1][:i+1])
+    Mass3Trail.set_data(m3Pos[0][:i+1], m3Pos[1][:i+1])
+    return Mass1, Mass2, Mass3, Mass1Trail, Mass2Trail, Mass3Trail
+
+ani = FuncAnimation(fig, animate, init_func=init, frames=len(m2Pos[0]), interval=1e-5, blit=True, repeat=True)
+ax.set_xlabel('Position (m)')
+ax.set_ylabel('Position (m)')
+ax.set_title('3 Celestial Bodies Orbit\'s 2D Simulation')
+ax.set_xlim(-1*AU, 8*AU)
+ax.set_ylim(-5*AU, 8*AU)
+ax.legend()
+plt.show()
+# ani.save('3 Celestial Bodies Orbit\'s 2D Simulation.mp4', writer='ffmpeg', fps= len(m1Pos[0]) // 10)
+
+# Random Bodies 3D Plot
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot(m1Pos[0], m1Pos[1], m1Pos[2], color='orange', linewidth=1, label='Mass 1')
+ax.plot(m2Pos[0], m2Pos[1], m2Pos[2], color='blue', linewidth=1, label='Mass 2')
+ax.plot(m3Pos[0], m3Pos[1], m3Pos[2], color='red', linewidth=1, label='Mass 3')
+ax.set_xlabel('Position (m)')
+ax.set_ylabel('Position (m)')
+ax.set_zlabel('Position (m)')
+ax.set_title('3 Celestial Bodies Orbit\'s 3D Plot')
+ax.legend()
+# plt.savefig('3 Celestial Bodies Orbit\'s 3D Plot.png', dpi = 500)
+plt.show()
+
+# Random Bodies 3D Animation
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.set_xlim(-AU, 8*AU)
+ax.set_ylim(-5*AU, 8*AU)
+ax.set_zlim(0, 1.5*AU)
+
+Mass1, = ax.plot([], [], [], 'o', color='orange', markersize=8, label='Mass 1')
+Mass2, = ax.plot([], [], [], 'o', color='blue', markersize=2, label='Mass 2')
+Mass3, = ax.plot([], [], [], 'o', color='red', markersize=1, label='Mass 3')
+Mass1Trail, = ax.plot([], [], [], '-', color='orange', linewidth=1, alpha=0.5)
+Mass2Trail, = ax.plot([], [], [], '-', color='blue', linewidth=1, alpha=0.5)
+Mass3Trail, = ax.plot([], [], [], '-', color='red', linewidth=1, alpha=0.5)
+
+def init():
+    Mass1.set_data([], [])
+    Mass1.set_3d_properties([])
+    Mass1Trail.set_data([], [])
+    Mass2.set_data([], [])
+    Mass2.set_3d_properties([])
+    Mass2Trail.set_data([], [])
+    Mass3.set_data([], [])
+    Mass3.set_3d_properties([])
+    Mass3Trail.set_data([], [])
+    return Mass1, Mass2, Mass3, Mass1Trail, Mass2Trail, Mass3Trail
+
+def animate(i):
+    Mass1.set_data([m1Pos[0][i]], [m1Pos[1][i]])
+    Mass1.set_3d_properties([m1Pos[2][i]])
+    Mass1Trail.set_data(m1Pos[0][:i+1], m1Pos[1][:i+1])
+    Mass1Trail.set_3d_properties(m1Pos[2][:i+1])
+    Mass2.set_data([m2Pos[0][i]], [m2Pos[1][i]])
+    Mass2.set_3d_properties([m2Pos[2][i]])
+    Mass2Trail.set_data(m2Pos[0][:i+1], m2Pos[1][:i+1])
+    Mass2Trail.set_3d_properties(m2Pos[2][:i+1])
+    Mass3.set_data([m3Pos[0][i]], [m3Pos[1][i]])
+    Mass3.set_3d_properties([m3Pos[2][i]])
+    Mass3Trail.set_data(m3Pos[0][:i+1], m3Pos[1][:i+1])
+    Mass3Trail.set_3d_properties(m3Pos[2][:i+1])
+    return Mass1, Mass2, Mass3, Mass1Trail, Mass2Trail, Mass3Trail
+
+ani = FuncAnimation(fig, animate, init_func=init, frames=len(m2Pos[0]), interval=1e-5, blit=True, repeat=True)
+ax.set_xlabel('Position (m)')
+ax.set_ylabel('Position (m)')
+ax.set_zlabel('Position (m)')
+ax.set_title('3 Celestial Bodies Orbit\'s 3D Simulation')
+ax.legend()
+plt.show()
+# ani.save('3 Celestial Bodies Orbit\'s 3D Simulation.mp4', writer='ffmpeg', fps= len(m1Pos[0]) // 10)

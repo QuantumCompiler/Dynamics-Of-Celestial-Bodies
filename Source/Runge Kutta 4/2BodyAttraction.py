@@ -36,11 +36,11 @@ h = 1200
 
 sunPos, earthPos, sunVel, earthVel, time = RK4TwoBody(CoupledBodies, masses, ic, t0, tn, h)
 
-plt.plot(earthPos[0], earthPos[1], color = 'blue', label = 'Earth')
 plt.plot(sunPos[0], sunPos[1], color = 'orange', label = 'Sun', linewidth = 5)
+plt.plot(earthPos[0], earthPos[1], color = 'blue', label = 'Earth')
 plt.xlabel('Position In Meters')
 plt.ylabel('Position In Meters')
-plt.title('Earth\'s Orbit Around The Sun')
+plt.title('Sun-Earth Orbit 2D Plot')
 plt.legend()
 plt.grid(True)
 plt.axis('equal')
@@ -73,10 +73,23 @@ def animate(i):
 ani = FuncAnimation(fig, animate, init_func=init, frames=len(time), interval=1e-5, blit=True, repeat=True)
 plt.xlabel('Position In Meters')
 plt.ylabel('Position In Meters')
-plt.title("Earth's Orbit Around The Sun")
+plt.title("Sun-Earth Orbit 2D Simulation")
 plt.legend()
 plt.grid(True)
 plt.axis('equal')
+plt.show()
+
+# 3D Plot
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot(sunPos[0], sunPos[1], sunPos[2], color='orange', linewidth=5, label='Sun')
+ax.plot(earthPos[0], earthPos[1], earthPos[2], color='blue', linewidth=2, label='Earth')
+ax.set_xlabel('Position In Meters')
+ax.set_ylabel('Position In Meters')
+ax.set_zlabel('Position In Meters')
+ax.set_title('Sun-Earth Orbit 3D Plot')
+ax.legend()
 plt.show()
 
 # 3D Animation
@@ -115,7 +128,7 @@ ani = FuncAnimation(fig, animate, init_func=init, frames=len(time), interval=1e-
 ax.set_xlabel('Position In Meters')
 ax.set_ylabel('Position In Meters')
 ax.set_zlabel('Position In Meters')
-plt.title("Earth's Orbit Around The Sun")
+plt.title("Sun-Earth Orbit 3D Simulation")
 plt.legend()
 plt.grid(True)
 plt.show()
