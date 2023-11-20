@@ -1,24 +1,13 @@
 # Imports
 from ModelFunctions import *
 
-# masses = [MSUN, MEARTH]
-# ic = [SUNPOS, EARTHPOS, SUNVEL, EARTHVEL]
+threeMasses = [MSUN, MEARTH, MMOON]
 
-# Masses = [2e30, 5.972e24]
-# Ic = [
-#     [0,0,0],
-#     [AU,0,0],
-#     [0,0,0],
-#     [0,2.97848e4,0]
-# ]
+threeIC = [SUNPOS, EARTHPOS, MOONPOS, SUNVEL, EARTHVEL, MOONVEL]
 
-# CoupledTwoBody2DPlotPos(masses, ic, 0, EARTHPERIOD, 0, 1, "Sun", "Earth")
+CoupledThreeBody2DPlotPos(threeMasses, threeIC, 0, EARTHPERIOD, 0, 1, "Sun", "Earth", "Moon")
 
-# CoupledTwoBody2DAnimPos(masses, ic, 0, EARTHPERIOD, 0, 1, "Sun", "Earth")
-
-# CoupledTwoBody2DPlotVel(masses, ic, 0, EARTHPERIOD, 0, "Sun", "Earth")
-
-# CoupledTwoBody2DAnimVel(masses, ic, 0, EARTHPERIOD, 0, "Sun", "Earth")
+CoupledThreeBody2DAnimPos(threeMasses, threeIC, 0, EARTHPERIOD, 0, 1, "Sun", "Earth", "Moon")
 
 # class MainWindow(QMainWindow):
 #     # Constructor
