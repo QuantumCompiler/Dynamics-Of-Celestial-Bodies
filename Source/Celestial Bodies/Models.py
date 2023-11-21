@@ -1,24 +1,27 @@
 # Imports
 from RK4 import *
 
-# Earth2DForceModel - Model for simulating motion of body in free fall on earth
+# ProjectileMotion - Model for simulating motion of body in projectile motion on a mass
 # Input:
 #   t - Time variable, not used directly in this model
-#   y - Height of object above earth
+#   y - Height of object above object's surface
 #   v - Velocity of object
+#   object - Array of parameters for object where projectile motion is occurring:
+#       object[0] - Mass of object
+#       object[1] - Distance from center of mass of object
 # Algorithm:
-#   * Calculate the distance of the object from the center of the Earth
+#   * Calculate the distance of the object from the center of the mass
 #   * Create differential equations
 #   * Return differential equations
 # Output:
 #   dydt - Velocity of object
 #   dzdt - Acceleration of object
-def Earth2DForceModel(t,y,v):
+def ProjectileMotion(t, y, v, object):
     # Height of object
-    height = REARTH + y
+    height = object[1] + y
     # Differential equations
-    dydt = v # Velocity
-    dzdt = - (G * MEARTH / pow(height, 2)) # Acceleration
+    dydt = v
+    dzdt = - (G * object[0] / pow(height, 2))
     return dydt, dzdt
 
 # TwoCoupledBodies - Model for two bodies interacting in space
