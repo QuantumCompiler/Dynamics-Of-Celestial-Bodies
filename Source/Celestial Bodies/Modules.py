@@ -1,12 +1,23 @@
 # Modules
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+from matplotlib.ticker import ScalarFormatter
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import os
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import *
 import sys
+
+# Plot Constants
+TWODPLOTTITLE = 14
+TWODPLOTABELS = 8
+TWODANIMTITLE = 14
+TWODANIMLABELS = 8
+THREEDPLOTTILE = 14
+THREEDPLOTLABELS = 6
+THREEDANIMTILE = 14
+THREEDANIMLABELS = 6
 
 # Global Constants
 G = 6.67408e-11 # Gravitational constant
