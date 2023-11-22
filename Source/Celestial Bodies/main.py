@@ -1,5 +1,5 @@
 # Imports
-from ModelFunctions import *
+from Windows import *
 
 # Widget Names 
 HeaderLabel = "Choose A Simulation"
@@ -34,20 +34,24 @@ class MainWindow(QMainWindow):
         self.TwoDForceBtn = QPushButton(TwoDForceLabel, self)
         self.TwoDForceBtn.setFixedSize(400, 50)
         self.TwoDForceBtn.setObjectName(TwoDForceObjName)
+        self.TwoDForceBtn.clicked.connect(self.OpenTwoDForceWindow)
         self.centerWidgetHoriz(self.TwoDForceBtn)
         self.TwoDForceBtn.move(self.TwoDForceBtn.pos().x(), 6 * self.headerLabel.pos().y())
         # 2 Body Button
         self.TwoBodyBtn = QPushButton(TwoBodyLabel, self)
         self.TwoBodyBtn.setFixedSize(400, 50)
         self.TwoBodyBtn.setObjectName(TwoBodyObjName)
+        self.TwoBodyBtn.clicked.connect(self.OpenTwoBodyWindow)
         self.centerWidgetHoriz(self.TwoBodyBtn)
         self.TwoBodyBtn.move(self.TwoBodyBtn.pos().x(), self.TwoDForceBtn.pos().y() + 50)
         # 3 Body Button
         self.ThreeBodyBtn = QPushButton(ThreeBodyLabel, self)
         self.ThreeBodyBtn.setFixedSize(400, 50)
         self.ThreeBodyBtn.setObjectName(ThreeBodyObjName)
+        self.ThreeBodyBtn.clicked.connect(self.OpenThreeBodyWindow)
         self.centerWidgetHoriz(self.ThreeBodyBtn)
         self.ThreeBodyBtn.move(self.ThreeBodyBtn.pos().x(), self.TwoBodyBtn.pos().y() + 50)
+        self.secondWindow = None
         
     def centerWidgetHoriz(self, widget):
         windowWidth = self.size().width()
@@ -63,6 +67,23 @@ class MainWindow(QMainWindow):
         self.centerWidgetHoriz(self.ThreeBodyBtn)
         super().resizeEvent(event)
 
+    def OpenTwoDForceWindow(self):
+        if not self.secondWindow:
+            self.secondWindow = TwoDForceWindow()
+        self.secondWindow.show()
+        self.close()
+
+    def OpenTwoBodyWindow(self):
+        if not self.secondWindow:
+            self.secondWindow = TwoBodyWindow()
+        self.secondWindow.show()
+        self.close()
+
+    def OpenThreeBodyWindow(self):
+        if not self.secondWindow:
+            self.secondWindow = ThreeBodyWindow()
+        self.secondWindow.show()
+        self.close()
 
 app = QApplication(sys.argv)
 window = MainWindow()
