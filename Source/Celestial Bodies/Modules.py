@@ -1,13 +1,18 @@
 # Modules
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+from matplotlib.figure import Figure
 from matplotlib.ticker import ScalarFormatter
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import os
+from PyQt6 import QtWidgets
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import *
 import sys
+import matplotlib
 
 # Plot Constants
 TWODPLOTTITLE = 14
