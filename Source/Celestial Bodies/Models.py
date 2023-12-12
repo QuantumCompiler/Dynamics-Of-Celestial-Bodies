@@ -1,64 +1,66 @@
 # Imports
 from RK4 import *
 
-# ProjectileMotion - Model for simulating motion of body in projectile motion on a mass
-# Input:
-#   t - Time variable, not used directly in this model
-#   y - Height of object above object's surface
-#   v - Velocity of object
-#   object - Array of parameters for object where projectile motion is occurring:
-#       object[0] - Mass of object
-#       object[1] - Distance from center of mass of object
-# Algorithm:
-#   * Calculate the distance of the object from the center of the mass
-#   * Create differential equations
-#   * Return differential equations
-# Output:
-#   dydt - Velocity of object
-#   dzdt - Acceleration of object
-def ProjectileMotion(t, y, v, object):
+""" ProjectileMotion - Model for simulating motion of body in projectile motion on a mass
+    Input:
+        t - Time variable, not used directly in this model
+        obj - Array of parameters for object where projectile motion is occurring:
+            obj[0] - Mass of object
+            obj[1] - Distance from center of mass of object
+        y - Height of object above object's surface
+        v - Velocity of object
+    Algorithm:
+        * Calculate the distance of the object from the center of the mass
+        * Create differential equations
+        * Return differential equations
+    Output:
+        dydt - Velocity of object
+        dzdt - Acceleration of object
+"""
+def ProjectileMotion(t, obj, y, v):
     # Height of object
-    height = object[1] + y
+    height = obj[1] + y
     # Differential equations
     dydt = v
-    dzdt = - (G * object[0] / pow(height, 2))
+    dzdt = - (G * obj[0] / pow(height, 2))
     return dydt, dzdt
 
-# TwoCoupledBodies - Model for two bodies interacting in space
-# Input:
-#   t - Time variable, not used directly in this model
-#   massList - Array of masses in system
-#   m1x - Position of mass 1 in x
-#   m1y - Position of mass 1 in y
-#   m1z - Position of mass 1 in z
-#   m2x - Position of mass 2 in x
-#   m2y - Position of mass 2 in y
-#   m2z - Position of mass 2 in z
-#   m1vx - Velocity of mass 1 in x
-#   m1vy - Velocity of mass 1 in y
-#   m1vz - Velocity of mass 1 in z
-#   m2vx - Velocity of mass 2 in x
-#   m2vy - Velocity of mass 2 in y
-#   m2vz - Velocity of mass 2 in z
-# Algorithm:
-#   * Calculate the distances from mass 1 to mass 2
-#   * Calculate the distances from mass 2 to mass 1
-#   * Calculate the accelerations of mass 1
-#   * Calculate the accelerations of mass 2
-#   * Return the updated values of each parameter
-# Output:
-#   m1vx - Velocity of mass 1 in x
-#   m1vy - Velocity of mass 1 in y
-#   m1vz - Velocity of mass 1 in z
-#   m2vx - Velocity of mass 2 in x
-#   m2vy - Velocity of mass 2 in y
-#   m2vz - Velocity of mass 2 in z
-#   m1ax - Acceleration of mass 1 in x
-#   m1ay - Acceleration of mass 1 in y
-#   m1az - Acceleration of mass 1 in z
-#   m2ax - Acceleration of mass 2 in x
-#   m2ay - Acceleration of mass 2 in y
-#   m2az - Acceleration of mass 2 in z
+""" TwoCoupledBodies - Model for two bodies interacting in space
+    Input:
+        t - Time variable, not used directly in this model
+        massList - Array of masses in system
+        m1x - Position of mass 1 in x
+        m1y - Position of mass 1 in y
+        m1z - Position of mass 1 in z
+        m2x - Position of mass 2 in x
+        m2y - Position of mass 2 in y
+        m2z - Position of mass 2 in z
+        m1vx - Velocity of mass 1 in x
+        m1vy - Velocity of mass 1 in y
+        m1vz - Velocity of mass 1 in z
+        m2vx - Velocity of mass 2 in x
+        m2vy - Velocity of mass 2 in y
+        m2vz - Velocity of mass 2 in z
+    Algorithm:
+        * Calculate the distances from mass 1 to mass 2
+        * Calculate the distances from mass 2 to mass 1
+        * Calculate the accelerations of mass 1
+        * Calculate the accelerations of mass 2
+        * Return the updated values of each parameter
+    Output:
+        m1vx - Velocity of mass 1 in x
+        m1vy - Velocity of mass 1 in y
+        m1vz - Velocity of mass 1 in z
+        m2vx - Velocity of mass 2 in x
+        m2vy - Velocity of mass 2 in y
+        m2vz - Velocity of mass 2 in z
+        m1ax - Acceleration of mass 1 in x
+        m1ay - Acceleration of mass 1 in y
+        m1az - Acceleration of mass 1 in z
+        m2ax - Acceleration of mass 2 in x
+        m2ay - Acceleration of mass 2 in y
+        m2az - Acceleration of mass 2 in z
+"""
 def TwoCoupledBodies(t, massList, m1x, m1y, m1z, m2x, m2y, m2z, m1vx, m1vy, m1vz, m2vx, m2vy, m2vz):
     # Distances from mass 1 to mass 2
     r12x = m1x - m2x
@@ -81,56 +83,59 @@ def TwoCoupledBodies(t, massList, m1x, m1y, m1z, m2x, m2y, m2z, m1vx, m1vy, m1vz
     return m1vx, m1vy, m1vz, m2vx, m2vy, m2vz, m1ax, m1ay, m1az, m2ax, m2ay, m2az
 
 # ThreeCoupledBodies - Model for three bodies interacting in space
-# Input:
-#   t - Time variable, not used directly in this model
-#   massList - Array of masses in system
-#   m1x - Position of mass 1 in x
-#   m1y - Position of mass 1 in y
-#   m1z - Position of mass 1 in z
-#   m2x - Position of mass 2 in x
-#   m2y - Position of mass 2 in y
-#   m2z - Position of mass 2 in z
-#   m3x - Position of mass 3 in x
-#   m3y - Position of mass 3 in y
-#   m3z - Position of mass 3 in z
-#   m1vx - Velocity of mass 1 in x
-#   m1vy - Velocity of mass 1 in y
-#   m1vz - Velocity of mass 1 in z
-#   m2vx - Velocity of mass 2 in x
-#   m2vy - Velocity of mass 2 in y
-#   m2vz - Velocity of mass 2 in z
-#   m3vx - Velocity of mass 3 in x
-#   m3vy - Velocity of mass 3 in y
-#   m3vz - Velocity of mass 3 in z
-# Algorithm:
-#   * Calculate the distances from mass 1 to mass 2
-#   * Calculate the distances from mass 1 to mass 3
-#   * Calculate the distances from mass 2 to mass 1
-#   * Calculate the distances from mass 2 to mass 3
-#   * Calculate the distances from mass 3 to mass 1
-#   * Calculate the accelerations of mass 1
-#   * Calculate the accelerations of mass 2
-#   * Calculate the accelerations of mass 3
-#   * Return the updated values of each parameter
-# Output:
-#   m1vx - Velocity of mass 1 in x
-#   m1vy - Velocity of mass 1 in y
-#   m1vz - Velocity of mass 1 in z
-#   m2vx - Velocity of mass 2 in x
-#   m2vy - Velocity of mass 2 in y
-#   m2vz - Velocity of mass 2 in z
-#   m3vx - Velocity of mass 3 in x
-#   m3vy - Velocity of mass 3 in y
-#   m3vz - Velocity of mass 3 in z
-#   m1ax - Acceleration of mass 1 in x
-#   m1ay - Acceleration of mass 1 in y
-#   m1az - Acceleration of mass 1 in z
-#   m2ax - Acceleration of mass 2 in x
-#   m2ay - Acceleration of mass 2 in y
-#   m2az - Acceleration of mass 2 in z
-#   m3ax - Acceleration of mass 3 in x
-#   m3ay - Acceleration of mass 3 in y
-#   m3az - Acceleration of mass 3 in z
+
+"""
+    Input:
+        t - Time variable, not used directly in this model
+        massList - Array of masses in system
+        m1x - Position of mass 1 in x
+        m1y - Position of mass 1 in y
+        m1z - Position of mass 1 in z
+        m2x - Position of mass 2 in x
+        m2y - Position of mass 2 in y
+        m2z - Position of mass 2 in z
+        m3x - Position of mass 3 in x
+        m3y - Position of mass 3 in y
+        m3z - Position of mass 3 in z
+        m1vx - Velocity of mass 1 in x
+        m1vy - Velocity of mass 1 in y
+        m1vz - Velocity of mass 1 in z
+        m2vx - Velocity of mass 2 in x
+        m2vy - Velocity of mass 2 in y
+        m2vz - Velocity of mass 2 in z
+        m3vx - Velocity of mass 3 in x
+        m3vy - Velocity of mass 3 in y
+        m3vz - Velocity of mass 3 in z
+    Algorithm:
+        * Calculate the distances from mass 1 to mass 2
+        * Calculate the distances from mass 1 to mass 3
+        * Calculate the distances from mass 2 to mass 1
+        * Calculate the distances from mass 2 to mass 3
+        * Calculate the distances from mass 3 to mass 1
+        * Calculate the accelerations of mass 1
+        * Calculate the accelerations of mass 2
+        * Calculate the accelerations of mass 3
+        * Return the updated values of each parameter
+    Output:
+        m1vx - Velocity of mass 1 in x
+        m1vy - Velocity of mass 1 in y
+        m1vz - Velocity of mass 1 in z
+        m2vx - Velocity of mass 2 in x
+        m2vy - Velocity of mass 2 in y
+        m2vz - Velocity of mass 2 in z
+        m3vx - Velocity of mass 3 in x
+        m3vy - Velocity of mass 3 in y
+        m3vz - Velocity of mass 3 in z
+        m1ax - Acceleration of mass 1 in x
+        m1ay - Acceleration of mass 1 in y
+        m1az - Acceleration of mass 1 in z
+        m2ax - Acceleration of mass 2 in x
+        m2ay - Acceleration of mass 2 in y
+        m2az - Acceleration of mass 2 in z
+        m3ax - Acceleration of mass 3 in x
+        m3ay - Acceleration of mass 3 in y
+        m3az - Acceleration of mass 3 in z
+"""
 def ThreeCoupledBodies(t, massList, m1x, m1y, m1z, m2x, m2y, m2z, m3x, m3y, m3z, m1vx, m1vy, m1vz, m2vx, m2vy, m2vz, m3vx, m3vy, m3vz):
     # Distances from mass 1 to mass 2
     r12x = m2x - m1x
