@@ -5,11 +5,31 @@ from Models import *
 ##### Solvers
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
 
+""" ProjectileMotionSolver - Solves projectile motion for a projectile on a given object
+    Input:
+        obj - List of object parameters where projectile motion is occurring
+        ic - Initial conditions of projectile
+        t0 - Initial time of model
+        tn - Final time of model
+    Algorithm:
+        * Calculate the number of steps for the RK4 solver
+        * Call the RK4 solver
+        * Return the lists
+    Output:
+        pos - List of positions of projectile
+        vel - List of velocities of projectile
+        time - List of times of model
+"""
+def ProjectileMotionSolver(obj, ic, t0, tn):
+    # Steps
+    h = (tn - t0) / 10000
+    # RK4 Solver
+    pos, vel, time = RK4ProjectileMotion(ProjectileMotion, obj, ic, t0, tn, h)
+    return pos, vel, time
+
 # CoupledTwoBodySolver - Solves the 2 Body problem with an RK4
 # Input:
 #   massList - Array of masses:
-#       massList[0] - Mass of mass 1
-#       massList[1] - Mass of mass 2
 #   ic - Matrix of initial conditions:
 #       ic[0][0] - Initial x position of mass 1
 #       ic[0][1] - Initial y position of mass 1
