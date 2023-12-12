@@ -9,6 +9,17 @@ threeMasses = [MSUN, MEARTH, MMOON]
 
 threeIC = [SUNPOS, EARTHPOS, MOONPOS, SUNVEL, EARTHVEL, MOONVEL]
 
+OnEarth = [MEARTH, REARTH]
+
+OnMoon = [MMOON, RMOON]
+
+ballIc = [100, 0]
+
+positions, velocities, time = ProjectileMotionSolver(OnEarth, ballIc, 0, 4.52)
+
+plt.plot(time, velocities)
+plt.show()
+
 # CoupledTwoBody2DPlotPos(twoMasses, twoIC, 0, EARTHPERIOD, 0, 1, "Sun", "Earth")
 
 # CoupledTwoBody2DAnimPos(twoMasses, twoIC, 0, EARTHPERIOD, 0, 1, "Sun", "Earth")
@@ -41,48 +52,48 @@ threeIC = [SUNPOS, EARTHPOS, MOONPOS, SUNVEL, EARTHVEL, MOONVEL]
 
 # CoupledThreeBody3DAnimVel(threeMasses, threeIC, 0, EARTHPERIOD, 0, 1, "Sun", "Earth", "Moon")
 
-class PlotCanvas(FigureCanvasQTAgg):
-    def __init__(self, parent=None, width=3, height=2, dpi=100):
-        fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = fig.add_subplot(111)
-        FigureCanvasQTAgg.__init__(self, fig)
-        self.setParent(parent)
-        self.plot()
+# class PlotCanvas(FigureCanvasQTAgg):
+#     def __init__(self, parent=None, width=3, height=2, dpi=100):
+#         fig = Figure(figsize=(width, height), dpi=dpi)
+#         self.axes = fig.add_subplot(111)
+#         FigureCanvasQTAgg.__init__(self, fig)
+#         self.setParent(parent)
+#         self.plot()
 
-    def plot(self):
-        data = [5 for i in range(25)]
-        self.axes.plot(data, 'r-')
-        self.axes.set_title('PyQt Matplotlib Example')
-        self.draw()
+#     def plot(self):
+#         data = [5 for i in range(25)]
+#         self.axes.plot(data, 'r-')
+#         self.axes.set_title('PyQt Matplotlib Example')
+#         self.draw()
 
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        # Title of Window
-        self.setWindowTitle("Plot Integration with Toolbar")
-        # Height and Width of Window
-        self.setGeometry(100, 100, 800, 600)
+# class MainWindow(QMainWindow):
+#     def __init__(self):
+#         super().__init__()
+#         # Title of Window
+#         self.setWindowTitle("Plot Integration with Toolbar")
+#         # Height and Width of Window
+#         self.setGeometry(100, 100, 800, 600)
 
-        # Create a QWidget for the central widget
-        centralWidget = QWidget(self)
-        self.setCentralWidget(centralWidget)
+#         # Create a QWidget for the central widget
+#         centralWidget = QWidget(self)
+#         self.setCentralWidget(centralWidget)
 
-        # Create a QVBoxLayout instance
-        layout = QVBoxLayout(centralWidget)
+#         # Create a QVBoxLayout instance
+#         layout = QVBoxLayout(centralWidget)
 
-        # Create the Matplotlib canvas and add it to the layout
-        plotCanvas = PlotCanvas(self, width=3, height=2)
-        layout.addWidget(plotCanvas)
+#         # Create the Matplotlib canvas and add it to the layout
+#         plotCanvas = PlotCanvas(self, width=3, height=2)
+#         layout.addWidget(plotCanvas)
 
-        # Create the navigation toolbar and add it to the layout
-        toolbar = NavigationToolbar(plotCanvas, self)
-        layout.addWidget(toolbar)
+#         # Create the navigation toolbar and add it to the layout
+#         toolbar = NavigationToolbar(plotCanvas, self)
+#         layout.addWidget(toolbar)
 
-        # Create a QLineEdit as a text field and add it to the layout
-        self.textField = QLineEdit("Enter some text here...")
-        layout.addWidget(self.textField)
+#         # Create a QLineEdit as a text field and add it to the layout
+#         self.textField = QLineEdit("Enter some text here...")
+#         layout.addWidget(self.textField)
 
-app = QApplication(sys.argv)
-mainWindow = MainWindow()
-mainWindow.show()
-sys.exit(app.exec())
+# app = QApplication(sys.argv)
+# mainWindow = MainWindow()
+# mainWindow.show()
+# sys.exit(app.exec())
