@@ -27,46 +27,47 @@ def ProjectileMotionSolver(obj, ic, t0, tn):
     pos, vel, time = RK4ProjectileMotion(ProjectileMotion, obj, ic, t0, tn, h)
     return pos, vel, time
 
-# CoupledTwoBodySolver - Solves the 2 Body problem with an RK4
-# Input:
-#   massList - Array of masses:
-#   ic - Matrix of initial conditions:
-#       ic[0][0] - Initial x position of mass 1
-#       ic[0][1] - Initial y position of mass 1
-#       ic[0][2] - Initial z position of mass 1
-#       ic[1][0] - Initial x position of mass 2
-#       ic[1][1] - Initial y position of mass 2
-#       ic[1][2] - Initial z position of mass 2
-#       ic[2][0] - Initial velocity of mass 1 in x
-#       ic[2][1] - Initial velocity of mass 1 in y
-#       ic[2][2] - Initial velocity of mass 1 in z
-#       ic[3][0] - Initial velocity of mass 2 in x
-#       ic[3][1] - Initial velocity of mass 2 in y
-#       ic[3][2] - Initial velocity of mass 2 in z
-#   t0 - Initial time of model
-#   tn - Final time of model
-# Algorithm:
-#   * Calculate the number of steps for the RK4 solver
-#   * Call the RK4 solver
-#   * Return the lists from the RK4 solver
-# Output:
-#   mass1Pos - List of positions of mass 1:
-#       mass1Pos[0] - Positions of mass 1 in x
-#       mass1Pos[1] - Positions of mass 1 in y
-#       mass1Pos[2] - Positions of mass 1 in z
-#   mass2Pos - List of positions of mass 2:
-#       mass2Pos[0] - Positions of mass 2 in x
-#       mass2Pos[1] - Positions of mass 2 in y
-#       mass2Pos[2] - Positions of mass 2 in z
-#   mass1Vel - List of velocities of mass 1:
-#       mass1Vel[0] - Velocities of mass 1 in x
-#       mass1Vel[1] - Velocities of mass 1 in y
-#       mass1Vel[2] - Velocities of mass 1 in z
-#   mass2Vel - List of velocities of mass 2:
-#       mass2Vel[0] - Velocities of mass 2 in x
-#       mass2Vel[1] - Velocities of mass 2 in y
-#       mass2Vel[2] - Velocities of mass 2 in z
-#   time - List of time values in model
+""" CoupledTwoBodySolver - Solves the 2 Body problem with an RK4
+    Input:
+        massList - Array of masses:
+        ic - Matrix of initial conditions:
+            ic[0][0] - Initial x position of mass 1
+            ic[0][1] - Initial y position of mass 1
+            ic[0][2] - Initial z position of mass 1
+            ic[1][0] - Initial x position of mass 2
+            ic[1][1] - Initial y position of mass 2
+            ic[1][2] - Initial z position of mass 2
+            ic[2][0] - Initial velocity of mass 1 in x
+            ic[2][1] - Initial velocity of mass 1 in y
+            ic[2][2] - Initial velocity of mass 1 in z
+            ic[3][0] - Initial velocity of mass 2 in x
+            ic[3][1] - Initial velocity of mass 2 in y
+            ic[3][2] - Initial velocity of mass 2 in z
+        t0 - Initial time of model
+        tn - Final time of model
+    Algorithm:
+        * Calculate the number of steps for the RK4 solver
+        * Call the RK4 solver
+        * Return the lists from the RK4 solver
+    Output:
+        mass1Pos - List of positions of mass 1:
+            mass1Pos[0] - Positions of mass 1 in x
+            mass1Pos[1] - Positions of mass 1 in y
+            mass1Pos[2] - Positions of mass 1 in z
+        mass2Pos - List of positions of mass 2:
+            mass2Pos[0] - Positions of mass 2 in x
+            mass2Pos[1] - Positions of mass 2 in y
+            mass2Pos[2] - Positions of mass 2 in z
+        mass1Vel - List of velocities of mass 1:
+            mass1Vel[0] - Velocities of mass 1 in x
+            mass1Vel[1] - Velocities of mass 1 in y
+            mass1Vel[2] - Velocities of mass 1 in z
+        mass2Vel - List of velocities of mass 2:
+            mass2Vel[0] - Velocities of mass 2 in x
+            mass2Vel[1] - Velocities of mass 2 in y
+            mass2Vel[2] - Velocities of mass 2 in z
+        time - List of time values in model
+"""
 def CoupledTwoBodySolver(massList, ic, t0, tn):
     # Steps
     h = (tn - t0) / 10000
@@ -74,34 +75,61 @@ def CoupledTwoBodySolver(massList, ic, t0, tn):
     mass1Pos, mass2Pos, mass1Vel, mass2Vel, time = RK4TwoBody(TwoCoupledBodies, massList, ic, t0, tn, h)
     return mass1Pos, mass2Pos, mass1Vel, mass2Vel, time
 
-# CoupledThreeBodySolver - Solves the 3 Body problem with an RK4
-# Input:
-#   massList - Array of masses in system
-#   ic - Matrix of initial conditions for masses in system:
-#       ic[0][0] - Initial x position of mass 1
-#       ic[0][1] - Initial y position of mass 1
-#       ic[0][2] - Initial z position of mass 1
-#       ic[1][0] - Initial x position of mass 2
-#       ic[1][1] - Initial y position of mass 2
-#       ic[1][2] - Initial z position of mass 2
-#       ic[2][0] - Initial x position of mass 3
-#       ic[2][1] - Initial y position of mass 3
-#       ic[2][2] - Initial z position of mass 3
-#       ic[3][0] - Initial velocity of mass 1 in x
-#       ic[3][1] - Initial velocity of mass 1 in y
-#       ic[3][2] - Initial velocity of mass 1 in z
-#       ic[4][0] - Initial velocity of mass 2 in x
-#       ic[4][1] - Initial velocity of mass 2 in y
-#       ic[4][2] - Initial velocity of mass 2 in z
-#       ic[5][0] - Initial velocity of mass 3 in x
-#       ic[5][1] - Initial velocity of mass 3 in y
-#       ic[5][2] - Initial velocity of mass 3 in z
-#   t0 - Initial time of system
-#   tn - Final time of system
-# Algorithm:
-#   * Calculate the number of steps for the RK4 solver
-#   * Call the RK4 solver
-#   * Return the lists from the RK4 solver
+""" CoupledThreeBodySolver - Solves the 3 Body problem with an RK4
+    Input:
+        massList - Array of masses in system
+        ic - Matrix of initial conditions for masses in system:
+            ic[0][0] - Initial x position of mass 1
+            ic[0][1] - Initial y position of mass 1
+            ic[0][2] - Initial z position of mass 1
+            ic[1][0] - Initial x position of mass 2
+            ic[1][1] - Initial y position of mass 2
+            ic[1][2] - Initial z position of mass 2
+            ic[2][0] - Initial x position of mass 3
+            ic[2][1] - Initial y position of mass 3
+            ic[2][2] - Initial z position of mass 3
+            ic[3][0] - Initial velocity of mass 1 in x
+            ic[3][1] - Initial velocity of mass 1 in y
+            ic[3][2] - Initial velocity of mass 1 in z
+            ic[4][0] - Initial velocity of mass 2 in x
+            ic[4][1] - Initial velocity of mass 2 in y
+            ic[4][2] - Initial velocity of mass 2 in z
+            ic[5][0] - Initial velocity of mass 3 in x
+            ic[5][1] - Initial velocity of mass 3 in y
+            ic[5][2] - Initial velocity of mass 3 in z
+        t0 - Initial time of system
+        tn - Final time of system
+    Algorithm:
+        * Calculate the number of steps for the RK4 solver
+        * Call the RK4 solver
+        * Return the lists from the RK4 solver
+    Output:
+        mass1Pos - List of positions of mass 1:
+            mass1Pos[0] - Positions of mass 1 in x
+            mass1Pos[1] - Positions of mass 1 in y
+            mass1Pos[2] - Positions of mass 1 in z
+        mass2Pos - List of positions of mass 2:
+            mass2Pos[0] - Positions of mass 2 in x
+            mass2Pos[1] - Positions of mass 2 in y
+            mass2Pos[2] - Positions of mass 2 in z
+        mass3Pos - List of positions of mass 3:
+            mass3Pos[0] - Positions of mass 3 in x
+            mass3Pos[1] - Positions of mass 3 in y
+            mass3Pos[2] - Positions of mass 3 in z
+        mass1Vel - List of velocities of mass 1:
+            mass1Vel[0] - Velocities of mass 1 in x
+            mass1Vel[1] - Velocities of mass 1 in y
+            mass1Vel[2] - Velocities of mass 1 in z
+        mass2Vel - List of velocities of mass 2:
+            mass2Vel[0] - Velocities of mass 2 in x
+            mass2Vel[1] - Velocities of mass 2 in y
+            mass2Vel[2] - Velocities of mass 2 in z
+        mass3Vel - List of velocities of mass 3:
+            mass3Vel[0] - Velocities of mass 3 in x
+            mass3Vel[1] - Velocities of mass 3 in y
+            mass3Vel[2] - Velocities of mass 3 in z
+        time - List of time values in model
+"""
 def CoupledThreeBodySolver(massList, ic, t0, tn):
     # Steps
     h = (tn - t0) / 10000
@@ -117,41 +145,42 @@ def CoupledThreeBodySolver(massList, ic, t0, tn):
 ##### Two Body 2D Position
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 
-# CoupledTwoBody2DPlotPos - Plots the positions of two bodies in space in 2D
-# Input:
-#   massList - Array of masses in system
-#   ic - Matrix of initial conditions:
-#       ic[0][0] - Initial x position of mass 1
-#       ic[0][1] - Initial y position of mass 1
-#       ic[0][2] - Initial z position of mass 1
-#       ic[1][0] - Initial x position of mass 2
-#       ic[1][1] - Initial y position of mass 2
-#       ic[1][2] - Initial z position of mass 2
-#       ic[2][0] - Initial velocity of mass 1 in x
-#       ic[2][1] - Initial velocity of mass 1 in y
-#       ic[2][2] - Initial velocity of mass 1 in z
-#       ic[3][0] - Initial velocity of mass 2 in x
-#       ic[3][1] - Initial velocity of mass 2 in y
-#       ic[3][2] - Initial velocity of mass 2 in z
-#   t0 - Initial time in the system
-#   tn - Final time in the system
-#   i - Index used for accessing elements in the lists returned from the RK4 solver
-#   j - Index used for accessing elements in the lists returned from the RK4 solver
-#       0 - Corresponds to x direction
-#       1 - Corresponds to y direction
-#       2 - Corresponds to z direction
-#   m1Name - Name of mass 1
-#   m2Name - Name of mass 2
-# Algorithm:
-#   * Call the RK4 solver
-#   * Calculate the max and min distances
-#   * Determine the place holders for the directions
-#   * Set the max and mins for axii
-#   * Format the scales of the axii
-#   * Plot the data
-#   * Place titles and labels on plot
-# Output:
-#   This function does not return a value
+""" CoupledTwoBody2DPlotPos - Plots the positions of two bodies in space in 2D
+    Input:
+        massList - Array of masses in system
+        ic - Matrix of initial conditions:
+            ic[0][0] - Initial x position of mass 1
+            ic[0][1] - Initial y position of mass 1
+            ic[0][2] - Initial z position of mass 1
+            ic[1][0] - Initial x position of mass 2
+            ic[1][1] - Initial y position of mass 2
+            ic[1][2] - Initial z position of mass 2
+            ic[2][0] - Initial velocity of mass 1 in x
+            ic[2][1] - Initial velocity of mass 1 in y
+            ic[2][2] - Initial velocity of mass 1 in z
+            ic[3][0] - Initial velocity of mass 2 in x
+            ic[3][1] - Initial velocity of mass 2 in y
+            ic[3][2] - Initial velocity of mass 2 in z
+        t0 - Initial time in the system
+        tn - Final time in the system
+        i - Index used for accessing elements in the lists returned from the RK4 solver
+        j - Index used for accessing elements in the lists returned from the RK4 solver
+            0 - Corresponds to x direction
+            1 - Corresponds to y direction
+            2 - Corresponds to z direction
+        m1Name - Name of mass 1
+        m2Name - Name of mass 2
+    Algorithm:
+        * Call the RK4 solver
+        * Calculate the max and min distances
+        * Determine the place holders for the directions
+        * Set the max and mins for axii
+        * Format the scales of the axii
+        * Plot the data
+        * Place titles and labels on plot
+    Output:
+        This function does not return a value
+"""
 def CoupledTwoBody2DPlotPos(massList, ic, t0, tn, i, j, m1Name, m2Name):
     # Solver
     mass1Pos, mass2Pos, mass1Vel, mass2Vel, time = CoupledTwoBodySolver(massList, ic, t0, tn)
@@ -197,44 +226,45 @@ def CoupledTwoBody2DPlotPos(massList, ic, t0, tn, i, j, m1Name, m2Name):
     plt.legend()
     plt.show()
 
-# CoupledTwoBody2DAnimPos - Plots the positions of two bodies in space as an animation in 2D
-# Input:
-#   massList - Array of masses in system
-#   ic - Matrix of initial conditions:
-#       ic[0][0] - Initial x position of mass 1
-#       ic[0][1] - Initial y position of mass 1
-#       ic[0][2] - Initial z position of mass 1
-#       ic[1][0] - Initial x position of mass 2
-#       ic[1][1] - Initial y position of mass 2
-#       ic[1][2] - Initial z position of mass 2
-#       ic[2][0] - Initial velocity of mass 1 in x
-#       ic[2][1] - Initial velocity of mass 1 in y
-#       ic[2][2] - Initial velocity of mass 1 in z
-#       ic[3][0] - Initial velocity of mass 2 in x
-#       ic[3][1] - Initial velocity of mass 2 in y
-#       ic[3][2] - Initial velocity of mass 2 in z
-#   t0 - Initial time in system
-#   tn - Final time in system
-#   i - Index used for accessing elements in the lists returned from the RK4 solver
-#   j - Index used for accessing elements in the lists returned from the RK4 solver
-#       0 - Corresponds to x direction
-#       1 - Corresponds to y direction
-#       2 - Corresponds to z direction
-#   m1Name - Name of mass 1
-#   m2Name - Name of mass 2
-# Algorithm:
-#   * Call the RK4 solver
-#   * Calculate the max and min positions
-#   * Determine the place holders for the directions
-#   * Set the max and min for the axii
-#   * Format the scales of the axii
-#   * Set up the animation parameters
-#   * Define the init function
-#   * Define the animation function
-#   * Call the animation
-#   * Set the title and labels
-# Output:
-#   This function does not return a value
+""" CoupledTwoBody2DAnimPos - Plots the positions of two bodies in space as an animation in 2D
+    Input:
+        massList - Array of masses in system
+        ic - Matrix of initial conditions:
+            ic[0][0] - Initial x position of mass 1
+            ic[0][1] - Initial y position of mass 1
+            ic[0][2] - Initial z position of mass 1
+            ic[1][0] - Initial x position of mass 2
+            ic[1][1] - Initial y position of mass 2
+            ic[1][2] - Initial z position of mass 2
+            ic[2][0] - Initial velocity of mass 1 in x
+            ic[2][1] - Initial velocity of mass 1 in y
+            ic[2][2] - Initial velocity of mass 1 in z
+            ic[3][0] - Initial velocity of mass 2 in x
+            ic[3][1] - Initial velocity of mass 2 in y
+            ic[3][2] - Initial velocity of mass 2 in z
+        t0 - Initial time in system
+        tn - Final time in system
+        i - Index used for accessing elements in the lists returned from the RK4 solver
+        j - Index used for accessing elements in the lists returned from the RK4 solver
+            0 - Corresponds to x direction
+            1 - Corresponds to y direction
+            2 - Corresponds to z direction
+        m1Name - Name of mass 1
+        m2Name - Name of mass 2
+    Algorithm:
+        * Call the RK4 solver
+        * Calculate the max and min positions
+        * Determine the place holders for the directions
+        * Set the max and min for the axii
+        * Format the scales of the axii
+        * Set up the animation parameters
+        * Define the init function
+        * Define the animation function
+        * Call the animation
+        * Set the title and labels
+    Output:
+        This function does not return a value
+"""
 def CoupledTwoBody2DAnimPos(massList, ic, t0, tn, i, j, m1Name, m2Name):
     # Solver
     mass1Pos, mass2Pos, mass1Vel, mass2Vel, time = CoupledTwoBodySolver(massList, ic, t0, tn)
@@ -302,40 +332,41 @@ def CoupledTwoBody2DAnimPos(massList, ic, t0, tn, i, j, m1Name, m2Name):
 ##### Two Body 2D Velocity
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 
-# CoupledTwoBody2DPlotVel - Plots the velocity vs. time of two bodies in space in 2D
-# Input:
-#   massList - Array of masses in system
-#   ic - Matrix of initial conditions:
-#       ic[0][0] - Initial x position of mass 1
-#       ic[0][1] - Initial y position of mass 1
-#       ic[0][2] - Initial z position of mass 1
-#       ic[1][0] - Initial x position of mass 2
-#       ic[1][1] - Initial y position of mass 2
-#       ic[1][2] - Initial z position of mass 2
-#       ic[2][0] - Initial velocity of mass 1 in x
-#       ic[2][1] - Initial velocity of mass 1 in y
-#       ic[2][2] - Initial velocity of mass 1 in z
-#       ic[3][0] - Initial velocity of mass 2 in x
-#       ic[3][1] - Initial velocity of mass 2 in y
-#       ic[3][2] - Initial velocity of mass 2 in z
-#   t0 - Initial time in the system
-#   tn - Final time in the system
-#   i - Index used for accessing elements in the lists returned from the RK4 solver
-#       0 - Corresponds to x velocity
-#       1 - Corresponds to y velocity
-#       2 - Corresponds to z velocity
-#   m1Name - Name of mass 1
-#   m2Name - Name of mass 2
-# Algorithm:
-#   * Call the RK4 solver
-#   * Calculate the max and min velocities
-#   * Determine the place holders for the directions
-#   * Set the max and mins for axii
-#   * Format the scales of the axii
-#   * Plot the data
-#   * Place titles and labels on plot
-# Output:
-#   This function does not return a value
+""" CoupledTwoBody2DPlotVel - Plots the velocity vs. time of two bodies in space in 2D
+    Input:
+        massList - Array of masses in system
+        ic - Matrix of initial conditions:
+            ic[0][0] - Initial x position of mass 1
+            ic[0][1] - Initial y position of mass 1
+            ic[0][2] - Initial z position of mass 1
+            ic[1][0] - Initial x position of mass 2
+            ic[1][1] - Initial y position of mass 2
+            ic[1][2] - Initial z position of mass 2
+            ic[2][0] - Initial velocity of mass 1 in x
+            ic[2][1] - Initial velocity of mass 1 in y
+            ic[2][2] - Initial velocity of mass 1 in z
+            ic[3][0] - Initial velocity of mass 2 in x
+            ic[3][1] - Initial velocity of mass 2 in y
+            ic[3][2] - Initial velocity of mass 2 in z
+        t0 - Initial time in the system
+        tn - Final time in the system
+        i - Index used for accessing elements in the lists returned from the RK4 solver
+            0 - Corresponds to x velocity
+            1 - Corresponds to y velocity
+            2 - Corresponds to z velocity
+        m1Name - Name of mass 1
+        m2Name - Name of mass 2
+    Algorithm:
+        * Call the RK4 solver
+        * Calculate the max and min velocities
+        * Determine the place holders for the directions
+        * Set the max and mins for axii
+        * Format the scales of the axii
+        * Plot the data
+        * Place titles and labels on plot
+    Output:
+        This function does not return a value
+"""
 def CoupledTwoBody2DPlotVel(massList, ic, t0, tn, i, m1Name, m2Name):
     # Solver
     mass1Pos, mass2Pos, mass1Vel, mass2Vel, time = CoupledTwoBodySolver(massList, ic, t0, tn)
@@ -372,43 +403,44 @@ def CoupledTwoBody2DPlotVel(massList, ic, t0, tn, i, m1Name, m2Name):
     plt.legend()
     plt.show()
 
-# CoupledTwoBody2DAnimVel - Plots the velocity vs. time of two bodies in space as an animation in 2D
-# Input:
-#   massList - Array of masses in system
-#   ic - Matrix of initial conditions:
-#       ic[0][0] - Initial x position of mass 1
-#       ic[0][1] - Initial y position of mass 1
-#       ic[0][2] - Initial z position of mass 1
-#       ic[1][0] - Initial x position of mass 2
-#       ic[1][1] - Initial y position of mass 2
-#       ic[1][2] - Initial z position of mass 2
-#       ic[2][0] - Initial velocity of mass 1 in x
-#       ic[2][1] - Initial velocity of mass 1 in y
-#       ic[2][2] - Initial velocity of mass 1 in z
-#       ic[3][0] - Initial velocity of mass 2 in x
-#       ic[3][1] - Initial velocity of mass 2 in y
-#       ic[3][2] - Initial velocity of mass 2 in z
-#   t0 - Initial time in system
-#   tn - Final time in system
-#   i - Index used for accessing elements in the lists returned from the RK4 solver
-#       0 - Corresponds to x velocity
-#       1 - Corresponds to y velocity
-#       2 - Corresponds to z velocity
-#   m1Name - Name of mass 1
-#   m2Name - Name of mass 2
-# Algorithm:
-#   * Call the RK4 solver
-#   * Calculate the max and min velocities
-#   * Determine the place holders for the directions
-#   * Set the max and min for the axii
-#   * Format the scales of the axii
-#   * Set up the animation parameters
-#   * Define the init function
-#   * Define the animation function
-#   * Call the animation
-#   * Set the title and labels
-# Output:
-#   This function does not return a value
+""" CoupledTwoBody2DAnimVel - Plots the velocity vs. time of two bodies in space as an animation in 2D
+    Input:
+        massList - Array of masses in system
+        ic - Matrix of initial conditions:
+            ic[0][0] - Initial x position of mass 1
+            ic[0][1] - Initial y position of mass 1
+            ic[0][2] - Initial z position of mass 1
+            ic[1][0] - Initial x position of mass 2
+            ic[1][1] - Initial y position of mass 2
+            ic[1][2] - Initial z position of mass 2
+            ic[2][0] - Initial velocity of mass 1 in x
+            ic[2][1] - Initial velocity of mass 1 in y
+            ic[2][2] - Initial velocity of mass 1 in z
+            ic[3][0] - Initial velocity of mass 2 in x
+            ic[3][1] - Initial velocity of mass 2 in y
+            ic[3][2] - Initial velocity of mass 2 in z
+        t0 - Initial time in system
+        tn - Final time in system
+        i - Index used for accessing elements in the lists returned from the RK4 solver
+            0 - Corresponds to x velocity
+            1 - Corresponds to y velocity
+            2 - Corresponds to z velocity
+        m1Name - Name of mass 1
+        m2Name - Name of mass 2
+    Algorithm:
+        * Call the RK4 solver
+        * Calculate the max and min velocities
+        * Determine the place holders for the directions
+        * Set the max and min for the axii
+        * Format the scales of the axii
+        * Set up the animation parameters
+        * Define the init function
+        * Define the animation function
+        * Call the animation
+        * Set the title and labels
+    Output:
+        This function does not return a value
+"""
 def CoupledTwoBody2DAnimVel(massList, ic, t0, tn, i, m1Name, m2Name):
     # Solver
     mass1Pos, mass2Pos, mass1Vel, mass2Vel, time = CoupledTwoBodySolver(massList, ic, t0, tn)
@@ -467,36 +499,37 @@ def CoupledTwoBody2DAnimVel(massList, ic, t0, tn, i, m1Name, m2Name):
 ##### Two Body 3D Position
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 
-# CoupledTwoBody3DPlotPos - Plots the positions of two bodies in space in 3D
-# Input:
-#   massList - Array of masses in the system
-#   ic - Matrix of initial conditions:
-#       ic[0][0] - Initial x position of mass 1
-#       ic[0][1] - Initial y position of mass 1
-#       ic[0][2] - Initial z position of mass 1
-#       ic[1][0] - Initial x position of mass 2
-#       ic[1][1] - Initial y position of mass 2
-#       ic[1][2] - Initial z position of mass 2
-#       ic[2][0] - Initial velocity of mass 1 in x
-#       ic[2][1] - Initial velocity of mass 1 in y
-#       ic[2][2] - Initial velocity of mass 1 in z
-#       ic[3][0] - Initial velocity of mass 2 in x
-#       ic[3][1] - Initial velocity of mass 2 in y
-#       ic[3][2] - Initial velocity of mass 2 in z
-#   t0 - Initial time in system
-#   tn - Final time in system
-#   m1Name - Name of mass 1
-#   m2Name - Name of mass 2
-# Algorithm:
-#   * Call the RK4 solver
-#   * Calculate the max and min distances
-#   * Determine the place holders for the directions
-#   * Set the max and mins for axii
-#   * Format the scales of the axii
-#   * Plot the data
-#   * Place titles and labels on plot
-# Output:
-#   This function does not return a value
+""" CoupledTwoBody3DPlotPos - Plots the positions of two bodies in space in 3D
+    Input:
+        massList - Array of masses in the system
+        ic - Matrix of initial conditions:
+            ic[0][0] - Initial x position of mass 1
+            ic[0][1] - Initial y position of mass 1
+            ic[0][2] - Initial z position of mass 1
+            ic[1][0] - Initial x position of mass 2
+            ic[1][1] - Initial y position of mass 2
+            ic[1][2] - Initial z position of mass 2
+            ic[2][0] - Initial velocity of mass 1 in x
+            ic[2][1] - Initial velocity of mass 1 in y
+            ic[2][2] - Initial velocity of mass 1 in z
+            ic[3][0] - Initial velocity of mass 2 in x
+            ic[3][1] - Initial velocity of mass 2 in y
+            ic[3][2] - Initial velocity of mass 2 in z
+        t0 - Initial time in system
+        tn - Final time in system
+        m1Name - Name of mass 1
+        m2Name - Name of mass 2
+    Algorithm:
+        * Call the RK4 solver
+        * Calculate the max and min distances
+        * Determine the place holders for the directions
+        * Set the max and mins for axii
+        * Format the scales of the axii
+        * Plot the data
+        * Place titles and labels on plot
+    Output:
+        This function does not return a value
+"""
 def CoupledTwoBody3DPlotPos(massList, ic, t0, tn, m1Name, m2Name):
     # Solver
     mass1Pos, mass2Pos, mass1Vel, mass2Vel, time = CoupledTwoBodySolver(massList, ic, t0, tn)
@@ -529,39 +562,40 @@ def CoupledTwoBody3DPlotPos(massList, ic, t0, tn, m1Name, m2Name):
     ax.grid(False)
     plt.show()
 
-# CoupledTwoBody3DAnimPos - Plots the positions of two bodies in space as an animation in 3D
-# Input:
-#   massList - Array of masses in the system
-#   ic - Matrix of initial conditions:
-#       ic[0][0] - Initial x position of mass 1
-#       ic[0][1] - Initial y position of mass 1
-#       ic[0][2] - Initial z position of mass 1
-#       ic[1][0] - Initial x position of mass 2
-#       ic[1][1] - Initial y position of mass 2
-#       ic[1][2] - Initial z position of mass 2
-#       ic[2][0] - Initial velocity of mass 1 in x
-#       ic[2][1] - Initial velocity of mass 1 in y
-#       ic[2][2] - Initial velocity of mass 1 in z
-#       ic[3][0] - Initial velocity of mass 2 in x
-#       ic[3][1] - Initial velocity of mass 2 in y
-#       ic[3][2] - Initial velocity of mass 2 in z
-#   t0 - Initial time in system
-#   tn - Final time in system
-#   m1Name - Name of mass 1
-#   m2Name - Name of mass 2
-# Algorithm:
-#   * Call the RK4 solver
-#   * Calculate the max and min positions
-#   * Determine the place holders for the directions
-#   * Set the max and min for the axii
-#   * Format the scales of the axii
-#   * Set up the animation parameters
-#   * Define the init function
-#   * Define the animation function
-#   * Call the animation
-#   * Set the title and labels
-# Output:
-#   This function does not return a value
+""" CoupledTwoBody3DAnimPos - Plots the positions of two bodies in space as an animation in 3D
+    Input:
+        massList - Array of masses in the system
+        ic - Matrix of initial conditions:
+            ic[0][0] - Initial x position of mass 1
+            ic[0][1] - Initial y position of mass 1
+            ic[0][2] - Initial z position of mass 1
+            ic[1][0] - Initial x position of mass 2
+            ic[1][1] - Initial y position of mass 2
+            ic[1][2] - Initial z position of mass 2
+            ic[2][0] - Initial velocity of mass 1 in x
+            ic[2][1] - Initial velocity of mass 1 in y
+            ic[2][2] - Initial velocity of mass 1 in z
+            ic[3][0] - Initial velocity of mass 2 in x
+            ic[3][1] - Initial velocity of mass 2 in y
+            ic[3][2] - Initial velocity of mass 2 in z
+        t0 - Initial time in system
+        tn - Final time in system
+        m1Name - Name of mass 1
+        m2Name - Name of mass 2
+    Algorithm:
+        * Call the RK4 solver
+        * Calculate the max and min positions
+        * Determine the place holders for the directions
+        * Set the max and min for the axii
+        * Format the scales of the axii
+        * Set up the animation parameters
+        * Define the init function
+        * Define the animation function
+        * Call the animation
+        * Set the title and labels
+    Output:
+        This function does not return a value
+"""
 def CoupledTwoBody3DAnimPos(massList, ic, t0, tn, m1Name, m2Name):
     # Solver
     mass1Pos, mass2Pos, mass1Vel, mass2Vel, time = CoupledTwoBodySolver(massList, ic, t0, tn)
@@ -621,41 +655,42 @@ def CoupledTwoBody3DAnimPos(massList, ic, t0, tn, m1Name, m2Name):
 ##### Two Body 3D Velocity
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 
-# CoupledTwoBody3DPlotVel - Plots the velocities of two bodies in space in 3D
-# Input:
-#   massList - Array of masses in the system
-#   ic - Matrix of initial conditions:
-#       ic[0][0] - Initial x position of mass 1
-#       ic[0][1] - Initial y position of mass 1
-#       ic[0][2] - Initial z position of mass 1
-#       ic[1][0] - Initial x position of mass 2
-#       ic[1][1] - Initial y position of mass 2
-#       ic[1][2] - Initial z position of mass 2
-#       ic[2][0] - Initial velocity of mass 1 in x
-#       ic[2][1] - Initial velocity of mass 1 in y
-#       ic[2][2] - Initial velocity of mass 1 in z
-#       ic[3][0] - Initial velocity of mass 2 in x
-#       ic[3][1] - Initial velocity of mass 2 in y
-#       ic[3][2] - Initial velocity of mass 2 in z
-#   t0 - Initial time in system
-#   tn - Final time in system
-#   i - Index used for accessing elements in the lists returned from the RK4 solver
-#   j - Index used for accessing elements in the lists returned from the RK4 solver
-#       0 - Corresponds to x velocity
-#       1 - Corresponds to y velocity
-#       2 - Corresponds to z velocity
-#   m1Name - Name of mass 1
-#   m2Name - Name of mass 2
-# Algorithm:
-#   * Call the RK4 solver
-#   * Calculate the max and min velocities
-#   * Determine the place holders for the directions
-#   * Set the max and mins for axii
-#   * Format the scales of the axii
-#   * Plot the data
-#   * Place titles and labels on plot
-# Output:
-#   This function does not return a value
+""" CoupledTwoBody3DPlotVel - Plots the velocities of two bodies in space in 3D
+    Input:
+        massList - Array of masses in the system
+        ic - Matrix of initial conditions:
+            ic[0][0] - Initial x position of mass 1
+            ic[0][1] - Initial y position of mass 1
+            ic[0][2] - Initial z position of mass 1
+            ic[1][0] - Initial x position of mass 2
+            ic[1][1] - Initial y position of mass 2
+            ic[1][2] - Initial z position of mass 2
+            ic[2][0] - Initial velocity of mass 1 in x
+            ic[2][1] - Initial velocity of mass 1 in y
+            ic[2][2] - Initial velocity of mass 1 in z
+            ic[3][0] - Initial velocity of mass 2 in x
+            ic[3][1] - Initial velocity of mass 2 in y
+            ic[3][2] - Initial velocity of mass 2 in z
+        t0 - Initial time in system
+        tn - Final time in system
+        i - Index used for accessing elements in the lists returned from the RK4 solver
+        j - Index used for accessing elements in the lists returned from the RK4 solver
+            0 - Corresponds to x velocity
+            1 - Corresponds to y velocity
+            2 - Corresponds to z velocity
+        m1Name - Name of mass 1
+        m2Name - Name of mass 2
+    Algorithm:
+        * Call the RK4 solver
+        * Calculate the max and min velocities
+        * Determine the place holders for the directions
+        * Set the max and mins for axii
+        * Format the scales of the axii
+        * Plot the data
+        * Place titles and labels on plot
+    Output:
+        This function does not return a value
+"""
 def CoupledTwoBody3DPlotVel(massList, ic, t0, tn, i, j, m1Name, m2Name):
     # Solver
     mass1Pos, mass2Pos, mass1Vel, mass2Vel, time = CoupledTwoBodySolver(massList, ic, t0, tn)
@@ -707,44 +742,45 @@ def CoupledTwoBody3DPlotVel(massList, ic, t0, tn, i, j, m1Name, m2Name):
     ax.grid(False)
     plt.show()
 
-# CoupledTwoBody3DAnimVel - Plots the velocity vs. time of two bodies in space as an animation in 3D
-# Input:
-#   massList - Array of masses in system
-#   ic - Matrix of initial conditions:
-#       ic[0][0] - Initial x position of mass 1
-#       ic[0][1] - Initial y position of mass 1
-#       ic[0][2] - Initial z position of mass 1
-#       ic[1][0] - Initial x position of mass 2
-#       ic[1][1] - Initial y position of mass 2
-#       ic[1][2] - Initial z position of mass 2
-#       ic[2][0] - Initial velocity of mass 1 in x
-#       ic[2][1] - Initial velocity of mass 1 in y
-#       ic[2][2] - Initial velocity of mass 1 in z
-#       ic[3][0] - Initial velocity of mass 2 in x
-#       ic[3][1] - Initial velocity of mass 2 in y
-#       ic[3][2] - Initial velocity of mass 2 in z
-#   t0 - Initial time in system
-#   tn - Final time in system
-#   i - Index used for accessing elements in the lists returned from the RK4 solver
-#   j - Index used for accessing elements in the lists returned from the RK4 solver
-#       0 - Corresponds to x velocity
-#       1 - Corresponds to y velocity
-#       2 - Corresponds to z velocity
-#   m1Name - Name of mass 1
-#   m2Name - Name of mass 2
-# Algorithm:
-#   * Call the RK4 solver
-#   * Calculate the max and min velocities
-#   * Determine the place holders for the directions
-#   * Set the max and min for the axii
-#   * Format the scales of the axii
-#   * Set up the animation parameters
-#   * Define the init function
-#   * Define the animation function
-#   * Call the animation
-#   * Set the title and labels
-# Output:
-#   This function does not return a value
+""" CoupledTwoBody3DAnimVel - Plots the velocity vs. time of two bodies in space as an animation in 3D
+    Input:
+        massList - Array of masses in system
+        ic - Matrix of initial conditions:
+            ic[0][0] - Initial x position of mass 1
+            ic[0][1] - Initial y position of mass 1
+            ic[0][2] - Initial z position of mass 1
+            ic[1][0] - Initial x position of mass 2
+            ic[1][1] - Initial y position of mass 2
+            ic[1][2] - Initial z position of mass 2
+            ic[2][0] - Initial velocity of mass 1 in x
+            ic[2][1] - Initial velocity of mass 1 in y
+            ic[2][2] - Initial velocity of mass 1 in z
+            ic[3][0] - Initial velocity of mass 2 in x
+            ic[3][1] - Initial velocity of mass 2 in y
+            ic[3][2] - Initial velocity of mass 2 in z
+        t0 - Initial time in system
+        tn - Final time in system
+        i - Index used for accessing elements in the lists returned from the RK4 solver
+        j - Index used for accessing elements in the lists returned from the RK4 solver
+            0 - Corresponds to x velocity
+            1 - Corresponds to y velocity
+            2 - Corresponds to z velocity
+        m1Name - Name of mass 1
+        m2Name - Name of mass 2
+    Algorithm:
+        * Call the RK4 solver
+        * Calculate the max and min velocities
+        * Determine the place holders for the directions
+        * Set the max and min for the axii
+        * Format the scales of the axii
+        * Set up the animation parameters
+        * Define the init function
+        * Define the animation function
+        * Call the animation
+        * Set the title and labels
+    Output:
+        This function does not return a value
+"""
 def CoupledTwoBody3DAnimVel(massList, ic, t0, tn, i, j, m1Name, m2Name):
     # Solver
     mass1Pos, mass2Pos, mass1Vel, mass2Vel, time = CoupledTwoBodySolver(massList, ic, t0, tn)
@@ -834,48 +870,49 @@ def CoupledTwoBody3DAnimVel(massList, ic, t0, tn, i, j, m1Name, m2Name):
 ##### Three Body 2D Position
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 
-# CoupledThreeBody2DPlotPos - Plots the positions of three bodies in space in 2D
-# Input:
-#   massList - Array of masses in system
-#   ic - Matrix of initial conditions for masses in system:
-#       ic[0][0] - Initial x position of mass 1
-#       ic[0][1] - Initial y position of mass 1
-#       ic[0][2] - Initial z position of mass 1
-#       ic[1][0] - Initial x position of mass 2
-#       ic[1][1] - Initial y position of mass 2
-#       ic[1][2] - Initial z position of mass 2
-#       ic[2][0] - Initial x position of mass 3
-#       ic[2][1] - Initial y position of mass 3
-#       ic[2][2] - Initial z position of mass 3
-#       ic[3][0] - Initial velocity of mass 1 in x
-#       ic[3][1] - Initial velocity of mass 1 in y
-#       ic[3][2] - Initial velocity of mass 1 in z
-#       ic[4][0] - Initial velocity of mass 2 in x
-#       ic[4][1] - Initial velocity of mass 2 in y
-#       ic[4][2] - Initial velocity of mass 2 in z
-#       ic[5][0] - Initial velocity of mass 3 in x
-#       ic[5][1] - Initial velocity of mass 3 in y
-#       ic[5][2] - Initial velocity of mass 3 in z
-#   t0 - Initial time of system
-#   tn - Final time of system
-#   i - Index used for accessing elements in the lists returned from the RK4 solver
-#   j - Index used for accessing elements in the lists returned from the RK4 solver
-#       0 - Corresponds to x direction
-#       1 - Corresponds to y direction
-#       2 - Corresponds to z direction
-#   m1Name - Name of mass 1
-#   m2Name - Name of mass 2
-#   m3Name - Name of mass 3
-# Algorithm:
-#   * Call the RK4 solver
-#   * Calculate the max and min distances
-#   * Determine the place holders for the directions
-#   * Set the max and mins for axii
-#   * Format the scales of the axii
-#   * Plot the data
-#   * Place titles and labels on plot
-# Output:
-#   This function does not return a value
+""" CoupledThreeBody2DPlotPos - Plots the positions of three bodies in space in 2D
+    Input:
+        massList - Array of masses in system
+        ic - Matrix of initial conditions for masses in system:
+            ic[0][0] - Initial x position of mass 1
+            ic[0][1] - Initial y position of mass 1
+            ic[0][2] - Initial z position of mass 1
+            ic[1][0] - Initial x position of mass 2
+            ic[1][1] - Initial y position of mass 2
+            ic[1][2] - Initial z position of mass 2
+            ic[2][0] - Initial x position of mass 3
+            ic[2][1] - Initial y position of mass 3
+            ic[2][2] - Initial z position of mass 3
+            ic[3][0] - Initial velocity of mass 1 in x
+            ic[3][1] - Initial velocity of mass 1 in y
+            ic[3][2] - Initial velocity of mass 1 in z
+            ic[4][0] - Initial velocity of mass 2 in x
+            ic[4][1] - Initial velocity of mass 2 in y
+            ic[4][2] - Initial velocity of mass 2 in z
+            ic[5][0] - Initial velocity of mass 3 in x
+            ic[5][1] - Initial velocity of mass 3 in y
+            ic[5][2] - Initial velocity of mass 3 in z
+        t0 - Initial time of system
+        tn - Final time of system
+        i - Index used for accessing elements in the lists returned from the RK4 solver
+        j - Index used for accessing elements in the lists returned from the RK4 solver
+            0 - Corresponds to x direction
+            1 - Corresponds to y direction
+            2 - Corresponds to z direction
+        m1Name - Name of mass 1
+        m2Name - Name of mass 2
+        m3Name - Name of mass 3
+    Algorithm:
+        * Call the RK4 solver
+        * Calculate the max and min distances
+        * Determine the place holders for the directions
+        * Set the max and mins for axii
+        * Format the scales of the axii
+        * Plot the data
+        * Place titles and labels on plot
+    Output:
+        This function does not return a value
+"""
 def CoupledThreeBody2DPlotPos(massList, ic, t0, tn, i, j, m1Name, m2Name, m3name):
     # Solver
     mass1Pos, mass2Pos, mass3Pos, mass1Vel, mass2Vel, mass3Vel, time = CoupledThreeBodySolver(massList, ic, t0, tn)
@@ -922,51 +959,52 @@ def CoupledThreeBody2DPlotPos(massList, ic, t0, tn, i, j, m1Name, m2Name, m3name
     plt.legend()
     plt.show()
 
-# CoupledThreeBody2DAnimPos - Plots the positions of three bodies in space as an animation in 2D
-# Input:
-#   massList - Array of masses in system
-#   ic - Matrix of initial conditions for masses in system:
-#       ic[0][0] - Initial x position of mass 1
-#       ic[0][1] - Initial y position of mass 1
-#       ic[0][2] - Initial z position of mass 1
-#       ic[1][0] - Initial x position of mass 2
-#       ic[1][1] - Initial y position of mass 2
-#       ic[1][2] - Initial z position of mass 2
-#       ic[2][0] - Initial x position of mass 3
-#       ic[2][1] - Initial y position of mass 3
-#       ic[2][2] - Initial z position of mass 3
-#       ic[3][0] - Initial velocity of mass 1 in x
-#       ic[3][1] - Initial velocity of mass 1 in y
-#       ic[3][2] - Initial velocity of mass 1 in z
-#       ic[4][0] - Initial velocity of mass 2 in x
-#       ic[4][1] - Initial velocity of mass 2 in y
-#       ic[4][2] - Initial velocity of mass 2 in z
-#       ic[5][0] - Initial velocity of mass 3 in x
-#       ic[5][1] - Initial velocity of mass 3 in y
-#       ic[5][2] - Initial velocity of mass 3 in z
-#   t0 - Initial time of system
-#   tn - Final time of system
-#   i - Index used for accessing elements in the lists returned from the RK4 solver
-#   j - Index used for accessing elements in the lists returned from the RK4 solver
-#       0 - Corresponds to x direction
-#       1 - Corresponds to y direction
-#       2 - Corresponds to z direction
-#   m1Name - Name of mass 1
-#   m2Name - Name of mass 2
-#   m3Name - Name of mass 3
-# Algorithm:
-#   * Call the RK4 solver
-#   * Calculate the max and min positions
-#   * Determine the place holders for the directions
-#   * Set the max and min for the axii
-#   * Format the scales of the axii
-#   * Set up the animation parameters
-#   * Define the init function
-#   * Define the animation function
-#   * Call the animation
-#   * Set the title and labels
-# Output:
-#   This function does not return a value
+""" CoupledThreeBody2DAnimPos - Plots the positions of three bodies in space as an animation in 2D
+    Input:
+        massList - Array of masses in system
+        ic - Matrix of initial conditions for masses in system:
+            ic[0][0] - Initial x position of mass 1
+            ic[0][1] - Initial y position of mass 1
+            ic[0][2] - Initial z position of mass 1
+            ic[1][0] - Initial x position of mass 2
+            ic[1][1] - Initial y position of mass 2
+            ic[1][2] - Initial z position of mass 2
+            ic[2][0] - Initial x position of mass 3
+            ic[2][1] - Initial y position of mass 3
+            ic[2][2] - Initial z position of mass 3
+            ic[3][0] - Initial velocity of mass 1 in x
+            ic[3][1] - Initial velocity of mass 1 in y
+            ic[3][2] - Initial velocity of mass 1 in z
+            ic[4][0] - Initial velocity of mass 2 in x
+            ic[4][1] - Initial velocity of mass 2 in y
+            ic[4][2] - Initial velocity of mass 2 in z
+            ic[5][0] - Initial velocity of mass 3 in x
+            ic[5][1] - Initial velocity of mass 3 in y
+            ic[5][2] - Initial velocity of mass 3 in z
+        t0 - Initial time of system
+        tn - Final time of system
+        i - Index used for accessing elements in the lists returned from the RK4 solver
+        j - Index used for accessing elements in the lists returned from the RK4 solver
+            0 - Corresponds to x direction
+            1 - Corresponds to y direction
+            2 - Corresponds to z direction
+        m1Name - Name of mass 1
+        m2Name - Name of mass 2
+        m3Name - Name of mass 3
+    Algorithm:
+        * Call the RK4 solver
+        * Calculate the max and min positions
+        * Determine the place holders for the directions
+        * Set the max and min for the axii
+        * Format the scales of the axii
+        * Set up the animation parameters
+        * Define the init function
+        * Define the animation function
+        * Call the animation
+        * Set the title and labels
+    Output:
+        This function does not return a value
+"""
 def CoupledThreeBody2DAnimPos(massList, ic, t0, tn, i, j, m1Name, m2Name, m3Name):
     # Solver
     mass1Pos, mass2Pos, mass3Pos, mass1Vel, mass2Vel, mass3Vel, time = CoupledThreeBodySolver(massList, ic, t0, tn)
@@ -1040,47 +1078,48 @@ def CoupledThreeBody2DAnimPos(massList, ic, t0, tn, i, j, m1Name, m2Name, m3Name
 ##### Three Body 2D Velocity
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 
-# CoupledThreeBody2DPlotVel - Plots the velocity vs. time of three bodies in space in 2D
-# Input:
-#   massList - Array of masses in system
-#   ic - Matrix of initial conditions for masses in system:
-#       ic[0][0] - Initial x position of mass 1
-#       ic[0][1] - Initial y position of mass 1
-#       ic[0][2] - Initial z position of mass 1
-#       ic[1][0] - Initial x position of mass 2
-#       ic[1][1] - Initial y position of mass 2
-#       ic[1][2] - Initial z position of mass 2
-#       ic[2][0] - Initial x position of mass 3
-#       ic[2][1] - Initial y position of mass 3
-#       ic[2][2] - Initial z position of mass 3
-#       ic[3][0] - Initial velocity of mass 1 in x
-#       ic[3][1] - Initial velocity of mass 1 in y
-#       ic[3][2] - Initial velocity of mass 1 in z
-#       ic[4][0] - Initial velocity of mass 2 in x
-#       ic[4][1] - Initial velocity of mass 2 in y
-#       ic[4][2] - Initial velocity of mass 2 in z
-#       ic[5][0] - Initial velocity of mass 3 in x
-#       ic[5][1] - Initial velocity of mass 3 in y
-#       ic[5][2] - Initial velocity of mass 3 in z
-#   t0 - Initial time in the system
-#   tn - Final time in the system
-#   i - Index used for accessing elements in the lists returned from the RK4 solver
-#       0 - Corresponds to x velocity
-#       1 - Corresponds to y velocity
-#       2 - Corresponds to z velocity
-#   m1Name - Name of mass 1
-#   m2Name - Name of mass 2
-#   m3Name - Name of mass 3
-# Algorithm:
-#   * Call the RK4 solver
-#   * Calculate the max and min velocities
-#   * Determine the place holders for the directions
-#   * Set the max and mins for axii
-#   * Format the scales of the axii
-#   * Plot the data
-#   * Place titles and labels on plot
-# Output:
-#   This function does not return a value
+""" CoupledThreeBody2DPlotVel - Plots the velocity vs. time of three bodies in space in 2D
+    Input:
+        massList - Array of masses in system
+        ic - Matrix of initial conditions for masses in system:
+            ic[0][0] - Initial x position of mass 1
+            ic[0][1] - Initial y position of mass 1
+            ic[0][2] - Initial z position of mass 1
+            ic[1][0] - Initial x position of mass 2
+            ic[1][1] - Initial y position of mass 2
+            ic[1][2] - Initial z position of mass 2
+            ic[2][0] - Initial x position of mass 3
+            ic[2][1] - Initial y position of mass 3
+            ic[2][2] - Initial z position of mass 3
+            ic[3][0] - Initial velocity of mass 1 in x
+            ic[3][1] - Initial velocity of mass 1 in y
+            ic[3][2] - Initial velocity of mass 1 in z
+            ic[4][0] - Initial velocity of mass 2 in x
+            ic[4][1] - Initial velocity of mass 2 in y
+            ic[4][2] - Initial velocity of mass 2 in z
+            ic[5][0] - Initial velocity of mass 3 in x
+            ic[5][1] - Initial velocity of mass 3 in y
+            ic[5][2] - Initial velocity of mass 3 in z
+        t0 - Initial time in the system
+        tn - Final time in the system
+        i - Index used for accessing elements in the lists returned from the RK4 solver
+            0 - Corresponds to x velocity
+            1 - Corresponds to y velocity
+            2 - Corresponds to z velocity
+        m1Name - Name of mass 1
+        m2Name - Name of mass 2
+        m3Name - Name of mass 3
+    Algorithm:
+        * Call the RK4 solver
+        * Calculate the max and min velocities
+        * Determine the place holders for the directions
+        * Set the max and mins for axii
+        * Format the scales of the axii
+        * Plot the data
+        * Place titles and labels on plot
+    Output:
+        This function does not return a value
+"""
 def CoupledThreeBody2DPlotVel(massList, ic, t0, tn, i, m1Name, m2Name, m3Name):
     # Solver
     mass1Pos, mass2Pos, mass3Pos, mass1Vel, mass2Vel, mass3Vel, time = CoupledThreeBodySolver(massList, ic, t0, tn)
@@ -1118,50 +1157,51 @@ def CoupledThreeBody2DPlotVel(massList, ic, t0, tn, i, m1Name, m2Name, m3Name):
     plt.legend()
     plt.show()
 
-# CoupledThreeBody2DAnimVel - Plots the velocities of three bodies in space as an animation
-# Input:
-#   massList - Array of masses in system
-#   ic - Matrix of initial conditions for masses in system:
-#       ic[0][0] - Initial x position of mass 1
-#       ic[0][1] - Initial y position of mass 1
-#       ic[0][2] - Initial z position of mass 1
-#       ic[1][0] - Initial x position of mass 2
-#       ic[1][1] - Initial y position of mass 2
-#       ic[1][2] - Initial z position of mass 2
-#       ic[2][0] - Initial x position of mass 3
-#       ic[2][1] - Initial y position of mass 3
-#       ic[2][2] - Initial z position of mass 3
-#       ic[3][0] - Initial velocity of mass 1 in x
-#       ic[3][1] - Initial velocity of mass 1 in y
-#       ic[3][2] - Initial velocity of mass 1 in z
-#       ic[4][0] - Initial velocity of mass 2 in x
-#       ic[4][1] - Initial velocity of mass 2 in y
-#       ic[4][2] - Initial velocity of mass 2 in z
-#       ic[5][0] - Initial velocity of mass 3 in x
-#       ic[5][1] - Initial velocity of mass 3 in y
-#       ic[5][2] - Initial velocity of mass 3 in z
-#   t0 - Initial time of system
-#   tn - Final time of system
-#   i - Index used for accessing elements in the lists returned from the RK4 solver
-#       0 - Corresponds to x velocity
-#       1 - Corresponds to y velocity
-#       2 - Corresponds to z velocity
-#   m1Name - Name of mass 1
-#   m2Name - Name of mass 2
-#   m3Name - Name of mass 3
-# Algorithm:
-#   * Call the RK4 solver
-#   * Calculate the max and min positions
-#   * Determine the place holders for the directions
-#   * Set the max and min for the axii
-#   * Format the scales of the axii
-#   * Set up the animation parameters
-#   * Define the init function
-#   * Define the animation function
-#   * Call the animation
-#   * Set the title and labels
-# Output:
-#   This function does not return a value
+""" CoupledThreeBody2DAnimVel - Plots the velocities of three bodies in space as an animation
+    Input:
+        massList - Array of masses in system
+        ic - Matrix of initial conditions for masses in system:
+            ic[0][0] - Initial x position of mass 1
+            ic[0][1] - Initial y position of mass 1
+            ic[0][2] - Initial z position of mass 1
+            ic[1][0] - Initial x position of mass 2
+            ic[1][1] - Initial y position of mass 2
+            ic[1][2] - Initial z position of mass 2
+            ic[2][0] - Initial x position of mass 3
+            ic[2][1] - Initial y position of mass 3
+            ic[2][2] - Initial z position of mass 3
+            ic[3][0] - Initial velocity of mass 1 in x
+            ic[3][1] - Initial velocity of mass 1 in y
+            ic[3][2] - Initial velocity of mass 1 in z
+            ic[4][0] - Initial velocity of mass 2 in x
+            ic[4][1] - Initial velocity of mass 2 in y
+            ic[4][2] - Initial velocity of mass 2 in z
+            ic[5][0] - Initial velocity of mass 3 in x
+            ic[5][1] - Initial velocity of mass 3 in y
+            ic[5][2] - Initial velocity of mass 3 in z
+        t0 - Initial time of system
+        tn - Final time of system
+        i - Index used for accessing elements in the lists returned from the RK4 solver
+            0 - Corresponds to x velocity
+            1 - Corresponds to y velocity
+            2 - Corresponds to z velocity
+        m1Name - Name of mass 1
+        m2Name - Name of mass 2
+        m3Name - Name of mass 3
+    Algorithm:
+        * Call the RK4 solver
+        * Calculate the max and min positions
+        * Determine the place holders for the directions
+        * Set the max and min for the axii
+        * Format the scales of the axii
+        * Set up the animation parameters
+        * Define the init function
+        * Define the animation function
+        * Call the animation
+        * Set the title and labels
+    Output:
+        This function does not return a value
+"""
 def CoupledThreeBody2DAnimVel(massList, ic, t0, tn, i, m1Name, m2Name, m3Name):
     # Solver
     mass1Pos, mass2Pos, mass3Pos, mass1Vel, mass2Vel, mass3Vel, time = CoupledThreeBodySolver(massList, ic, t0, tn)
@@ -1226,43 +1266,44 @@ def CoupledThreeBody2DAnimVel(massList, ic, t0, tn, i, m1Name, m2Name, m3Name):
 ##### Three Body 3D Position
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 
-# CoupledThreeBody3DPlotPos - Plots the positions of three bodies in space
-# Input:
-#   massList - Array of masses in system
-#   ic - Matrix of initial conditions for masses in system:
-#       ic[0][0] - Initial x position of mass 1
-#       ic[0][1] - Initial y position of mass 1
-#       ic[0][2] - Initial z position of mass 1
-#       ic[1][0] - Initial x position of mass 2
-#       ic[1][1] - Initial y position of mass 2
-#       ic[1][2] - Initial z position of mass 2
-#       ic[2][0] - Initial x position of mass 3
-#       ic[2][1] - Initial y position of mass 3
-#       ic[2][2] - Initial z position of mass 3
-#       ic[3][0] - Initial velocity of mass 1 in x
-#       ic[3][1] - Initial velocity of mass 1 in y
-#       ic[3][2] - Initial velocity of mass 1 in z
-#       ic[4][0] - Initial velocity of mass 2 in x
-#       ic[4][1] - Initial velocity of mass 2 in y
-#       ic[4][2] - Initial velocity of mass 2 in z
-#       ic[5][0] - Initial velocity of mass 3 in x
-#       ic[5][1] - Initial velocity of mass 3 in y
-#       ic[5][2] - Initial velocity of mass 3 in z
-#   t0 - Initial time of system
-#   tn - Final time of system
-#   m1Name - Name of mass 1
-#   m2Name - Name of mass 2
-#   m3Name - Name of mass 3
-# Algorithm:
-#   * Call the RK4 solver
-#   * Calculate the max and min distances
-#   * Determine the place holders for the directions
-#   * Set the max and mins for axii
-#   * Format the scales of the axii
-#   * Plot the data
-#   * Place titles and labels on plot
-# Output:
-#   This function does not return a value
+""" CoupledThreeBody3DPlotPos - Plots the positions of three bodies in space
+    Input:
+        massList - Array of masses in system
+        ic - Matrix of initial conditions for masses in system:
+            ic[0][0] - Initial x position of mass 1
+            ic[0][1] - Initial y position of mass 1
+            ic[0][2] - Initial z position of mass 1
+            ic[1][0] - Initial x position of mass 2
+            ic[1][1] - Initial y position of mass 2
+            ic[1][2] - Initial z position of mass 2
+            ic[2][0] - Initial x position of mass 3
+            ic[2][1] - Initial y position of mass 3
+            ic[2][2] - Initial z position of mass 3
+            ic[3][0] - Initial velocity of mass 1 in x
+            ic[3][1] - Initial velocity of mass 1 in y
+            ic[3][2] - Initial velocity of mass 1 in z
+            ic[4][0] - Initial velocity of mass 2 in x
+            ic[4][1] - Initial velocity of mass 2 in y
+            ic[4][2] - Initial velocity of mass 2 in z
+            ic[5][0] - Initial velocity of mass 3 in x
+            ic[5][1] - Initial velocity of mass 3 in y
+            ic[5][2] - Initial velocity of mass 3 in z
+        t0 - Initial time of system
+        tn - Final time of system
+        m1Name - Name of mass 1
+        m2Name - Name of mass 2
+        m3Name - Name of mass 3
+    Algorithm:
+        * Call the RK4 solver
+        * Calculate the max and min distances
+        * Determine the place holders for the directions
+        * Set the max and mins for axii
+        * Format the scales of the axii
+        * Plot the data
+        * Place titles and labels on plot
+    Output:
+        This function does not return a value
+"""
 def CoupledThreeBody3DPlotPos(massList, ic, t0, tn, m1Name, m2Name, m3name):
     # Solver
     mass1Pos, mass2Pos, mass3Pos, mass1Vel, mass2Vel, mass3Vel, time = CoupledThreeBodySolver(massList, ic, t0, tn)
@@ -1296,46 +1337,47 @@ def CoupledThreeBody3DPlotPos(massList, ic, t0, tn, m1Name, m2Name, m3name):
     ax.grid(False)
     plt.show()
 
-# CoupledThreeBody3DAnimPos - Plots the positions of three bodies in space in 3D as an animation
-# Input:
-#   massList - Array of masses in the system
-#   ic - Matrix of initial conditions for masses in system:
-#       ic[0][0] - Initial x position of mass 1
-#       ic[0][1] - Initial y position of mass 1
-#       ic[0][2] - Initial z position of mass 1
-#       ic[1][0] - Initial x position of mass 2
-#       ic[1][1] - Initial y position of mass 2
-#       ic[1][2] - Initial z position of mass 2
-#       ic[2][0] - Initial x position of mass 3
-#       ic[2][1] - Initial y position of mass 3
-#       ic[2][2] - Initial z position of mass 3
-#       ic[3][0] - Initial velocity of mass 1 in x
-#       ic[3][1] - Initial velocity of mass 1 in y
-#       ic[3][2] - Initial velocity of mass 1 in z
-#       ic[4][0] - Initial velocity of mass 2 in x
-#       ic[4][1] - Initial velocity of mass 2 in y
-#       ic[4][2] - Initial velocity of mass 2 in z
-#       ic[5][0] - Initial velocity of mass 3 in x
-#       ic[5][1] - Initial velocity of mass 3 in y
-#       ic[5][2] - Initial velocity of mass 3 in z
-#   t0 - Initial time in system
-#   tn - Final time in system
-#   m1Name - Name of mass 1
-#   m2Name - Name of mass 2
-#   m3Name - Name of mass 3
-# Algorithm:
-#   * Call the RK4 solver
-#   * Calculate the max and min positions
-#   * Determine the place holders for the directions
-#   * Set the max and min for the axii
-#   * Format the scales of the axii
-#   * Set up the animation parameters
-#   * Define the init function
-#   * Define the animation function
-#   * Call the animation
-#   * Set the title and labels
-# Output:
-#   This function does not return a value
+""" CoupledThreeBody3DAnimPos - Plots the positions of three bodies in space in 3D as an animation
+    Input:
+        massList - Array of masses in the system
+        ic - Matrix of initial conditions for masses in system:
+            ic[0][0] - Initial x position of mass 1
+            ic[0][1] - Initial y position of mass 1
+            ic[0][2] - Initial z position of mass 1
+            ic[1][0] - Initial x position of mass 2
+            ic[1][1] - Initial y position of mass 2
+            ic[1][2] - Initial z position of mass 2
+            ic[2][0] - Initial x position of mass 3
+            ic[2][1] - Initial y position of mass 3
+            ic[2][2] - Initial z position of mass 3
+            ic[3][0] - Initial velocity of mass 1 in x
+            ic[3][1] - Initial velocity of mass 1 in y
+            ic[3][2] - Initial velocity of mass 1 in z
+            ic[4][0] - Initial velocity of mass 2 in x
+            ic[4][1] - Initial velocity of mass 2 in y
+            ic[4][2] - Initial velocity of mass 2 in z
+            ic[5][0] - Initial velocity of mass 3 in x
+            ic[5][1] - Initial velocity of mass 3 in y
+            ic[5][2] - Initial velocity of mass 3 in z
+        t0 - Initial time in system
+        tn - Final time in system
+        m1Name - Name of mass 1
+        m2Name - Name of mass 2
+        m3Name - Name of mass 3
+    Algorithm:
+        * Call the RK4 solver
+        * Calculate the max and min positions
+        * Determine the place holders for the directions
+        * Set the max and min for the axii
+        * Format the scales of the axii
+        * Set up the animation parameters
+        * Define the init function
+        * Define the animation function
+        * Call the animation
+        * Set the title and labels
+    Output:
+        This function does not return a value
+"""
 def CoupledThreeBody3DAnimPos(massList, ic, t0, tn, m1Name, m2Name, m3Name):
     # Solver
     mass1Pos, mass2Pos, mass3Pos, mass1Vel, mass2Vel, mass3Vel, time = CoupledThreeBodySolver(massList, ic, t0, tn)
@@ -1404,48 +1446,49 @@ def CoupledThreeBody3DAnimPos(massList, ic, t0, tn, m1Name, m2Name, m3Name):
 ##### Three Body 3D Velocity
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 
-# CoupledThreeBody3DPlotVel - Plots the velocities of three bodies in space in 3D
-# Input:
-#   massList - Array of masses in the system
-#   ic - Matrix of initial conditions for masses in system:
-#       ic[0][0] - Initial x position of mass 1
-#       ic[0][1] - Initial y position of mass 1
-#       ic[0][2] - Initial z position of mass 1
-#       ic[1][0] - Initial x position of mass 2
-#       ic[1][1] - Initial y position of mass 2
-#       ic[1][2] - Initial z position of mass 2
-#       ic[2][0] - Initial x position of mass 3
-#       ic[2][1] - Initial y position of mass 3
-#       ic[2][2] - Initial z position of mass 3
-#       ic[3][0] - Initial velocity of mass 1 in x
-#       ic[3][1] - Initial velocity of mass 1 in y
-#       ic[3][2] - Initial velocity of mass 1 in z
-#       ic[4][0] - Initial velocity of mass 2 in x
-#       ic[4][1] - Initial velocity of mass 2 in y
-#       ic[4][2] - Initial velocity of mass 2 in z
-#       ic[5][0] - Initial velocity of mass 3 in x
-#       ic[5][1] - Initial velocity of mass 3 in y
-#       ic[5][2] - Initial velocity of mass 3 in z
-#   t0 - Initial time in system
-#   tn - Final time in system
-#   i - Index used for accessing elements in the lists returned from the RK4 solver
-#   j - Index used for accessing elements in the lists returned from the RK4 solver
-#       0 - Corresponds to x velocity
-#       1 - Corresponds to y velocity
-#       2 - Corresponds to z velocity
-#   m1Name - Name of mass 1
-#   m2Name - Name of mass 2
-#   m3Name - Name of mass 3
-# Algorithm:
-#   * Call the RK4 solver
-#   * Calculate the max and min velocities
-#   * Determine the place holders for the directions
-#   * Set the max and mins for axii
-#   * Format the scales of the axii
-#   * Plot the data
-#   * Place titles and labels on plot
-# Output:
-#   This function does not return a value, it plots the positions of three bodies in space
+""" CoupledThreeBody3DPlotVel - Plots the velocities of three bodies in space in 3D
+    Input:
+        massList - Array of masses in the system
+        ic - Matrix of initial conditions for masses in system:
+            ic[0][0] - Initial x position of mass 1
+            ic[0][1] - Initial y position of mass 1
+            ic[0][2] - Initial z position of mass 1
+            ic[1][0] - Initial x position of mass 2
+            ic[1][1] - Initial y position of mass 2
+            ic[1][2] - Initial z position of mass 2
+            ic[2][0] - Initial x position of mass 3
+            ic[2][1] - Initial y position of mass 3
+            ic[2][2] - Initial z position of mass 3
+            ic[3][0] - Initial velocity of mass 1 in x
+            ic[3][1] - Initial velocity of mass 1 in y
+            ic[3][2] - Initial velocity of mass 1 in z
+            ic[4][0] - Initial velocity of mass 2 in x
+            ic[4][1] - Initial velocity of mass 2 in y
+            ic[4][2] - Initial velocity of mass 2 in z
+            ic[5][0] - Initial velocity of mass 3 in x
+            ic[5][1] - Initial velocity of mass 3 in y
+            ic[5][2] - Initial velocity of mass 3 in z
+        t0 - Initial time in system
+        tn - Final time in system
+        i - Index used for accessing elements in the lists returned from the RK4 solver
+        j - Index used for accessing elements in the lists returned from the RK4 solver
+            0 - Corresponds to x velocity
+            1 - Corresponds to y velocity
+            2 - Corresponds to z velocity
+        m1Name - Name of mass 1
+        m2Name - Name of mass 2
+        m3Name - Name of mass 3
+    Algorithm:
+        * Call the RK4 solver
+        * Calculate the max and min velocities
+        * Determine the place holders for the directions
+        * Set the max and mins for axii
+        * Format the scales of the axii
+        * Plot the data
+        * Place titles and labels on plot
+    Output:
+        This function does not return a value, it plots the positions of three bodies in space
+"""
 def CoupledThreeBody3DPlotVel(massList, ic, t0, tn, i, j, m1Name, m2Name, m3Name):
     # Solver
     mass1Pos, mass2Pos, mass3Pos, mass1Vel, mass2Vel, mass3Vel, time = CoupledThreeBodySolver(massList, ic, t0, tn)
@@ -1497,51 +1540,52 @@ def CoupledThreeBody3DPlotVel(massList, ic, t0, tn, i, j, m1Name, m2Name, m3Name
     ax.grid(False)
     plt.show()
 
-# CoupledThreeBody3DAnimVel - Plots the velocity vs time of three bodies in space as an animation in 3D
-# Input:
-#   massList - Array of masses in system
-#   ic - Matrix of initial conditions for masses in system:
-#       ic[0][0] - Initial x position of mass 1
-#       ic[0][1] - Initial y position of mass 1
-#       ic[0][2] - Initial z position of mass 1
-#       ic[1][0] - Initial x position of mass 2
-#       ic[1][1] - Initial y position of mass 2
-#       ic[1][2] - Initial z position of mass 2
-#       ic[2][0] - Initial x position of mass 3
-#       ic[2][1] - Initial y position of mass 3
-#       ic[2][2] - Initial z position of mass 3
-#       ic[3][0] - Initial velocity of mass 1 in x
-#       ic[3][1] - Initial velocity of mass 1 in y
-#       ic[3][2] - Initial velocity of mass 1 in z
-#       ic[4][0] - Initial velocity of mass 2 in x
-#       ic[4][1] - Initial velocity of mass 2 in y
-#       ic[4][2] - Initial velocity of mass 2 in z
-#       ic[5][0] - Initial velocity of mass 3 in x
-#       ic[5][1] - Initial velocity of mass 3 in y
-#       ic[5][2] - Initial velocity of mass 3 in z
-#   t0 - Initial time in system
-#   tn - Final time in system
-#   i - Index used for accessing elements in the lists returned from the RK4 solver
-#   j - Index used for accessing elements in the lists returned from the RK4 solver
-#       0 - Corresponds to x velocity
-#       1 - Corresponds to y velocity
-#       2 - Corresponds to z velocity
-#   m1Name - Name of mass 1
-#   m2Name - Name of mass 2
-#   m3Name - Name of mass 3
-# Algorithm:
-#   * Call the RK4 solver
-#   * Calculate the max and min velocities
-#   * Determine the place holders for the directions
-#   * Set the max and min for the axii
-#   * Format the scales of the axii
-#   * Set up the animation parameters
-#   * Define the init function
-#   * Define the animation function
-#   * Call the animation
-#   * Set the title and labels
-# Output:
-#   This function does not return a value
+""" CoupledThreeBody3DAnimVel - Plots the velocity vs time of three bodies in space as an animation in 3D
+    Input:
+        massList - Array of masses in system
+        ic - Matrix of initial conditions for masses in system:
+            ic[0][0] - Initial x position of mass 1
+            ic[0][1] - Initial y position of mass 1
+            ic[0][2] - Initial z position of mass 1
+            ic[1][0] - Initial x position of mass 2
+            ic[1][1] - Initial y position of mass 2
+            ic[1][2] - Initial z position of mass 2
+            ic[2][0] - Initial x position of mass 3
+            ic[2][1] - Initial y position of mass 3
+            ic[2][2] - Initial z position of mass 3
+            ic[3][0] - Initial velocity of mass 1 in x
+            ic[3][1] - Initial velocity of mass 1 in y
+            ic[3][2] - Initial velocity of mass 1 in z
+            ic[4][0] - Initial velocity of mass 2 in x
+            ic[4][1] - Initial velocity of mass 2 in y
+            ic[4][2] - Initial velocity of mass 2 in z
+            ic[5][0] - Initial velocity of mass 3 in x
+            ic[5][1] - Initial velocity of mass 3 in y
+            ic[5][2] - Initial velocity of mass 3 in z
+        t0 - Initial time in system
+        tn - Final time in system
+        i - Index used for accessing elements in the lists returned from the RK4 solver
+        j - Index used for accessing elements in the lists returned from the RK4 solver
+            0 - Corresponds to x velocity
+            1 - Corresponds to y velocity
+            2 - Corresponds to z velocity
+        m1Name - Name of mass 1
+        m2Name - Name of mass 2
+        m3Name - Name of mass 3
+    Algorithm:
+        * Call the RK4 solver
+        * Calculate the max and min velocities
+        * Determine the place holders for the directions
+        * Set the max and min for the axii
+        * Format the scales of the axii
+        * Set up the animation parameters
+        * Define the init function
+        * Define the animation function
+        * Call the animation
+        * Set the title and labels
+    Output:
+        This function does not return a value
+"""
 def CoupledThreeBody3DAnimVel(massList, ic, t0, tn, i, j, m1Name, m2Name, m3Name):
     # Solver
     mass1Pos, mass2Pos, mass3Pos, mass1Vel, mass2Vel, mass3Vel, time = CoupledThreeBodySolver(massList, ic, t0, tn)
