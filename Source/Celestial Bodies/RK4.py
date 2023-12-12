@@ -1,27 +1,28 @@
 # Imports
 from Modules import *
 
-# RK41st - Runge Kutta 4 ODE Solver (Of the form da / db) 
-# Input:
-#   ODE - Ordinary Differential Equation that is being solved
-#   a0 - Original position
-#   b0 - Original time
-#   bn - Final time
-#   h - Step
-# Algorithm:
-#   * Calculate the number of points n
-#   * Initialize the a values to zero with n + 1 entries
-#   * Set the initial value of a to be a0
-#   * Generate a list for b values from b0 to bn with n + 1 entries
-#   * Iterate over the total number of entries n
-#       * Update a to be the current value of a in avalues
-#       * Update b to be the current value of b in bvalues
-#       * Calculate k1, k2, k3, k4 from the definition of RK4
-#       * Update the next entry of avalues with the definition of RK4
-#   * Return the lists bvalues and avalues
-# Output:
-#   avalues - List of a values that were found from RK4 method
-#   bvalues - List of b values that were found from RK4 method
+""" RK41st - Runge Kutta 4 ODE Solver (Of the form da / db) 
+    Input:
+        ODE - Ordinary Differential Equation that is being solved
+        a0 - Original position
+        b0 - Original time
+        bn - Final time
+        h - Step
+    Algorithm:
+        * Calculate the number of points n
+        * Initialize the a values to zero with n + 1 entries
+        * Set the initial value of a to be a0
+        * Generate a list for b values from b0 to bn with n + 1 entries
+        * Iterate over the total number of entries n
+            * Update a to be the current value of a in avalues
+            * Update b to be the current value of b in bvalues
+            * Calculate k1, k2, k3, k4 from the definition of RK4
+            * Update the next entry of avalues with the definition of RK4
+        * Return the lists bvalues and avalues
+    Output:
+        avalues - List of a values that were found from RK4 method
+        bvalues - List of b values that were found from RK4 method
+"""
 def RK41st(ODE, a0, b0, bn, h):
     # Number of points
     n = int((bn - b0) / h)
@@ -45,29 +46,30 @@ def RK41st(ODE, a0, b0, bn, h):
         avalues[i + 1] = a + (1/6) * (k1 + 2 * k2 + 2 * k3 + k4)
     return avalues, bvalues
 
-# RK42nd - Runge Kutta 4 ODE Solver For A Second Order ODE (Of the form d^2a / dc^2)
-# Input:
-#   ODE - Function that represents a second order ODE
-#       * Particularly, this function must return da_dc, db_dc
-#   a0 - Initial value for a
-#   b0 - Initial value for b
-#   c0 - Initial value for c
-#   cn - Final value for c
-#   h - Step Size
-# Algorithm:
-#   * Calculate the number of points n
-#   * Create lists for a, b, and c values
-#   * Initialize the values for a and b in their lists
-#   * Iterate over the total number of points n
-#       * Assign the values for a, b, and c with the current list value
-#       * Calculate the values for k1a, k2a, k3a, and k4a
-#       * Calculate the values for k1b, k2b, k3b, and k4b
-#       * Assign the next values for a and b in their lists
-#   * Return the lists
-# Output:
-#   avalues - List of a values that were found from RK4 method
-#   bvalues - List of b values that were found from RK4 method
-#   cvalues - List of c values that were found from RK4 method
+""" RK42nd - Runge Kutta 4 ODE Solver For A Second Order ODE (Of the form d^2a / dc^2)
+    Input:
+        ODE - Function that represents a second order ODE
+            * Particularly, this function must return da_dc, db_dc
+        a0 - Initial value for a
+        b0 - Initial value for b
+        c0 - Initial value for c
+        cn - Final value for c
+        h - Step Size
+    Algorithm:
+        * Calculate the number of points n
+        * Create lists for a, b, and c values
+        * Initialize the values for a and b in their lists
+        * Iterate over the total number of points n
+            * Assign the values for a, b, and c with the current list value
+            * Calculate the values for k1a, k2a, k3a, and k4a
+            * Calculate the values for k1b, k2b, k3b, and k4b
+            * Assign the next values for a and b in their lists
+        * Return the lists
+    Output:
+        avalues - List of a values that were found from RK4 method
+        bvalues - List of b values that were found from RK4 method
+        cvalues - List of c values that were found from RK4 method
+"""
 def RK42nd(ODE, a0, b0, c0, cn, h):
     # Number of points
     n = int((cn - c0) / h)
@@ -152,32 +154,33 @@ def RK4ProjectileMotion(ODE, obj, ic, t0, tn, h):
         (posvals[i + 1], velovals[i + 1]) = next_state
     return posvals, velovals, timevals
     
-# RK4TwoBody - RK4 Method That Solves The Force Attraction Between Two Bodies In Space
-# Input:
-#   ODE - Differential equation that represents the model that is to be solved
-#   massList - Array of masses in model
-#   ic - Initial conditions of bodies
-#   t0 - Initial time in model
-#   tn - Final time in model
-#   h - Step size
-# Algorithm:
-#   * Calculate the number of points in solution
-#   * Create empty lists for the parameters of each mass
-#   * Create empty list for the time in the model
-#   * Initialize lists to their initial conditions
-#   * Iterate over the total number of points
-#       * Generate the state of the current parameters
-#       * Update the time to the current time in the step
-#       * Update the state with the RK4 method
-#       * Generate the next state of the system
-#       * Update the next state of the system
-#   * Return the lists
-# Output:
-#   mass1Pos - List of mass 1 positions with respect to time
-#   mass2Pos - List of mass 2 positions with respect to time
-#   mass1Vel - List of mass 1 velocities with respect to time
-#   mass2Vel - List of mass 2 velocities with respect to time
-#   timevals - List of times at current steps in model
+""" RK4TwoBody - RK4 Method That Solves The Force Attraction Between Two Bodies In Space
+    Input:
+        ODE - Differential equation that represents the model that is to be solved
+        massList - Array of masses in model
+        ic - Initial conditions of bodies
+        t0 - Initial time in model
+        tn - Final time in model
+        h - Step size
+    Algorithm:
+        * Calculate the number of points in solution
+        * Create empty lists for the parameters of each mass
+        * Create empty list for the time in the model
+        * Initialize lists to their initial conditions
+        * Iterate over the total number of points
+            * Generate the state of the current parameters
+            * Update the time to the current time in the step
+            * Update the state with the RK4 method
+            * Generate the next state of the system
+            * Update the next state of the system
+        * Return the lists
+    Output:
+        mass1Pos - List of mass 1 positions with respect to time
+        mass2Pos - List of mass 2 positions with respect to time
+        mass1Vel - List of mass 1 velocities with respect to time
+        mass2Vel - List of mass 2 velocities with respect to time
+        timevals - List of times at current steps in model
+"""
 def RK4TwoBody(ODE, massList, ic, t0, tn, h):
     # Number of points
     n = int((tn - t0) / h)
@@ -243,34 +246,35 @@ def RK4TwoBody(ODE, massList, ic, t0, tn, h):
     mass2Vel = [m2vxvals, m2vyvals, m2vzvals]
     return mass1Pos, mass2Pos, mass1Vel, mass2Vel, timevals
 
-# RK4ThreeBody - RK4 Method That Solves The Force Attraction Between Three Bodies In Space
-# Input:
-#   ODE - Differential equation that represents the model that is to be solved
-#   massList - Array of masses in model
-#   ic - Initial conditions of bodies
-#   t0 - Initial time in model
-#   tn - Final time in model
-#   h - Step size
-# Algorithm:
-#   * Calculate the number of points in solution
-#   * Create empty lists for the parameters of each mass
-#   * Create empty list for the time in the model
-#   * Initialize lists to their initial conditions
-#   * Iterate over the total number of points
-#       * Generate the state of the current parameters
-#       * Update the time to the current time in the step
-#       * Update the state with the RK4 method
-#       * Generate the next state of the system
-#       * Update the next state of the system
-#   * Return the lists
-# Output:
-#   mass1Pos - List of mass 1 positions with respect to time
-#   mass2Pos - List of mass 2 positions with respect to time
-#   mass3Pos - List of mass 3 positions with respect to time
-#   mass1Vel - List of mass 1 velocities with respect to time
-#   mass2Vel - List of mass 2 velocities with respect to time
-#   mass3Vel - List of mass 3 velocities with respect to time
-#   timevals - List of times at current steps in model
+""" RK4ThreeBody - RK4 Method That Solves The Force Attraction Between Three Bodies In Space
+    Input:
+        ODE - Differential equation that represents the model that is to be solved
+        massList - Array of masses in model
+        ic - Initial conditions of bodies
+        t0 - Initial time in model
+        tn - Final time in model
+        h - Step size
+    Algorithm:
+        * Calculate the number of points in solution
+        * Create empty lists for the parameters of each mass
+        * Create empty list for the time in the model
+        * Initialize lists to their initial conditions
+        * Iterate over the total number of points
+            * Generate the state of the current parameters
+            * Update the time to the current time in the step
+            * Update the state with the RK4 method
+            * Generate the next state of the system
+            * Update the next state of the system
+        * Return the lists
+    Output:
+        mass1Pos - List of mass 1 positions with respect to time
+        mass2Pos - List of mass 2 positions with respect to time
+        mass3Pos - List of mass 3 positions with respect to time
+        mass1Vel - List of mass 1 velocities with respect to time
+        mass2Vel - List of mass 2 velocities with respect to time
+        mass3Vel - List of mass 3 velocities with respect to time
+        timevals - List of times at current steps in model
+"""
 def RK4ThreeBody(ODE, massList, ic, t0, tn, h):
     # Number of points
     n = int((tn - t0) / h)
