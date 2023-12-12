@@ -97,6 +97,61 @@ def RK42nd(ODE, a0, b0, c0, cn, h):
         bvalues[i + 1] = b + (1/6) * (k1b + 2 * k2b + 2 * k3b + k4b)
     return avalues, bvalues, cvalues
 
+""" RK4ProjectileMotion - Runge Kutta 4 Solver For Projectile Motion
+    Input:
+        ODE - Differential equation that is being used in solver
+        obj - Object where the projectile motion is occurring
+        ic - Initial conditions of projectile that is under projectile motion
+            ic[0] - Initial position of projectile above objects surface
+            ic[1] - Initial velocity of projectile in the vertical direction
+        t0 - Initial time of solution
+        tn - Final time of solution
+        h - Step size of model
+    Algorithm:
+        * Calculate the number of points in solution
+        * Create lists for position, velocity, and time
+        * Initialize values for position and velocity
+        * Iterate through the total number of points n
+            * Retrieve the current stat of the system
+            * Calculate the values for k1, k2, k3, and k4 respectively
+            * Calculate the next state of the system
+            * Update the current state of the system
+        * Return the lists
+    Output:
+        posvals - List of position values of projectile
+        velovals - List of velocity values of projectile
+        timevals - List of time values of model
+"""
+def RK4ProjectileMotion(ODE, obj, ic, t0, tn, h):
+    # Number of points
+    n = int((tn - t0) / h)
+    # List for position values
+    posvals = np.zeros(n + 1)
+    # List for velocity values
+    velovals = np.zeros(n + 1)
+    # Initialize position
+    posvals[0] = ic[0]
+    # Initialize velocity
+    velovals[0] = ic[1]
+    # Initialize time list
+    timevals = np.linspace(t0, tn, n + 1)
+    # Iterate over points
+    for i in range(n):
+        # Current state of values
+        state = (posvals[i], velovals[i])
+        # Current time of state
+        t = timevals[i]
+        # RK4 update
+        k1 = np.array(ODE(t, obj, *state))
+        k2 = np.array(ODE(t + 0.5 * h, obj, *(np.add(state, 0.5 * h * k1))))
+        k3 = np.array(ODE(t + 0.5 * h, obj, *(np.add(state, 0.5 * h * k2))))
+        k4 = np.array(ODE(t + h, obj, *(np.add(state, h * k3))))
+        # Next state of system
+        next_state = np.add(state, (h / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4))
+        # Update next state of system
+        (posvals[i + 1], velovals[i + 1]) = next_state
+    return posvals, velovals, timevals
+    
 # RK4TwoBody - RK4 Method That Solves The Force Attraction Between Two Bodies In Space
 # Input:
 #   ODE - Differential equation that represents the model that is to be solved
@@ -176,7 +231,7 @@ def RK4TwoBody(ODE, massList, ic, t0, tn, h):
         k4 = np.array(ODE(t + h, massList, *(np.add(state, h * k3))))
         # Next state of system
         next_state = np.add(state, (h / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4))
-        # Update next stat of system
+        # Update next state of system
         (m1xvals[i + 1], m1yvals[i + 1], m1zvals[i + 1],
         m2xvals[i + 1], m2yvals[i + 1], m2zvals[i + 1],
         m1vxvals[i + 1], m1vyvals[i + 1], m1vzvals[i + 1],
@@ -287,7 +342,7 @@ def RK4ThreeBody(ODE, massList, ic, t0, tn, h):
         k4 = np.array(ODE(t + h, massList, *(np.add(state, h * k3))))
         # Next state of system
         next_state = np.add(state, (h / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4))
-        # Update next stat of system
+        # Update next state of system
         (m1xvals[i + 1], m1yvals[i + 1], m1zvals[i + 1],
         m2xvals[i + 1], m2yvals[i + 1], m2zvals[i + 1],
         m3xvals[i + 1], m3yvals[i + 1], m3zvals[i + 1],
