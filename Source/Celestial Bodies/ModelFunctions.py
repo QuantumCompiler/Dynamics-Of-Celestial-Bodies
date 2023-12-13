@@ -176,6 +176,20 @@ def ProjectileMotionPositionPlot(obj, ic, t0, tn, objName, projectileName):
     plt.legend()
     plt.show()
 
+def DerfNop(obj, ic, t0, tn, objName, projectileName):
+    # Solver
+    position, velocity, time = ProjectileMotionSolver(obj, ic, t0, tn)
+
+    # Create an instance of PlotCanvas
+    plot_canvas = PlotCanvas(width=5, height=4, dpi=100)
+
+    # Plot using the axes of PlotCanvas
+    plot_canvas.axes.plot(time, position, '-', color='green', linewidth=1, label=projectileName)
+    plot_canvas.axes.set_title(f"Projectile Motion Plot Of Position Under The Influence Of {objName}")
+    plot_canvas.axes.set_xlabel("Time In Seconds (s)")
+    plot_canvas.axes.set_ylabel("Vertical Position In (m)")
+    plot_canvas.axes.legend()
+
 """ ProjectileMotionPositionAnim - Position animation plot of projectile motion
     Input:
         obj - List of object parameters where projectile motion is occurring
@@ -225,7 +239,6 @@ def ProjectileMotionPositionAnim(obj, ic, t0, tn, objName, projectileName):
     ax.set_xlabel(f"Time In Seconds (s)", fontsize = TWODANIMLABELS)
     ax.set_ylabel(f"Vertical Position In (m)", fontsize = TWODANIMLABELS)
     ax.legend()
-    plt.show()
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 ##### Projectile Motion Velocity
@@ -307,7 +320,6 @@ def ProjectileMotionVelocityAnim(obj, ic, t0, tn, objName, projectileName):
     ax.set_xlabel(f"Time In Seconds (s)", fontsize = TWODANIMLABELS)
     ax.set_ylabel(f"Vertical Velocity In $(\\frac{{m}}{{s}})$", fontsize = TWODPLOTABELS)
     ax.legend()
-    plt.show()
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 ##### Two Body 2D Position
