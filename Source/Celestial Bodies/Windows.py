@@ -1,4 +1,4 @@
-from ModelFunctions import *
+from WindowFunctions import *
 
 # Widget Names 
 HeaderLabel = "Choose A Simulation"
@@ -423,7 +423,6 @@ class TwoDForceWindow(QWidget):
             layout.addWidget(warningLabel)
             dialogBox.setLayout(layout)
             dialogBox.exec()
-        ProjectileMotionPositionPlot(obj, ic, initTime, finalTime, objName, "Projectile")
 
 class TwoBodyWindow(QWidget):
     def __init__(self):
