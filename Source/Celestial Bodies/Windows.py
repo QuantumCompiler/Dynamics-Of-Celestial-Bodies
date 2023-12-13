@@ -84,6 +84,27 @@ class MainWindow(QMainWindow):
         self.secondWindow.show()
         self.close()
 
+# 2D Force Window Widget Attributes
+
+# Object Names
+twoDCommonObjectDropDownBtnName = "Common Object Dropdown"
+twoDCommonObjInitPos = "Common Object Projectile Initial Position"
+twoDCommonObjInitVel = "Common Object Projectile Initial Velocity"
+twoDCommonObjInitTime = "Common Object Initial Time"
+twoDCommonObjFinalTime = "Common Object Final Time"
+twoDCustomObjMass = "Custom Object Mass"
+twoDCustomObjRadius = "Custom Object Radius"
+twoDCustomObjInitPos = "Custom Object Projectile Initial Position"
+twoDCustomObjInitVel = "Custom Object Projectile Initial Velocity"
+twoDCustomObjInitTime = "Custom Object Initial Time"
+twoDCustomObjFinalTime = "Custom Object Final Time"
+twoDPosPlotCheck = "2D Position Plot Checkbox"
+twoDPosAniCheck = "2D Position Animation Checkbox"
+twoDVelPlotCheck = "2D Velocity Plot Checkbox"
+twoDVelAniCheck = "2D Velocity Animation Checkbox"
+twoDCalculateBtn = "2D Calculate Button"
+twoDClearBtn = "2D Clear Button"
+
 class TwoDForceWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -134,26 +155,31 @@ class TwoDForceWindow(QWidget):
             "Neptune",
             "Pluto"
         ])
+        commonMassesDropdown.setObjectName(twoDCommonObjectDropDownBtnName)
         commonParametersLayout.addWidget(commonMassesDropdown, 0, Qt.AlignmentFlag.AlignHCenter)
         ## Projectile Motion Initial Position
         projectileInitialPosition1 = QLineEdit()
         projectileInitialPosition1.setFixedWidth(200)
         projectileInitialPosition1.setPlaceholderText("Enter Initial Position In (m)")
+        projectileInitialPosition1.setObjectName(twoDCommonObjInitPos)
         commonParametersLayout.addWidget(projectileInitialPosition1, 0, Qt.AlignmentFlag.AlignHCenter)
         ## Projectile Motion Initial Velocity
         projectileInitialVelocity1 = QLineEdit()
         projectileInitialVelocity1.setFixedWidth(200)
         projectileInitialVelocity1.setPlaceholderText("Enter Initial Velocity In (m/s)")
+        projectileInitialVelocity1.setObjectName(twoDCommonObjInitVel)
         commonParametersLayout.addWidget(projectileInitialVelocity1, 0, Qt.AlignmentFlag.AlignHCenter)
         ## Initial Time Of Model
         initialTime1 = QLineEdit()
         initialTime1.setFixedWidth(200)
         initialTime1.setPlaceholderText("Enter Initial Time Of Model In (s)")
+        initialTime1.setObjectName(twoDCommonObjInitTime)
         commonParametersLayout.addWidget(initialTime1, 0, Qt.AlignmentFlag.AlignHCenter)
         ## Final Time Of Model
         finalTime1 = QLineEdit()
         finalTime1.setFixedWidth(200)
         finalTime1.setPlaceholderText("Enter Final Time Of Model In (s)")
+        finalTime1.setObjectName(twoDCommonObjFinalTime)
         commonParametersLayout.addWidget(finalTime1, 0, Qt.AlignmentFlag.AlignHCenter)
         # Custom Parameters
         ## Header
@@ -167,31 +193,37 @@ class TwoDForceWindow(QWidget):
         customMass = QLineEdit()
         customMass.setFixedWidth(200)
         customMass.setPlaceholderText("Enter Mass Of Object In (Kg)")
+        customMass.setObjectName(twoDCustomObjMass)
         customParametersLayout.addWidget(customMass, 0, Qt.AlignmentFlag.AlignHCenter)
         ## Radius Of Mass
         customRadius = QLineEdit()
         customRadius.setFixedWidth(200)
         customRadius.setPlaceholderText("Enter Radius Of Mass In (m)")
+        customRadius.setObjectName(twoDCustomObjRadius)
         customParametersLayout.addWidget(customRadius, 0, Qt.AlignmentFlag.AlignHCenter)
         ## Projectile Motion Initial Position
         projectileInitialPosition2 = QLineEdit()
         projectileInitialPosition2.setFixedWidth(200)
         projectileInitialPosition2.setPlaceholderText("Enter Initial Position In (m)")
+        projectileInitialPosition2.setObjectName(twoDCustomObjInitPos)
         customParametersLayout.addWidget(projectileInitialPosition2, 0, Qt.AlignmentFlag.AlignHCenter)
         ## Projectile Motion Initial Velocity
         projectileInitialVelocity2 = QLineEdit()
         projectileInitialVelocity2.setFixedWidth(200)
         projectileInitialVelocity2.setPlaceholderText("Enter Initial Velocity In (m/s)")
+        projectileInitialVelocity2.setObjectName(twoDCustomObjInitVel)
         customParametersLayout.addWidget(projectileInitialVelocity2, 0, Qt.AlignmentFlag.AlignHCenter)
         ## Initial Time Of Model
         initialTime2 = QLineEdit()
         initialTime2.setFixedWidth(200)
         initialTime2.setPlaceholderText("Enter Initial Time Of Model In (s)")
+        initialTime2.setObjectName(twoDCustomObjInitTime)
         customParametersLayout.addWidget(initialTime2, 0, Qt.AlignmentFlag.AlignHCenter)
         ## Final Time Of Model
         finalTime2 = QLineEdit()
         finalTime2.setFixedWidth(200)
         finalTime2.setPlaceholderText("Enter Final Time Of Model In (s)")
+        finalTime2.setObjectName(twoDCustomObjFinalTime)
         customParametersLayout.addWidget(finalTime2, 0, Qt.AlignmentFlag.AlignHCenter)
         # Parameters layouts layout addition
         parametersLayout.addLayout(commonParametersLayout)
@@ -205,15 +237,19 @@ class TwoDForceWindow(QWidget):
         plotSelectionHeaderLayout.addWidget(plotSelectionHeader)
         ## 2D Position Plot
         twoDPosPlot = QCheckBox("2D Position Plot")
+        twoDPosPlot.setObjectName(twoDPosPlotCheck)
         plotSelectionLayout.addWidget(twoDPosPlot, 0, Qt.AlignmentFlag.AlignLeft)
         ## 2D Position Animation
         twoDPosAni = QCheckBox("2D Position Animation")
+        twoDPosAni.setObjectName(twoDPosAniCheck)
         plotSelectionLayout.addWidget(twoDPosAni, 0, Qt.AlignmentFlag.AlignLeft)
         ## 2D Velocity Plot
         twoDVelPlot = QCheckBox("2D Velocity Plot")
+        twoDVelPlot.setObjectName(twoDVelPlotCheck)
         plotSelectionLayout.addWidget(twoDVelPlot, 0, Qt.AlignmentFlag.AlignLeft)
         ## 2D Velocity Animation
         twoDVelAni = QCheckBox("2D Velocity Animation")
+        twoDVelAni.setObjectName(twoDVelAniCheck)
         plotSelectionLayout.addWidget(twoDVelAni, 0, Qt.AlignmentFlag.AlignLeft)
         # Buttons
         buttonsHeader = QLabel("Calculate / Clear Selection")
@@ -225,10 +261,14 @@ class TwoDForceWindow(QWidget):
         ## Calculate Button
         calculateButton = QPushButton("Calculate")
         calculateButton.setFixedSize(300, 50)
+        calculateButton.setObjectName(twoDCalculateBtn)
+        calculateButton.clicked.connect(self.Calculate)
         buttonLayout.addWidget(calculateButton)
         ## Clear Button
         clearButton = QPushButton("Clear")
         clearButton.setFixedSize(300, 50)
+        clearButton.setObjectName(twoDClearBtn)
+        clearButton.clicked.connect(self.ClearInputs)
         buttonLayout.addWidget(clearButton)
         # Main layout widget addition
         mainLayout.addLayout(parametersLayout)
@@ -238,6 +278,152 @@ class TwoDForceWindow(QWidget):
         mainLayout.addLayout(buttonLayout)
         # Add layouts
         self.setLayout(mainLayout)
+
+    def ClearInputs(self):
+        # Grab children from input fields
+        commonObjDD = self.findChild(QComboBox, twoDCommonObjectDropDownBtnName)
+        commonObjInitPos = self.findChild(QLineEdit, twoDCommonObjInitPos)
+        commonObjInitVel = self.findChild(QLineEdit, twoDCommonObjInitVel)
+        commonObjInitTime = self.findChild(QLineEdit, twoDCommonObjInitTime)
+        commonObjFinalTime = self.findChild(QLineEdit, twoDCommonObjFinalTime)
+        customObjMass = self.findChild(QLineEdit, twoDCustomObjMass)
+        customObjRadius = self.findChild(QLineEdit, twoDCustomObjRadius)
+        customObjInitPos = self.findChild(QLineEdit, twoDCustomObjInitPos)
+        customObjInitVel = self.findChild(QLineEdit, twoDCustomObjInitVel)
+        customObjInitTime = self.findChild(QLineEdit, twoDCustomObjInitTime)
+        customObjFinalTime = self.findChild(QLineEdit, twoDCustomObjFinalTime)
+        posPlotCheck = self.findChild(QCheckBox, twoDPosPlotCheck)
+        posAniCheck = self.findChild(QCheckBox, twoDPosAniCheck)
+        velPlotCheck = self.findChild(QCheckBox, twoDVelPlotCheck)
+        velAniCheck = self.findChild(QCheckBox, twoDVelAniCheck)
+        calcBtn = self.findChild(QPushButton, twoDCalculateBtn)
+        clearBtn = self.findChild(QPushButton, twoDClearBtn)
+        # Reset values in fields
+        commonObjDD.setCurrentIndex(0)
+        commonObjInitPos.clear()
+        commonObjInitVel.clear()
+        commonObjInitTime.clear()
+        commonObjFinalTime.clear()
+        customObjMass.clear()
+        customObjRadius.clear()
+        customObjInitPos.clear()
+        customObjInitVel.clear()
+        customObjInitTime.clear()
+        customObjFinalTime.clear()
+        posPlotCheck.setChecked(False)
+        posAniCheck.setChecked(False)
+        velPlotCheck.setChecked(False)
+        velAniCheck.setChecked(False)
+
+    def Calculate(self):
+        # Grab children from input fields
+        commonObjDD = self.findChild(QComboBox, twoDCommonObjectDropDownBtnName)
+        commonObjInitPos = self.findChild(QLineEdit, twoDCommonObjInitPos)
+        commonObjInitVel = self.findChild(QLineEdit, twoDCommonObjInitVel)
+        commonObjInitTime = self.findChild(QLineEdit, twoDCommonObjInitTime)
+        commonObjFinalTime = self.findChild(QLineEdit, twoDCommonObjFinalTime)
+        customObjMass = self.findChild(QLineEdit, twoDCustomObjMass)
+        customObjRadius = self.findChild(QLineEdit, twoDCustomObjRadius)
+        customObjInitPos = self.findChild(QLineEdit, twoDCustomObjInitPos)
+        customObjInitVel = self.findChild(QLineEdit, twoDCustomObjInitVel)
+        customObjInitTime = self.findChild(QLineEdit, twoDCustomObjInitTime)
+        customObjFinalTime = self.findChild(QLineEdit, twoDCustomObjFinalTime)
+        posPlotCheck = self.findChild(QCheckBox, twoDPosPlotCheck)
+        posAniCheck = self.findChild(QCheckBox, twoDPosAniCheck)
+        velPlotCheck = self.findChild(QCheckBox, twoDVelPlotCheck)
+        velAniCheck = self.findChild(QCheckBox, twoDVelAniCheck)
+        calcBtn = self.findChild(QPushButton, twoDCalculateBtn)
+        clearBtn = self.findChild(QPushButton, twoDClearBtn)
+        # Parameters to be fed into solver
+        obj = []
+        objName = ""
+        ic = []
+        initPos = 0
+        initVel = 0
+        initTime = 0
+        finTime = 0
+        # Common field entered, custom not
+        if ((customObjMass.text() == "" and customObjRadius.text() == "" and customObjInitPos.text() == "" and customObjInitVel.text() == "" and customObjInitTime.text() == "" and customObjFinalTime.text() == "") 
+            and (commonObjDD.currentText() != "Select Common Mass" and commonObjInitPos.text() != "" and commonObjInitVel.text() != "" and commonObjInitTime.text() != "" and commonObjFinalTime.text())):
+            objectSelection = commonObjDD.currentText()
+            initialPos = float(commonObjInitPos.text())
+            initialVel = float(commonObjInitVel.text())
+            initialTime = float(commonObjInitTime.text())
+            finalTime = float(commonObjFinalTime.text())
+            # Assign object parameters
+            if (objectSelection == "Sun"):
+                obj.append(MSUN)
+                obj.append(RSUN)
+            elif (objectSelection == "Mercury"):
+                obj.append(MMERCURY)
+                obj.append(RMERCURY)
+            elif (objectSelection == "Venus"):
+                obj.append(MVENUS)
+                obj.append(RVENUS)
+            elif (objectSelection == "Earth"):
+                obj.append(MEARTH)
+                obj.append(REARTH)
+            elif (objectSelection == "Moon"):
+                obj.append(MMOON)
+                obj.append(RMOON)
+            elif (objectSelection == "Mars"):
+                obj.append(MMARS)
+                obj.append(RMARS)
+            elif (objectSelection == "Jupiter"):
+                obj.append(RJUPITER)
+                obj.append(MJUPITER)
+            elif (objectSelection == "Saturn"):
+                obj.append(MSATURN)
+                obj.append(RSATURN)
+            elif (objectSelection == "Uranus"):
+                obj.append(MURANUS)
+                obj.append(RURANUS)
+            elif (objectSelection == "Neptune"):
+                obj.append(MNEPTUNE)
+                obj.append(RNEPTUNE)
+            elif (objectSelection == "Pluto"):
+                obj.append(MPLUTO)
+                obj.append(RPLUTO)
+            objName = objectSelection
+            initPos = initialPos
+            initVel = initialVel
+            ic.append(initPos)
+            ic.append(initVel)
+            initTime = initialTime
+            finTime = finalTime
+        # Custom field entered, common not
+        elif ((customObjMass.text() != "" and customObjRadius.text() != "" and customObjInitPos.text() != "" and customObjInitVel.text() != "" and customObjInitTime.text() != "" and customObjFinalTime.text() != "") 
+            and (commonObjInitPos.text() == "" and commonObjInitVel.text() == "" and commonObjInitTime.text() == "" and commonObjFinalTime.text() == "")):
+            objectMass = float(customObjMass.text())
+            objectRadius = float(customObjRadius.text())
+            initialPos = float(customObjInitPos.text())
+            initialVel = float(customObjInitVel.text())
+            initialTime = float(customObjInitTime.text())
+            finalTime = float(customObjFinalTime.text())
+            obj.append(objectMass)
+            obj.append(objectRadius)
+            objName = objectSelection
+            initPos = initialPos
+            initVel = initialVel
+            ic.append(initPos)
+            ic.append(initVel)
+            initTime = initialTime
+            finTime = finalTime
+        # Invalid entries
+        else:
+            dialogBox = QDialog(self)
+            dialogBox.setWindowTitle("Invalid Entries")
+            dialogBox.setFixedSize(400, 75)
+            warningLabel = QLabel("Please enter in values into one parameter field or the other.", dialogBox)
+            warningFont = warningLabel.font()
+            warningFont.setPointSize(13)
+            warningLabel.setFont(warningFont)
+            warningLabel.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+            layout = QVBoxLayout()
+            layout.addWidget(warningLabel)
+            dialogBox.setLayout(layout)
+            dialogBox.exec()
+        ProjectileMotionPositionPlot(obj, ic, initTime, finalTime, objName, "Projectile")
 
 class TwoBodyWindow(QWidget):
     def __init__(self):
