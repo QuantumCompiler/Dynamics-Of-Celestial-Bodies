@@ -15,10 +15,13 @@ OnMoon = [MMOON, RMOON]
 
 ballIc = [100, 0]
 
-positions, velocities, time = ProjectileMotionSolver(OnEarth, ballIc, 0, 4.52)
+ProjectileMotionPositionPlot(OnEarth, ballIc, 0, 4.52, "Earth", "Projectile")
 
-plt.plot(time, velocities)
-plt.show()
+ProjectileMotionPositionAnim(OnEarth, ballIc, 0, 4.52, "Earth", "Projectile")
+
+ProjectileMotionVelocityPlot(OnEarth, ballIc, 0, 4.52, "Earth", "Projectile")
+
+ProjectileMotionVelocityAnim(OnEarth, ballIc, 0, 4.52, "Earth", "Projectile")
 
 # CoupledTwoBody2DPlotPos(twoMasses, twoIC, 0, EARTHPERIOD, 0, 1, "Sun", "Earth")
 
