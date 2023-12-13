@@ -100,3 +100,44 @@ ballIc = [100, 0]
 # mainWindow = MainWindow()
 # mainWindow.show()
 # sys.exit(app.exec())
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Main Window")
+        self.setGeometry(100, 100, 600, 400)
+        
+        self.openSecondWindowButton = QPushButton("Open Second Window", self)
+        self.openSecondWindowButton.clicked.connect(self.openSecondWindow)
+        self.openSecondWindowButton.resize(200, 50)
+        self.openSecondWindowButton.move(200, 175)
+
+    def openSecondWindow(self):
+        self.secondWindow = SecondWindow()
+        self.secondWindow.show()
+
+class SecondWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Second Window")
+        self.setGeometry(150, 150, 400, 300)
+        
+        self.openThirdWindowButton = QPushButton("Open Third Window", self)
+        self.openThirdWindowButton.clicked.connect(self.openThirdWindow)
+        self.openThirdWindowButton.resize(150, 40)
+        self.openThirdWindowButton.move(125, 130)
+
+    def openThirdWindow(self):
+        self.thirdWindow = ThirdWindow()
+        self.thirdWindow.show()
+
+class ThirdWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Third Window")
+        self.setGeometry(200, 200, 300, 200)
+
+app = QApplication(sys.argv)
+mainWindow = MainWindow()
+mainWindow.show()
+sys.exit(app.exec())
