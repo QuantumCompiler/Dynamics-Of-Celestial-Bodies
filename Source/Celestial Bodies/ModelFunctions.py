@@ -1843,3 +1843,4 @@ def CoupledThreeBody3DAnimVel(massList, ic, t0, tn, i, j, m1Name, m2Name, m3Name
     ax.legend()
     ax.grid(False)
     plt.show()
+    
