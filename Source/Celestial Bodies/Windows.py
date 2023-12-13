@@ -262,7 +262,7 @@ class TwoDForceWindow(QWidget):
         calculateButton = QPushButton("Calculate")
         calculateButton.setFixedSize(300, 50)
         calculateButton.setObjectName(twoDCalculateBtn)
-        calculateButton.clicked.connect(self.Calculate)
+        calculateButton.clicked.connect(self.OpenPlot)
         buttonLayout.addWidget(calculateButton)
         ## Clear Button
         clearButton = QPushButton("Clear")
@@ -278,6 +278,9 @@ class TwoDForceWindow(QWidget):
         mainLayout.addLayout(buttonLayout)
         # Add layouts
         self.setLayout(mainLayout)
+
+    def OpenPlot(self):
+        calc = self.Calculate()
 
     def ClearInputs(self):
         # Grab children from input fields
@@ -423,6 +426,7 @@ class TwoDForceWindow(QWidget):
             layout.addWidget(warningLabel)
             dialogBox.setLayout(layout)
             dialogBox.exec()
+        return obj, objName, ic, initPos, initVel, initTime, finTime
 
 class TwoBodyWindow(QWidget):
     def __init__(self):
@@ -433,8 +437,6 @@ class TwoBodyWindow(QWidget):
         self.resize(800,500)
         self.setMinimumWidth(800)
         self.setMinimumHeight(500)
-        # Layouts
-        mainLayout = QVBoxLayout()
         # Layouts
         mainLayout = QVBoxLayout()
         # Center Column Header
@@ -456,8 +458,6 @@ class ThreeBodyWindow(QWidget):
         self.resize(800,500)
         self.setMinimumWidth(800)
         self.setMinimumHeight(500)
-        # Layouts
-        mainLayout = QVBoxLayout()
         # Layouts
         mainLayout = QVBoxLayout()
         # Center Column Header
