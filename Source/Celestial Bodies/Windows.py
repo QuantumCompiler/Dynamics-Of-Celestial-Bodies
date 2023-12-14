@@ -281,6 +281,26 @@ class TwoDForceWindow(QWidget):
 
     def OpenPlot(self):
         calc = self.Calculate()
+        posPlotCheck = self.findChild(QCheckBox, twoDPosPlotCheck)
+        posAniCheck = self.findChild(QCheckBox, twoDPosAniCheck)
+        velPlotCheck = self.findChild(QCheckBox, twoDVelPlotCheck)
+        velAniCheck = self.findChild(QCheckBox, twoDVelAniCheck)
+        # Position Plot
+        if (posPlotCheck.isChecked() == True):
+            self.posPlot = ProjectileMotionWindow(0, calc[0], calc[1], calc[2], calc[3], calc[4], "Projectile", "Projectile Motion Plot: Position Vs. Time")
+            self.posPlot.show()
+        # Position Animation
+        if (posAniCheck.isChecked() == True):
+            self.posAni = ProjectileMotionWindow(1, calc[0], calc[1], calc[2], calc[3], calc[4], "Projectile", "Projectile Motion Animation: Position Vs. Time")
+            self.posAni.show()
+        # Velocity Plot
+        if (velPlotCheck.isChecked() == True):
+            self.velPlot = ProjectileMotionWindow(2, calc[0], calc[1], calc[2], calc[3], calc[4], "Projectile", "Projectile Motion Plot: Velocity Vs. Time")
+            self.velPlot.show()
+        # Velocity Animation
+        if (velAniCheck.isChecked() == True):
+            self.velAni = ProjectileMotionWindow(3, calc[0], calc[1], calc[2], calc[3], calc[4], "Projectile", "Projectile Motion Animation: Velocity Vs. Time")
+            self.velAni.show()
 
     def ClearInputs(self):
         # Grab children from input fields
@@ -331,10 +351,6 @@ class TwoDForceWindow(QWidget):
         customObjInitVel = self.findChild(QLineEdit, twoDCustomObjInitVel)
         customObjInitTime = self.findChild(QLineEdit, twoDCustomObjInitTime)
         customObjFinalTime = self.findChild(QLineEdit, twoDCustomObjFinalTime)
-        posPlotCheck = self.findChild(QCheckBox, twoDPosPlotCheck)
-        posAniCheck = self.findChild(QCheckBox, twoDPosAniCheck)
-        velPlotCheck = self.findChild(QCheckBox, twoDVelPlotCheck)
-        velAniCheck = self.findChild(QCheckBox, twoDVelAniCheck)
         calcBtn = self.findChild(QPushButton, twoDCalculateBtn)
         clearBtn = self.findChild(QPushButton, twoDClearBtn)
         # Parameters to be fed into solver
@@ -426,7 +442,7 @@ class TwoDForceWindow(QWidget):
             layout.addWidget(warningLabel)
             dialogBox.setLayout(layout)
             dialogBox.exec()
-        return obj, objName, ic, initPos, initVel, initTime, finTime
+        return obj, ic, initTime, finTime, objName
 
 class TwoBodyWindow(QWidget):
     def __init__(self):
