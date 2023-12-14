@@ -209,7 +209,7 @@ def ProjectileMotionPositionAnim(obj, ic, t0, tn, objName, projectileName):
     plt.xlim(min(time) - 0.05 * max(time), 1.05 * max(time))
     plt.ylim(min(position) - 0.05 * max(position), 1.05 * max(position))
     # Init Inner Function
-    def init():
+    def init(): 
         projectile.set_data([], [])
         projectileTrail.set_data([], [])
         return projectile, projectileTrail
