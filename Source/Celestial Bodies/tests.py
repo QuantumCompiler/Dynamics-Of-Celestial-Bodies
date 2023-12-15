@@ -101,43 +101,90 @@ ballIc = [100, 0]
 # mainWindow.show()
 # sys.exit(app.exec())
 
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Main Window")
-        self.setGeometry(100, 100, 600, 400)
+# class MainWindow(QMainWindow):
+#     def __init__(self):
+#         super().__init__()
+#         self.setWindowTitle("Main Window")
+#         self.setGeometry(100, 100, 600, 400)
         
-        self.openSecondWindowButton = QPushButton("Open Second Window", self)
-        self.openSecondWindowButton.clicked.connect(self.openSecondWindow)
-        self.openSecondWindowButton.resize(200, 50)
-        self.openSecondWindowButton.move(200, 175)
+#         self.openSecondWindowButton = QPushButton("Open Second Window", self)
+#         self.openSecondWindowButton.clicked.connect(self.openSecondWindow)
+#         self.openSecondWindowButton.resize(200, 50)
+#         self.openSecondWindowButton.move(200, 175)
 
-    def openSecondWindow(self):
-        self.secondWindow = SecondWindow()
-        self.secondWindow.show()
+#     def openSecondWindow(self):
+#         self.secondWindow = SecondWindow()
+#         self.secondWindow.show()
 
-class SecondWindow(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Second Window")
-        self.setGeometry(150, 150, 400, 300)
+# class SecondWindow(QWidget):
+#     def __init__(self):
+#         super().__init__()
+#         self.setWindowTitle("Second Window")
+#         self.setGeometry(150, 150, 400, 300)
         
-        self.openThirdWindowButton = QPushButton("Open Third Window", self)
-        self.openThirdWindowButton.clicked.connect(self.openThirdWindow)
-        self.openThirdWindowButton.resize(150, 40)
-        self.openThirdWindowButton.move(125, 130)
+#         self.openThirdWindowButton = QPushButton("Open Third Window", self)
+#         self.openThirdWindowButton.clicked.connect(self.openThirdWindow)
+#         self.openThirdWindowButton.resize(150, 40)
+#         self.openThirdWindowButton.move(125, 130)
 
-    def openThirdWindow(self):
-        self.thirdWindow = ThirdWindow()
-        self.thirdWindow.show()
+#     def openThirdWindow(self):
+#         self.thirdWindow = ThirdWindow()
+#         self.thirdWindow.show()
 
-class ThirdWindow(QWidget):
+# class ThirdWindow(QWidget):
+#     def __init__(self):
+#         super().__init__()
+#         self.setWindowTitle("Third Window")
+#         self.setGeometry(200, 200, 300, 200)
+
+# app = QApplication(sys.argv)
+# mainWindow = MainWindow()
+# mainWindow.show()
+# sys.exit(app.exec())
+
+class ExampleApp(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Third Window")
-        self.setGeometry(200, 200, 300, 200)
+        self.initUI()
+
+    def initUI(self):
+        # Create two horizontal layouts
+        hbox1 = QHBoxLayout()
+        hbox2 = QHBoxLayout()
+
+        # Add widgets to the first horizontal layout
+        hbox1.addWidget(QPushButton("Button 1.1"))
+        hbox1.addWidget(QPushButton("Button 1.2"))
+
+        # Add widgets to the second horizontal layout
+        hbox2.addWidget(QPushButton("Button 2.1"))
+        hbox2.addWidget(QPushButton("Button 2.2"))
+
+        # Set spacing between widgets in the horizontal layouts
+        hbox1.setSpacing(100)  # spacing between widgets in hbox1
+        hbox2.setSpacing(50)  # spacing between widgets in hbox2
+
+        # Create a vertical layout
+        vbox = QVBoxLayout()
+
+        # Add the horizontal layouts to the vertical layout
+        vbox.addLayout(hbox1)
+        vbox.addLayout(hbox2)
+
+        # Set the spacing between the horizontal layouts
+        vbox.setSpacing(50)  # spacing between hbox1 and hbox2
+
+        # Set the contents margins (left, top, right, bottom)
+        vbox.setContentsMargins(10, 10, 10, 10)
+
+        # Set the layout of the main widget
+        self.setLayout(vbox)
+
+        # Window settings
+        self.setGeometry(300, 300, 300, 200)
+        self.setWindowTitle('Layout Spacing Example')
 
 app = QApplication(sys.argv)
-mainWindow = MainWindow()
+mainWindow = ExampleApp()
 mainWindow.show()
 sys.exit(app.exec())
