@@ -1,2 +1,5 @@
 # DS Store Ignore
 .DS_Store
+
+# PyCache
+**/__pycache__/
