@@ -11,17 +11,18 @@ import os
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import *
+import random
 import sys
 import matplotlib
 
 # Plot Constants
-TWODPLOTTITLE = 14
+TWODPLOTTITLE = 10
 TWODPLOTABELS = 8
-TWODANIMTITLE = 14
+TWODANIMTITLE = 10
 TWODANIMLABELS = 8
-THREEDPLOTTILE = 14
+THREEDPLOTTILE = 10
 THREEDPLOTLABELS = 6
-THREEDANIMTILE = 14
+THREEDANIMTILE = 10
 THREEDANIMLABELS = 6
 
 # Global Constants
