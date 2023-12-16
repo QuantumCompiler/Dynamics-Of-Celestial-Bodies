@@ -172,6 +172,7 @@ projMotCommonObjInitVel = "Common Object Projectile Initial Velocity"
 projMotCommonObjInitTime = "Common Object Initial Time"
 projMotCommonObjFinalTime = "Common Object Final Time"
 projMotCommonObjClearParamBtn = "Clear Common Parameters"
+projMotCommonObjRandBtn = "Randomize Common Parameters"
 projMotCustomObjMass = "Custom Object Mass"
 projMotCustomObjRadius = "Custom Object Radius"
 projMotCustomObjInitPos = "Custom Object Projectile Initial Position"
@@ -179,6 +180,7 @@ projMotCustomObjInitVel = "Custom Object Projectile Initial Velocity"
 projMotCustomObjInitTime = "Custom Object Initial Time"
 projMotCustomObjFinalTime = "Custom Object Final Time"
 projMotCustomObjClearParamBtn = "Clear Custom Parameters"
+projMotCustomObjRandBtn = "Randomize Custom Parameters"
 projMotPosPlotCheck = "2D Position Plot Checkbox"
 projMotPosAniCheck = "2D Position Animation Checkbox"
 projMotVelPlotCheck = "2D Velocity Plot Checkbox"
@@ -197,6 +199,8 @@ projMotMainWinBtn = "Return Home"
         ClearCommonParam - Clears the common parameters input fields
         ClearCustomParam - Clears the custom parameters input fields
         OpenPlot - Opens a window for a given plot
+        RandomCommon - Generates random parameters for a common object simulation
+        RandomCustom - Generates random parameters for a custom object simulation
         ReturnHome - Returns home and closes the current window
         SelectAllPlots - Selects all plot options
         UnselectAllPlots - Unselects all plot options
@@ -217,6 +221,7 @@ class ProjectileMotionWindow(QWidget):
             * Create the common masses initial time text field
             * Create the common masses final time text field
             * Create the common masses clear button
+            * Create the common masses random button
             * Create the custom masses parameters header
             * Create the custom masses mass text field
             * Create the custom masses radius text field
@@ -225,6 +230,7 @@ class ProjectileMotionWindow(QWidget):
             * Create the custom masses initial time text field
             * Create the custom masses final time text field
             * Create the custom masses clear button
+            * Create the custom masses random button
             * Add the common and custom parameters layouts to the parameters layout
             * Create the plot selection header
             * Create the plot selection check boxes
@@ -240,8 +246,17 @@ class ProjectileMotionWindow(QWidget):
         Output:
             This function does not return a value
     """
+    # Main window signal
     mainWindowSignal = pyqtSignal()
     def __init__(self):
+        # Widget sizes
+        headerSize = 20
+        comboBoxMinWidth = 200
+        comboBoxMinHeight = 25
+        textFieldMinWidth = 200
+        textFieldMinHeight = 25
+        buttonMinWidth = 175
+        buttonMinHeight = 35
         super().__init__()
         # Title of Window
         self.setWindowTitle("Projectile Motion Simulation")
@@ -255,6 +270,7 @@ class ProjectileMotionWindow(QWidget):
         parametersLayout = QHBoxLayout()
         commonParametersLayout = QVBoxLayout()
         customParametersLayout = QVBoxLayout()
+        customObjParametersLayout = QHBoxLayout()
         ## Plot selection layouts
         plotSelectionLayout = QVBoxLayout()
         plotSelectionHeaderLayout = QHBoxLayout()
@@ -265,140 +281,166 @@ class ProjectileMotionWindow(QWidget):
         buttonHeaderLayout = QHBoxLayout()
         buttonMainBtnsLayout = QHBoxLayout()
         # Margins
-        mainLayout.setContentsMargins(0,25,0,25)
-        # Spacing
-        # Common Parameters
+        mainLayout.setContentsMargins(25,25,25,25)
         ## Header
         commonParametersHeader = QLabel("Common Parameters")
         commonParametersHeaderFont = commonParametersHeader.font()
-        commonParametersHeaderFont.setPointSize(20)
+        commonParametersHeaderFont.setPointSize(headerSize)
         commonParametersHeader.setFont(commonParametersHeaderFont)
         commonParametersHeader.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         commonParametersLayout.addWidget(commonParametersHeader)
         ## Common Masses Dropdown
         commonObjectsDropdown = QComboBox()
-        commonObjectsDropdown.setFixedWidth(200)
+        commonObjectsDropdown.setMinimumWidth(comboBoxMinWidth)
+        commonObjectsDropdown.setMinimumHeight(comboBoxMinHeight)
         commonObjectsDropdown.addItems(["Select Common Object", "Sun", "Mercury", "Venus", "Earth", "Moon", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"])
         commonObjectsDropdown.setObjectName(projMotCommonObjectDropDownBtnName)
-        commonParametersLayout.addWidget(commonObjectsDropdown, 0, Qt.AlignmentFlag.AlignHCenter)
+        commonParametersLayout.addWidget(commonObjectsDropdown)
         ## Projectile Motion Initial Position
         projectileInitialPosition1 = QLineEdit()
-        projectileInitialPosition1.setFixedWidth(200)
+        projectileInitialPosition1.setMinimumWidth(textFieldMinWidth)
+        projectileInitialPosition1.setMinimumHeight(textFieldMinHeight)
         projectileInitialPosition1.setPlaceholderText("Enter Initial Position In (m)")
         projectileInitialPosition1.setObjectName(projMotCommonObjInitPos)
-        commonParametersLayout.addWidget(projectileInitialPosition1, 0, Qt.AlignmentFlag.AlignHCenter)
+        commonParametersLayout.addWidget(projectileInitialPosition1)
         ## Projectile Motion Initial Velocity
         projectileInitialVelocity1 = QLineEdit()
-        projectileInitialVelocity1.setFixedWidth(200)
+        projectileInitialVelocity1.setMinimumWidth(textFieldMinWidth)
+        projectileInitialVelocity1.setMinimumHeight(textFieldMinHeight)
         projectileInitialVelocity1.setPlaceholderText("Enter Initial Velocity In (m/s)")
         projectileInitialVelocity1.setObjectName(projMotCommonObjInitVel)
-        commonParametersLayout.addWidget(projectileInitialVelocity1, 0, Qt.AlignmentFlag.AlignHCenter)
+        commonParametersLayout.addWidget(projectileInitialVelocity1)
         ## Initial Time Of Model
         initialTime1 = QLineEdit()
-        initialTime1.setFixedWidth(200)
+        initialTime1.setMinimumWidth(textFieldMinWidth)
+        initialTime1.setMinimumHeight(textFieldMinHeight)
         initialTime1.setPlaceholderText("Enter Initial Time Of Model In (s)")
         initialTime1.setObjectName(projMotCommonObjInitTime)
-        commonParametersLayout.addWidget(initialTime1, 0, Qt.AlignmentFlag.AlignHCenter)
+        commonParametersLayout.addWidget(initialTime1)
         ## Final Time Of Model
         finalTime1 = QLineEdit()
-        finalTime1.setFixedWidth(200)
+        finalTime1.setMinimumWidth(textFieldMinWidth)
+        finalTime1.setMinimumHeight(textFieldMinHeight)
         finalTime1.setPlaceholderText("Enter Final Time Of Model In (s)")
         finalTime1.setObjectName(projMotCommonObjFinalTime)
-        commonParametersLayout.addWidget(finalTime1, 0, Qt.AlignmentFlag.AlignHCenter)
+        commonParametersLayout.addWidget(finalTime1)
         ## Clear Parameters Button
         commonParametersClearBtn = QPushButton("Clear Common Parameters")
-        commonParametersClearBtn.setFixedSize(175, 35)
+        commonParametersClearBtn.setMinimumWidth(buttonMinWidth)
+        commonParametersClearBtn.setMinimumHeight(buttonMinHeight)
         commonParametersClearBtn.setObjectName(projMotCommonObjClearParamBtn)
         commonParametersClearBtn.clicked.connect(self.ClearCommonParam)
-        commonParametersLayout.addWidget(commonParametersClearBtn, 0, Qt.AlignmentFlag.AlignHCenter)
+        commonParametersLayout.addWidget(commonParametersClearBtn)
+        ## Random Parameters Button
+        commonParametersRandomBtn = QPushButton("Randomize Parameters")
+        commonParametersRandomBtn.setMinimumWidth(buttonMinWidth)
+        commonParametersRandomBtn.setMinimumHeight(buttonMinHeight)
+        commonParametersRandomBtn.setObjectName(projMotCommonObjRandBtn)
+        commonParametersRandomBtn.clicked.connect(self.RandomCommon)
+        commonParametersLayout.addWidget(commonParametersRandomBtn)
         # Custom Parameters
         ## Header
         customParametersHeader = QLabel("Custom Parameters")
         customParametersHeaderFont = customParametersHeader.font()
-        customParametersHeaderFont.setPointSize(20)
+        customParametersHeaderFont.setPointSize(headerSize)
         customParametersHeader.setFont(customParametersHeaderFont)
         customParametersHeader.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         customParametersLayout.addWidget(customParametersHeader)
         ## Mass
-        customMass = QLineEdit()
-        customMass.setFixedWidth(200)
-        customMass.setPlaceholderText("Enter Mass Of Object In (Kg)")
-        customMass.setObjectName(projMotCustomObjMass)
-        customParametersLayout.addWidget(customMass, 0, Qt.AlignmentFlag.AlignHCenter)
+        customObj = QLineEdit()
+        customObj.setMinimumHeight(textFieldMinHeight)
+        customObj.setPlaceholderText("Enter Mass Of Object In (Kg)")
+        customObj.setObjectName(projMotCustomObjMass)
+        customObjParametersLayout.addWidget(customObj)
         ## Radius Of Mass
         customRadius = QLineEdit()
-        customRadius.setFixedWidth(200)
+        customRadius.setMinimumHeight(textFieldMinHeight)
         customRadius.setPlaceholderText("Enter Radius Of Mass In (m)")
         customRadius.setObjectName(projMotCustomObjRadius)
-        customParametersLayout.addWidget(customRadius, 0, Qt.AlignmentFlag.AlignHCenter)
+        customObjParametersLayout.addWidget(customRadius)
+        customParametersLayout.addLayout(customObjParametersLayout)
         ## Projectile Motion Initial Position
         projectileInitialPosition2 = QLineEdit()
-        projectileInitialPosition2.setFixedWidth(200)
+        projectileInitialPosition2.setMinimumWidth(textFieldMinWidth)
+        projectileInitialPosition2.setMinimumHeight(textFieldMinHeight)
         projectileInitialPosition2.setPlaceholderText("Enter Initial Position In (m)")
         projectileInitialPosition2.setObjectName(projMotCustomObjInitPos)
-        customParametersLayout.addWidget(projectileInitialPosition2, 0, Qt.AlignmentFlag.AlignHCenter)
+        customParametersLayout.addWidget(projectileInitialPosition2)
         ## Projectile Motion Initial Velocity
         projectileInitialVelocity2 = QLineEdit()
-        projectileInitialVelocity2.setFixedWidth(200)
+        projectileInitialVelocity2.setMinimumWidth(textFieldMinWidth)
+        projectileInitialVelocity2.setMinimumHeight(textFieldMinHeight)
         projectileInitialVelocity2.setPlaceholderText("Enter Initial Velocity In (m/s)")
         projectileInitialVelocity2.setObjectName(projMotCustomObjInitVel)
-        customParametersLayout.addWidget(projectileInitialVelocity2, 0, Qt.AlignmentFlag.AlignHCenter)
+        customParametersLayout.addWidget(projectileInitialVelocity2)
         ## Initial Time Of Model
         initialTime2 = QLineEdit()
-        initialTime2.setFixedWidth(200)
+        initialTime2.setMinimumWidth(textFieldMinWidth)
+        initialTime2.setMinimumHeight(textFieldMinHeight)
         initialTime2.setPlaceholderText("Enter Initial Time Of Model In (s)")
         initialTime2.setObjectName(projMotCustomObjInitTime)
-        customParametersLayout.addWidget(initialTime2, 0, Qt.AlignmentFlag.AlignHCenter)
+        customParametersLayout.addWidget(initialTime2)
         ## Final Time Of Model
         finalTime2 = QLineEdit()
-        finalTime2.setFixedWidth(200)
+        finalTime2.setMinimumWidth(textFieldMinWidth)
+        finalTime2.setMinimumHeight(textFieldMinHeight)
         finalTime2.setPlaceholderText("Enter Final Time Of Model In (s)")
         finalTime2.setObjectName(projMotCustomObjFinalTime)
-        customParametersLayout.addWidget(finalTime2, 0, Qt.AlignmentFlag.AlignHCenter)
+        customParametersLayout.addWidget(finalTime2)
         ## Clear Parameters Button
         customParametersClearBtn = QPushButton("Clear Custom Parameters")
-        customParametersClearBtn.setFixedSize(175,35)
+        customParametersClearBtn.setMinimumWidth(buttonMinWidth)
+        customParametersClearBtn.setMinimumHeight(buttonMinHeight)
         customParametersClearBtn.setObjectName(projMotCustomObjClearParamBtn)
         customParametersClearBtn.clicked.connect(self.ClearCustomParam)
-        customParametersLayout.addWidget(customParametersClearBtn, 0, Qt.AlignmentFlag.AlignHCenter)
+        customParametersLayout.addWidget(customParametersClearBtn)
+        ## Random Parameters Button
+        customParametersRandomBtn = QPushButton("Randomize Parameters")
+        customParametersRandomBtn.setMinimumWidth(buttonMinWidth)
+        customParametersRandomBtn.setMinimumHeight(buttonMinHeight)
+        customParametersRandomBtn.setObjectName(projMotCustomObjRandBtn)
+        customParametersRandomBtn.clicked.connect(self.RandomCustom)
+        customParametersLayout.addWidget(customParametersRandomBtn)
         # Parameters layouts layout addition
         parametersLayout.addLayout(commonParametersLayout)
         parametersLayout.addLayout(customParametersLayout)
         # Plot Selection
         plotSelectionHeader = QLabel("Choose Plot(s)")
         plotSelectionHeaderFont = plotSelectionHeader.font()
-        plotSelectionHeaderFont.setPointSize(20)
+        plotSelectionHeaderFont.setPointSize(headerSize)
         plotSelectionHeader.setFont(plotSelectionHeaderFont)
         plotSelectionHeader.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         plotSelectionLayout.addWidget(plotSelectionHeader)
         ## 2D Position Plot
         projMotPosPlot = QCheckBox("2D Position Plot")
         projMotPosPlot.setObjectName(projMotPosPlotCheck)
-        plotSelectionCBLayout.addWidget(projMotPosPlot, 0, Qt.AlignmentFlag.AlignLeft)
+        plotSelectionCBLayout.addWidget(projMotPosPlot)
         ## 2D Position Animation
         projMotPosAni = QCheckBox("2D Position Animation")
         projMotPosAni.setObjectName(projMotPosAniCheck)
-        plotSelectionCBLayout.addWidget(projMotPosAni, 0, Qt.AlignmentFlag.AlignLeft)
+        plotSelectionCBLayout.addWidget(projMotPosAni)
         ## 2D Velocity Plot
         projMotVelPlot = QCheckBox("2D Velocity Plot")
         projMotVelPlot.setObjectName(projMotVelPlotCheck)
-        plotSelectionCBLayout.addWidget(projMotVelPlot, 0, Qt.AlignmentFlag.AlignLeft)
+        plotSelectionCBLayout.addWidget(projMotVelPlot)
         ## 2D Velocity Animation
         projMotVelAni = QCheckBox("2D Velocity Animation")
         projMotVelAni.setObjectName(projMotVelAniCheck)
-        plotSelectionCBLayout.addWidget(projMotVelAni, 0, Qt.AlignmentFlag.AlignLeft)
+        plotSelectionCBLayout.addWidget(projMotVelAni)
         ## Select all plots
         selectAllPlotsBtn = QPushButton("Select All Plots")
-        selectAllPlotsBtn.setFixedSize(150, 35)
+        selectAllPlotsBtn.setMinimumWidth(buttonMinWidth)
+        selectAllPlotsBtn.setMinimumHeight(buttonMinHeight)
         selectAllPlotsBtn.setObjectName(projMotCBSelectAll)
         selectAllPlotsBtn.clicked.connect(self.SelectAllPlots)
-        plotSelectionBtnLayout.addWidget(selectAllPlotsBtn, 0, Qt.AlignmentFlag.AlignHCenter)
+        plotSelectionBtnLayout.addWidget(selectAllPlotsBtn)
         ## Unselect all plots
         unselectAllPlotsBtn = QPushButton("Unselect All Plots")
-        unselectAllPlotsBtn.setFixedSize(150, 35)
+        unselectAllPlotsBtn.setMinimumWidth(buttonMinWidth)
+        unselectAllPlotsBtn.setMinimumHeight(buttonMinHeight)
         unselectAllPlotsBtn.setObjectName(projMotCBUnselectAll)
         unselectAllPlotsBtn.clicked.connect(self.UnselectAllPlots)
-        plotSelectionBtnLayout.addWidget(unselectAllPlotsBtn, 0, Qt.AlignmentFlag.AlignHCenter)
+        plotSelectionBtnLayout.addWidget(unselectAllPlotsBtn)
         ## Plot selection layouts layout addition
         plotSelectionLayout.addLayout(plotSelectionHeaderLayout)
         plotSelectionLayout.addLayout(plotSelectionCBLayout)
@@ -412,19 +454,22 @@ class ProjectileMotionWindow(QWidget):
         buttonHeaderLayout.addWidget(buttonsHeader)
         ## Calculate Button
         calculateButton = QPushButton("Calculate")
-        calculateButton.setFixedSize(150, 35)
+        calculateButton.setMinimumWidth(buttonMinWidth)
+        calculateButton.setMinimumHeight(buttonMinHeight)
         calculateButton.setObjectName(projMotCalculateBtn)
         calculateButton.clicked.connect(self.OpenPlot)
         buttonMainBtnsLayout.addWidget(calculateButton)
         ## Clear Button
         clearButton = QPushButton("Clear")
-        clearButton.setFixedSize(150, 35)
+        clearButton.setMinimumWidth(buttonMinWidth)
+        clearButton.setMinimumHeight(buttonMinHeight)
         clearButton.setObjectName(projMotClearBtn)
         clearButton.clicked.connect(self.ClearAllInputs)
         buttonMainBtnsLayout.addWidget(clearButton)
         ## Main Window Button
         mainWindowButton = QPushButton("Return Home")
-        mainWindowButton.setFixedSize(150, 35)
+        mainWindowButton.setMinimumWidth(buttonMinWidth)
+        mainWindowButton.setMinimumHeight(buttonMinHeight)
         mainWindowButton.setObjectName(projMotMainWinBtn)
         mainWindowButton.clicked.connect(self.ReturnHome)
         buttonMainBtnsLayout.addWidget(mainWindowButton)
@@ -693,6 +738,89 @@ class ProjectileMotionWindow(QWidget):
             layout.addWidget(warningLabel)
             dialogBox.setLayout(layout)
             dialogBox.exec()
+
+    """ RandomCommon - Generates random parameters for a common object simulation
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab the common object children
+            * Calculate a random object from the choices in combo box and set the combo box to that entry
+            * Calculate a random initial position, round it, and set the text field to that value
+            * Calculate a random initial velocity, round it, and set the text field to that value
+            * Set the initial time of the model to 0
+            * Calculate a random final time of the model, round it, and set the text field to that value
+        Output:
+            This function does not return a value
+    """
+    def RandomCommon(self):
+        # Grab children
+        commonObjDD = self.findChild(QComboBox, projMotCommonObjectDropDownBtnName)
+        commonObjInitPos = self.findChild(QLineEdit, projMotCommonObjInitPos)
+        commonObjInitVel = self.findChild(QLineEdit, projMotCommonObjInitVel)
+        commonObjInitTime = self.findChild(QLineEdit, projMotCommonObjInitTime)
+        commonObjFinalTime = self.findChild(QLineEdit, projMotCommonObjFinalTime)
+        # Random object
+        randObj = random.randrange(1,11)
+        commonObjDD.setCurrentIndex(randObj)
+        # Random Position
+        randPos = random.uniform(0.0, 1000.0)
+        randPos = round(randPos,2)
+        commonObjInitPos.setText(str(randPos))
+        # Random Velocity
+        randVel = random.uniform(-200.0, 200.0)
+        randVel = round(randVel,2)
+        commonObjInitVel.setText(str(randVel))
+        # Initial Time
+        commonObjInitTime.setText(str(0))
+        # Random Final Time
+        randFinTime = random.uniform(1.0, 30.0)
+        randFinTime = round(randFinTime,2)
+        commonObjFinalTime.setText(str(randFinTime))
+
+    """ RandomCustom - Generates random parameters for a custom object simulation
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab the custom object children
+            * Calculate a random mass for the custom object, round it, and set the text field to that value
+            * Calculate a random radius for the custom object, round it, and set the text field to that value
+            * Calculate a random initial position, round it, and set the text field to that value
+            * Calculate a random initial velocity, round it, and set the text field to that value
+            * Set the initial time of the model to 0
+            * Calculate a random final time of the model, round it, and set the text field to that value
+        Output:
+            This function does not return a value
+    """
+    def RandomCustom(self):
+        # Grab children
+        customObjMass = self.findChild(QLineEdit, projMotCustomObjMass)
+        customObjRadius = self.findChild(QLineEdit, projMotCustomObjRadius)
+        customObjInitPos = self.findChild(QLineEdit, projMotCustomObjInitPos)
+        customObjInitVel = self.findChild(QLineEdit, projMotCustomObjInitVel)
+        customObjInitTime = self.findChild(QLineEdit, projMotCustomObjInitTime)
+        customObjFinalTime = self.findChild(QLineEdit, projMotCustomObjFinalTime)
+        # Random Mass
+        randMass = random.uniform(0.5 * MPLUTO, 10.0 * MSUN)
+        randMass = round(randMass,2)
+        customObjMass.setText(str(randMass))
+        # Random Radius
+        randRad = random.uniform(0.5 * RPLUTO, 10.0 * RSUN)
+        randRad = round(randRad,2)
+        customObjRadius.setText(str(randRad))
+        # Random Position
+        randPos = random.uniform(0.0, 1000.0)
+        randPos = round(randPos,2)
+        customObjInitPos.setText(str(randPos))
+        # Random Velocity
+        randVel = random.uniform(-200.0, 200.0)
+        randVel = round(randVel,2)
+        customObjInitVel.setText(str(randVel))
+        # Initial Time
+        customObjInitTime.setText(str(0))
+        # Random Final Time
+        randFinTime = random.uniform(1.0, 30.0)
+        randFinTime = round(randFinTime,2)
+        customObjFinalTime.setText(str(randFinTime))
 
     """ ReturnHome - Returns home and closes the current window
         Input:
