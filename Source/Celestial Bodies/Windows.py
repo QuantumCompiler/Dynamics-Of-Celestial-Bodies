@@ -539,17 +539,7 @@ class ProjectileMotionWindow(QWidget):
     """
     def Calculate(self):
         # Grab children from input fields
-        commonObjDD = self.findChild(QComboBox, projMotCommonObjectDD)
-        commonObjInitPos = self.findChild(QLineEdit, projMotCommonObjInitPos)
-        commonObjInitVel = self.findChild(QLineEdit, projMotCommonObjInitVel)
-        commonObjInitTime = self.findChild(QLineEdit, projMotCommonObjInitTime)
-        commonObjFinalTime = self.findChild(QLineEdit, projMotCommonObjFinalTime)
-        customObjMass = self.findChild(QLineEdit, projMotCustomObjMass)
-        customObjRadius = self.findChild(QLineEdit, projMotCustomObjRadius)
-        customObjInitPos = self.findChild(QLineEdit, projMotCustomObjInitPos)
-        customObjInitVel = self.findChild(QLineEdit, projMotCustomObjInitVel)
-        customObjInitTime = self.findChild(QLineEdit, projMotCustomObjInitTime)
-        customObjFinalTime = self.findChild(QLineEdit, projMotCustomObjFinalTime)
+        children = self.GrabChildren()
         # Parameters to be fed into solver
         obj = []
         objName = ""
@@ -558,15 +548,15 @@ class ProjectileMotionWindow(QWidget):
         initVel = 0
         initTime = 0
         finTime = 0
+        commonEntered = (any(isinstance(widget, QComboBox) and widget.currentText() != "Select Common Object" for widget in children[0]) and all(isinstance(widget, QLineEdit) and widget.text() != "" for widget in children[0][1:5]))
+        customEntered = (all(isinstance(widget, QLineEdit) and widget.text() != "" for widget in children[1][0:6]))
         # Common field entered, custom not
-        if ((customObjMass.text() == "" and customObjRadius.text() == "" and customObjInitPos.text() == "" and customObjInitVel.text() == "" and customObjInitTime.text() == "" and customObjFinalTime.text() == "") 
-            and (commonObjDD.currentText() != "Select Common Object" and commonObjInitPos.text() != "" and commonObjInitVel.text() != "" and commonObjInitTime.text() != "" and commonObjFinalTime.text())):
-            # Convert input fields to correct data type
-            objectSelection = commonObjDD.currentText()
-            initialPos = float(commonObjInitPos.text())
-            initialVel = float(commonObjInitVel.text())
-            initialTime = float(commonObjInitTime.text())
-            finalTime = float(commonObjFinalTime.text())
+        if (commonEntered):
+            objectSelection = children[0][0].currentText()
+            initialPos = float(children[0][1].text())
+            initialVel = float(children[0][2].text())
+            initialTime = float(children[0][3].text())
+            finalTime = float(children[0][4].text())
             # Assign object parameters
             if (objectSelection == "Sun"):
                 obj.append(MSUN)
@@ -609,16 +599,16 @@ class ProjectileMotionWindow(QWidget):
             ic.append(initVel)
             initTime = initialTime
             finTime = finalTime
+            return obj, ic, initTime, finTime, objName
         # Custom field entered, common not
-        elif ((customObjMass.text() != "" and customObjRadius.text() != "" and customObjInitPos.text() != "" and customObjInitVel.text() != "" and customObjInitTime.text() != "" and customObjFinalTime.text() != "") 
-            and (commonObjInitPos.text() == "" and commonObjInitVel.text() == "" and commonObjInitTime.text() == "" and commonObjFinalTime.text() == "")):
+        elif (commonEntered == False and customEntered == True):
             # Convert input fields to correct data type
-            objectMass = float(customObjMass.text())
-            objectRadius = float(customObjRadius.text())
-            initialPos = float(customObjInitPos.text())
-            initialVel = float(customObjInitVel.text())
-            initialTime = float(customObjInitTime.text())
-            finalTime = float(customObjFinalTime.text())
+            objectMass = float(children[1][0].text())
+            objectRadius = float(children[1][1].text())
+            initialPos = float(children[1][2].text())
+            initialVel = float(children[1][3].text())
+            initialTime = float(children[1][4].text())
+            finalTime = float(children[1][5].text())
             # Assign object parameters
             obj.append(objectMass)
             obj.append(objectRadius)
@@ -630,12 +620,13 @@ class ProjectileMotionWindow(QWidget):
             ic.append(initVel)
             initTime = initialTime
             finTime = finalTime
+            return obj, ic, initTime, finTime, objName
         # Invalid entries
         else:
             dialogBox = QDialog(self)
             dialogBox.setWindowTitle("Invalid Entries")
             dialogBox.setFixedSize(400, 75)
-            warningLabel = QLabel("Please enter in values into one parameter field or the other.", dialogBox)
+            warningLabel = QLabel("Please enter in all values in the given fields.", dialogBox)
             warningFont = warningLabel.font()
             warningFont.setPointSize(13)
             warningLabel.setFont(warningFont)
@@ -644,7 +635,7 @@ class ProjectileMotionWindow(QWidget):
             layout.addWidget(warningLabel)
             dialogBox.setLayout(layout)
             dialogBox.exec()
-        return obj, ic, initTime, finTime, objName
+            return None, None, None, None, None
     
     """ ClearAllInputs - Clears all the inputs of the window
         Input:
@@ -762,6 +753,8 @@ class ProjectileMotionWindow(QWidget):
         ## Plot selection / Main buttons children
         for widgets in children[2:]:
             for widget in widgets:
+                if isinstance(widget, QCheckBox):
+                    widget.setChecked(False)
                 widget.setDisabled(True)
 
     """ CommmonObjChanged - Enables / Disables and resets children based on index of the combo box
@@ -957,41 +950,40 @@ class ProjectileMotionWindow(QWidget):
     def OpenPlot(self):
         # Call calculate
         calc = self.Calculate()
-        # Grab checkbox children
-        posPlotCheck = self.findChild(QCheckBox, projMotPosPlotCheck)
-        posAniCheck = self.findChild(QCheckBox, projMotPosAniCheck)
-        velPlotCheck = self.findChild(QCheckBox, projMotVelPlotCheck)
-        velAniCheck = self.findChild(QCheckBox, projMotVelAniCheck)
-        # Position Plot
-        if (posPlotCheck.isChecked() == True):
-            self.posPlot = ProjectileMotionPlotWindow(0, calc[0], calc[1], calc[2], calc[3], calc[4], "Projectile", "Projectile Motion Plot: Position Vs. Time")
-            self.posPlot.show()
-        # Position Animation
-        if (posAniCheck.isChecked() == True):
-            self.posAni = ProjectileMotionPlotWindow(1, calc[0], calc[1], calc[2], calc[3], calc[4], "Projectile", "Projectile Motion Animation: Position Vs. Time")
-            self.posAni.show()
-        # Velocity Plot
-        if (velPlotCheck.isChecked() == True):
-            self.velPlot = ProjectileMotionPlotWindow(2, calc[0], calc[1], calc[2], calc[3], calc[4], "Projectile", "Projectile Motion Plot: Velocity Vs. Time")
-            self.velPlot.show()
-        # Velocity Animation
-        if (velAniCheck.isChecked() == True):
-            self.velAni = ProjectileMotionPlotWindow(3, calc[0], calc[1], calc[2], calc[3], calc[4], "Projectile", "Projectile Motion Animation: Velocity Vs. Time")
-            self.velAni.show()
-        # No boxes checked
-        if (posPlotCheck.isChecked() == False and posAniCheck.isChecked() == False and velPlotCheck.isChecked() == False and velAniCheck.isChecked() == False):
-            dialogBox = QDialog(self)
-            dialogBox.setWindowTitle("Invalid Entries")
-            dialogBox.setFixedSize(400, 75)
-            warningLabel = QLabel("Please select plot(s) for entered input parameters.", dialogBox)
-            warningFont = warningLabel.font()
-            warningFont.setPointSize(13)
-            warningLabel.setFont(warningFont)
-            warningLabel.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-            layout = QVBoxLayout()
-            layout.addWidget(warningLabel)
-            dialogBox.setLayout(layout)
-            dialogBox.exec()
+        # Check for not none
+        if all(values is not None for values in calc):        
+            # Grab children
+            children = self.GrabChildren()
+            # Position Plot
+            if (children[2][0].isChecked() == True):
+                self.posPlot = ProjectileMotionPlotWindow(0, calc[0], calc[1], calc[2], calc[3], calc[4], "Projectile", "Projectile Motion Plot: Position Vs. Time")
+                self.posPlot.show()
+            # Position Animation
+            if (children[2][1].isChecked() == True):
+                self.posAni = ProjectileMotionPlotWindow(1, calc[0], calc[1], calc[2], calc[3], calc[4], "Projectile", "Projectile Motion Animation: Position Vs. Time")
+                self.posAni.show()
+            # Velocity Plot
+            if (children[2][2].isChecked() == True):
+                self.velPlot = ProjectileMotionPlotWindow(2, calc[0], calc[1], calc[2], calc[3], calc[4], "Projectile", "Projectile Motion Plot: Velocity Vs. Time")
+                self.velPlot.show()
+            # Velocity Animation
+            if (children[2][3].isChecked() == True):
+                self.velAni = ProjectileMotionPlotWindow(3, calc[0], calc[1], calc[2], calc[3], calc[4], "Projectile", "Projectile Motion Animation: Velocity Vs. Time")
+                self.velAni.show()
+            # No boxes checked
+            if (children[2][0].isChecked() == False and children[2][1].isChecked() == False and children[2][2].isChecked() == False and children[2][3].isChecked() == False):
+                dialogBox = QDialog(self)
+                dialogBox.setWindowTitle("Invalid Entries")
+                dialogBox.setFixedSize(400, 75)
+                warningLabel = QLabel("Please select plot(s) for entered input values.", dialogBox)
+                warningFont = warningLabel.font()
+                warningFont.setPointSize(13)
+                warningLabel.setFont(warningFont)
+                warningLabel.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+                layout = QVBoxLayout()
+                layout.addWidget(warningLabel)
+                dialogBox.setLayout(layout)
+                dialogBox.exec()
 
     """ RandomCommon - Generates random parameters for a common object simulation
         Input:
@@ -1166,6 +1158,7 @@ class TwoBodyWindow(QWidget):
     """ Constructor - Constructs window with widgets and layouts of widgets
     
     """
+    mainWindowSignal = pyqtSignal()
     def __init__(self):
         super().__init__()
         # Title of Window
@@ -1176,13 +1169,12 @@ class TwoBodyWindow(QWidget):
         self.setMinimumHeight(500)
         # Layouts
         mainLayout = QVBoxLayout()
-        commonParameters = QHBoxLayout()
-        mass1CommonParametersLayout = QVBoxLayout()
-        mass2CommonParametersLayout = QVBoxLayout()
         # Main layout widget addition
-        mainLayout.addLayout(commonParameters)
         # Add layouts
         self.setLayout(mainLayout)
+
+    def Calculate(self):
+        return
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
 ##### Three Body Window
