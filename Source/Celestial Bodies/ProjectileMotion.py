@@ -300,319 +300,275 @@ projMotMainWinBtn = "Return Home"
 
 """ ProjectileMotionWindow - Window for the projectile motion simulation
     Member Functions:
-        Constructor - Constructs window with widgets and layouts of widgets
-        Calculate - Assigns parameters of input fields to be fed to the projectile motion solver
-        ClearAllInputs - Clears all the inputs of the window
-        ClearCommonParam - Clears the common parameters input fields
-        ClearCustomParam - Clears the custom parameters input fields
-        CommmonObjChanged - Enables / Disables and resets children based on index of the combo box
-        CustomObjChanged - Enables / Disables and resets children based on the value of children in custom parameters
-        GrabChildren - Grabs the children from the main window
-        OpenPlot - Opens a window for a given plot
-        RandomCommon - Generates random parameters for a common object simulation
-        RandomCustom - Generates random parameters for a custom object simulation
-        ReturnHome - Returns home and closes the current window
-        SelectAllPlots - Selects all plot options
-        UnselectAllPlots - Unselects all plot options
+
 """
 class ProjectileMotionWindow(QWidget):
     """ Constructor - Constructs window with widgets and layouts of widgets
         Input:
             This function does not have any unique input parameters
         Algorithm:
-            * Create a signal for the main window
-            * Set the title of the window
-            * Set the height and width of the window
-            * Create the layouts for the window
-            * Create the common mass parameters header
-            * Create the common masses drop down
-            * Create the common masses initial position text field
-            * Create the common masses initial velocity text field
-            * Create the common masses initial time text field
-            * Create the common masses final time text field
-            * Create the common masses clear button
-            * Create the common masses random button
-            * Create the custom masses parameters header
-            * Create the custom masses mass text field
-            * Create the custom masses radius text field
-            * Create the custom masses initial position text field
-            * Create the custom masses initial velocity text field
-            * Create the custom masses initial time text field
-            * Create the custom masses final time text field
-            * Create the custom masses clear button
-            * Create the custom masses random button
-            * Add the common and custom parameters layouts to the parameters layout
-            * Create the plot selection header
-            * Create the plot selection check boxes
-            * Create the plot selection buttons
-            * Add the plot selection layouts to the plot selection layout
-            * Create the buttons header
-            * Create the calculate button
-            * Create the clear button
-            * Create the main window button
-            * Add the button layouts to the button layout
-            * Add the parameters, plot selection, and button layouts to the main layout
-            * Set the main layout to main layout
+            * Call the init ui function
         Output:
             This function does not return a value
     """
     # Main window signal
     mainWindowSignal = pyqtSignal()
     def __init__(self):
-        # Widget sizes
-        headerSize = 20
-        comboBoxMinWidth = 200
-        comboBoxMinHeight = 25
-        textFieldMinWidth = 200
-        textFieldMinHeight = 25
-        buttonMinWidth = 175
-        buttonMinHeight = 35
         super().__init__()
-        # Title of Window
-        self.setWindowTitle("Projectile Motion Simulation")
-        # Height and Width of Window
-        self.resize(800,500)
-        self.setMinimumWidth(800)
-        self.setMinimumHeight(500)
-        # Layouts
-        mainLayout = QVBoxLayout()
-        ## Parameters layouts
-        parametersLayout = QHBoxLayout()
-        commonParametersLayout = QVBoxLayout()
-        customParametersLayout = QVBoxLayout()
-        customObjParametersLayout = QHBoxLayout()
-        ## Plot selection layouts
-        plotSelectionLayout = QVBoxLayout()
-        plotSelectionHeaderLayout = QHBoxLayout()
-        plotSelectionCBLayout = QHBoxLayout()
-        plotSelectionBtnLayout = QHBoxLayout()
-        # Main buttons layout
-        buttonLayout = QVBoxLayout()
-        buttonHeaderLayout = QHBoxLayout()
-        buttonMainBtnsLayout = QHBoxLayout()
-        # Margins
-        mainLayout.setContentsMargins(25,25,25,25)
-        ## Header
-        commonParametersHeader = QLabel("Common Parameters")
-        commonParametersHeaderFont = commonParametersHeader.font()
-        commonParametersHeaderFont.setPointSize(headerSize)
-        commonParametersHeader.setFont(commonParametersHeaderFont)
-        commonParametersHeader.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        commonParametersLayout.addWidget(commonParametersHeader)
-        ## Common Masses Dropdown
-        commonObjectsDropdown = QComboBox()
-        commonObjectsDropdown.setMinimumWidth(comboBoxMinWidth)
-        commonObjectsDropdown.setMinimumHeight(comboBoxMinHeight)
-        commonObjectsDropdown.addItems(["Select Common Object", "Sun", "Mercury", "Venus", "Earth", "Moon", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"])
-        commonObjectsDropdown.currentIndexChanged.connect(self.CommmonObjChanged)
-        commonObjectsDropdown.setObjectName(projMotCommonObjectDD)
-        commonParametersLayout.addWidget(commonObjectsDropdown)
-        ## Projectile Motion Initial Position
-        projectileInitialPosition1 = QLineEdit()
-        projectileInitialPosition1.setMinimumWidth(textFieldMinWidth)
-        projectileInitialPosition1.setMinimumHeight(textFieldMinHeight)
-        projectileInitialPosition1.setPlaceholderText("Enter Initial Position In (m)")
-        projectileInitialPosition1.setDisabled(True)
-        projectileInitialPosition1.setObjectName(projMotCommonObjInitPos)
-        commonParametersLayout.addWidget(projectileInitialPosition1)
-        ## Projectile Motion Initial Velocity
-        projectileInitialVelocity1 = QLineEdit()
-        projectileInitialVelocity1.setMinimumWidth(textFieldMinWidth)
-        projectileInitialVelocity1.setMinimumHeight(textFieldMinHeight)
-        projectileInitialVelocity1.setPlaceholderText("Enter Initial Velocity In (m/s)")
-        projectileInitialVelocity1.setDisabled(True)
-        projectileInitialVelocity1.setObjectName(projMotCommonObjInitVel)
-        commonParametersLayout.addWidget(projectileInitialVelocity1)
-        ## Initial Time Of Model
-        initialTime1 = QLineEdit()
-        initialTime1.setMinimumWidth(textFieldMinWidth)
-        initialTime1.setMinimumHeight(textFieldMinHeight)
-        initialTime1.setPlaceholderText("Enter Initial Time Of Model In (s)")
-        initialTime1.setDisabled(True)
-        initialTime1.setObjectName(projMotCommonObjInitTime)
-        commonParametersLayout.addWidget(initialTime1)
-        ## Final Time Of Model
-        finalTime1 = QLineEdit()
-        finalTime1.setMinimumWidth(textFieldMinWidth)
-        finalTime1.setMinimumHeight(textFieldMinHeight)
-        finalTime1.setPlaceholderText("Enter Final Time Of Model In (s)")
-        finalTime1.setDisabled(True)
-        finalTime1.setObjectName(projMotCommonObjFinalTime)
-        commonParametersLayout.addWidget(finalTime1)
-        ## Clear Parameters Button
-        commonParametersClearBtn = QPushButton("Clear Common Parameters")
-        commonParametersClearBtn.setMinimumWidth(buttonMinWidth)
-        commonParametersClearBtn.setMinimumHeight(buttonMinHeight)
-        commonParametersClearBtn.setDisabled(True)
-        commonParametersClearBtn.setObjectName(projMotCommonObjClearParamBtn)
-        commonParametersClearBtn.clicked.connect(self.ClearCommonParam)
-        commonParametersLayout.addWidget(commonParametersClearBtn)
-        ## Random Parameters Button
-        commonParametersRandomBtn = QPushButton("Randomize Parameters")
-        commonParametersRandomBtn.setMinimumWidth(buttonMinWidth)
-        commonParametersRandomBtn.setMinimumHeight(buttonMinHeight)
-        commonParametersRandomBtn.setObjectName(projMotCommonObjRandBtn)
-        commonParametersRandomBtn.clicked.connect(self.RandomCommon)
-        commonParametersLayout.addWidget(commonParametersRandomBtn)
-        # Custom Parameters
-        ## Header
-        customParametersHeader = QLabel("Custom Parameters")
-        customParametersHeaderFont = customParametersHeader.font()
-        customParametersHeaderFont.setPointSize(headerSize)
-        customParametersHeader.setFont(customParametersHeaderFont)
-        customParametersHeader.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        customParametersLayout.addWidget(customParametersHeader)
-        ## Mass
-        customObj = QLineEdit()
-        customObj.setMinimumHeight(textFieldMinHeight)
-        customObj.setPlaceholderText("Enter Mass Of Object In (Kg)")
-        customObj.textChanged.connect(self.CustomObjChanged)
-        customObj.setObjectName(projMotCustomObjMass)
-        customObjParametersLayout.addWidget(customObj)
-        ## Radius Of Mass
-        customRadius = QLineEdit()
-        customRadius.setMinimumHeight(textFieldMinHeight)
-        customRadius.setPlaceholderText("Enter Radius Of Mass In (m)")
-        customRadius.textChanged.connect(self.CustomObjChanged)
-        customRadius.setObjectName(projMotCustomObjRadius)
-        customObjParametersLayout.addWidget(customRadius)
-        customParametersLayout.addLayout(customObjParametersLayout)
-        ## Projectile Motion Initial Position
-        projectileInitialPosition2 = QLineEdit()
-        projectileInitialPosition2.setMinimumWidth(textFieldMinWidth)
-        projectileInitialPosition2.setMinimumHeight(textFieldMinHeight)
-        projectileInitialPosition2.setPlaceholderText("Enter Initial Position In (m)")
-        projectileInitialPosition2.setDisabled(True)
-        projectileInitialPosition2.setObjectName(projMotCustomObjInitPos)
-        customParametersLayout.addWidget(projectileInitialPosition2)
-        ## Projectile Motion Initial Velocity
-        projectileInitialVelocity2 = QLineEdit()
-        projectileInitialVelocity2.setMinimumWidth(textFieldMinWidth)
-        projectileInitialVelocity2.setMinimumHeight(textFieldMinHeight)
-        projectileInitialVelocity2.setPlaceholderText("Enter Initial Velocity In (m/s)")
-        projectileInitialVelocity2.setDisabled(True)
-        projectileInitialVelocity2.setObjectName(projMotCustomObjInitVel)
-        customParametersLayout.addWidget(projectileInitialVelocity2)
-        ## Initial Time Of Model
-        initialTime2 = QLineEdit()
-        initialTime2.setMinimumWidth(textFieldMinWidth)
-        initialTime2.setMinimumHeight(textFieldMinHeight)
-        initialTime2.setPlaceholderText("Enter Initial Time Of Model In (s)")
-        initialTime2.setDisabled(True)
-        initialTime2.setObjectName(projMotCustomObjInitTime)
-        customParametersLayout.addWidget(initialTime2)
-        ## Final Time Of Model
-        finalTime2 = QLineEdit()
-        finalTime2.setMinimumWidth(textFieldMinWidth)
-        finalTime2.setMinimumHeight(textFieldMinHeight)
-        finalTime2.setPlaceholderText("Enter Final Time Of Model In (s)")
-        finalTime2.setDisabled(True)
-        finalTime2.setObjectName(projMotCustomObjFinalTime)
-        customParametersLayout.addWidget(finalTime2)
-        ## Clear Parameters Button
-        customParametersClearBtn = QPushButton("Clear Custom Parameters")
-        customParametersClearBtn.setMinimumWidth(buttonMinWidth)
-        customParametersClearBtn.setMinimumHeight(buttonMinHeight)
-        customParametersClearBtn.setDisabled(True)
-        customParametersClearBtn.setObjectName(projMotCustomObjClearParamBtn)
-        customParametersClearBtn.clicked.connect(self.ClearCustomParam)
-        customParametersLayout.addWidget(customParametersClearBtn)
-        ## Random Parameters Button
-        customParametersRandomBtn = QPushButton("Randomize Parameters")
-        customParametersRandomBtn.setMinimumWidth(buttonMinWidth)
-        customParametersRandomBtn.setMinimumHeight(buttonMinHeight)
-        customParametersRandomBtn.setObjectName(projMotCustomObjRandBtn)
-        customParametersRandomBtn.clicked.connect(self.RandomCustom)
-        customParametersLayout.addWidget(customParametersRandomBtn)
-        # Parameters layouts layout addition
-        parametersLayout.addLayout(commonParametersLayout)
-        parametersLayout.addLayout(customParametersLayout)
-        # Plot Selection
-        plotSelectionHeader = QLabel("Choose Plot(s)")
-        plotSelectionHeaderFont = plotSelectionHeader.font()
-        plotSelectionHeaderFont.setPointSize(headerSize)
-        plotSelectionHeader.setFont(plotSelectionHeaderFont)
-        plotSelectionHeader.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        plotSelectionLayout.addWidget(plotSelectionHeader)
-        ## 2D Position Plot
-        projMotPosPlot = QCheckBox("2D Position Plot")
-        projMotPosPlot.setDisabled(True)
-        projMotPosPlot.setObjectName(projMotPosPlotCheck)
-        plotSelectionCBLayout.addWidget(projMotPosPlot)
-        ## 2D Position Animation
-        projMotPosAni = QCheckBox("2D Position Animation")
-        projMotPosAni.setDisabled(True)
-        projMotPosAni.setObjectName(projMotPosAniCheck)
-        plotSelectionCBLayout.addWidget(projMotPosAni)
-        ## 2D Velocity Plot
-        projMotVelPlot = QCheckBox("2D Velocity Plot")
-        projMotVelPlot.setDisabled(True)
-        projMotVelPlot.setObjectName(projMotVelPlotCheck)
-        plotSelectionCBLayout.addWidget(projMotVelPlot)
-        ## 2D Velocity Animation
-        projMotVelAni = QCheckBox("2D Velocity Animation")
-        projMotVelAni.setDisabled(True)
-        projMotVelAni.setObjectName(projMotVelAniCheck)
-        plotSelectionCBLayout.addWidget(projMotVelAni)
-        ## Select all plots
-        selectAllPlotsBtn = QPushButton("Select All Plots")
-        selectAllPlotsBtn.setMinimumWidth(buttonMinWidth)
-        selectAllPlotsBtn.setMinimumHeight(buttonMinHeight)
-        selectAllPlotsBtn.setDisabled(True)
-        selectAllPlotsBtn.setObjectName(projMotCBSelectAll)
-        selectAllPlotsBtn.clicked.connect(self.SelectAllPlots)
-        plotSelectionBtnLayout.addWidget(selectAllPlotsBtn)
-        ## Unselect all plots
-        unselectAllPlotsBtn = QPushButton("Unselect All Plots")
-        unselectAllPlotsBtn.setMinimumWidth(buttonMinWidth)
-        unselectAllPlotsBtn.setMinimumHeight(buttonMinHeight)
-        unselectAllPlotsBtn.setDisabled(True)
-        unselectAllPlotsBtn.setObjectName(projMotCBUnselectAll)
-        unselectAllPlotsBtn.clicked.connect(self.UnselectAllPlots)
-        plotSelectionBtnLayout.addWidget(unselectAllPlotsBtn)
-        ## Plot selection layouts layout addition
-        plotSelectionLayout.addLayout(plotSelectionHeaderLayout)
-        plotSelectionLayout.addLayout(plotSelectionCBLayout)
-        plotSelectionLayout.addLayout(plotSelectionBtnLayout)
-        # Buttons
-        buttonsHeader = QLabel("Calculate / Clear Selection")
-        buttonsHeaderFont = buttonsHeader.font()
-        buttonsHeaderFont.setPointSize(20)
-        buttonsHeader.setFont(buttonsHeaderFont)
-        buttonsHeader.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        buttonHeaderLayout.addWidget(buttonsHeader)
-        ## Calculate Button
-        calculateButton = QPushButton("Calculate")
-        calculateButton.setMinimumWidth(buttonMinWidth)
-        calculateButton.setMinimumHeight(buttonMinHeight)
-        calculateButton.setDisabled(True)
-        calculateButton.setObjectName(projMotCalculateBtn)
-        calculateButton.clicked.connect(self.OpenPlot)
-        buttonMainBtnsLayout.addWidget(calculateButton)
-        ## Clear Button
-        clearButton = QPushButton("Clear")
-        clearButton.setMinimumWidth(buttonMinWidth)
-        clearButton.setMinimumHeight(buttonMinHeight)
-        clearButton.setDisabled(True)
-        clearButton.setObjectName(projMotClearBtn)
-        clearButton.clicked.connect(self.ClearAllInputs)
-        buttonMainBtnsLayout.addWidget(clearButton)
-        ## Main Window Button
-        mainWindowButton = QPushButton("Return Home")
-        mainWindowButton.setMinimumWidth(buttonMinWidth)
-        mainWindowButton.setMinimumHeight(buttonMinHeight)
-        mainWindowButton.setObjectName(projMotMainWinBtn)
-        mainWindowButton.clicked.connect(self.ReturnHome)
-        buttonMainBtnsLayout.addWidget(mainWindowButton)
-        ## Button layouts layout addition
-        buttonLayout.addLayout(buttonHeaderLayout)
-        buttonLayout.addLayout(buttonMainBtnsLayout)
-        # Main layout widget addition
-        mainLayout.addLayout(parametersLayout)
-        mainLayout.addLayout(plotSelectionLayout)
-        mainLayout.addLayout(buttonLayout)
-        # Add layouts
-        self.setLayout(mainLayout)
+        self.InitUI()
+        # # Widget sizes
+        # headerSize = 20
+        # comboBoxMinWidth = 200
+        # comboBoxMinHeight = 25
+        # textFieldMinWidth = 200
+        # textFieldMinHeight = 25
+        # buttonMinWidth = 175
+        # buttonMinHeight = 35
+        # # Title of Window
+        # self.setWindowTitle("Projectile Motion Simulation")
+        # # Height and Width of Window
+        # self.resize(800,500)
+        # self.setMinimumWidth(800)
+        # self.setMinimumHeight(500)
+        # # Layouts
+        # mainLayout = QVBoxLayout()
+        # ## Parameters layouts
+        # parametersLayout = QHBoxLayout()
+        # commonParametersLayout = QVBoxLayout()
+        # customParametersLayout = QVBoxLayout()
+        # customObjParametersLayout = QHBoxLayout()
+        # ## Plot selection layouts
+        # plotSelectionLayout = QVBoxLayout()
+        # plotSelectionHeaderLayout = QHBoxLayout()
+        # plotSelectionCBLayout = QHBoxLayout()
+        # plotSelectionBtnLayout = QHBoxLayout()
+        # # Main buttons layout
+        # buttonLayout = QVBoxLayout()
+        # buttonHeaderLayout = QHBoxLayout()
+        # buttonMainBtnsLayout = QHBoxLayout()
+        # # Margins
+        # mainLayout.setContentsMargins(25,25,25,25)
+        # ## Header
+        # commonParametersHeader = QLabel("Common Parameters")
+        # commonParametersHeaderFont = commonParametersHeader.font()
+        # commonParametersHeaderFont.setPointSize(headerSize)
+        # commonParametersHeader.setFont(commonParametersHeaderFont)
+        # commonParametersHeader.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        # commonParametersLayout.addWidget(commonParametersHeader)
+        # ## Common Masses Dropdown
+        # commonObjectsDropdown = QComboBox()
+        # commonObjectsDropdown.setMinimumWidth(comboBoxMinWidth)
+        # commonObjectsDropdown.setMinimumHeight(comboBoxMinHeight)
+        # commonObjectsDropdown.addItems(["Select Common Object", "Sun", "Mercury", "Venus", "Earth", "Moon", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"])
+        # commonObjectsDropdown.currentIndexChanged.connect(self.CommmonObjChanged)
+        # commonObjectsDropdown.setObjectName(projMotCommonObjectDD)
+        # commonParametersLayout.addWidget(commonObjectsDropdown)
+        # ## Projectile Motion Initial Position
+        # projectileInitialPosition1 = QLineEdit()
+        # projectileInitialPosition1.setMinimumWidth(textFieldMinWidth)
+        # projectileInitialPosition1.setMinimumHeight(textFieldMinHeight)
+        # projectileInitialPosition1.setPlaceholderText("Enter Initial Position In (m)")
+        # projectileInitialPosition1.setDisabled(True)
+        # projectileInitialPosition1.setObjectName(projMotCommonObjInitPos)
+        # commonParametersLayout.addWidget(projectileInitialPosition1)
+        # ## Projectile Motion Initial Velocity
+        # projectileInitialVelocity1 = QLineEdit()
+        # projectileInitialVelocity1.setMinimumWidth(textFieldMinWidth)
+        # projectileInitialVelocity1.setMinimumHeight(textFieldMinHeight)
+        # projectileInitialVelocity1.setPlaceholderText("Enter Initial Velocity In (m/s)")
+        # projectileInitialVelocity1.setDisabled(True)
+        # projectileInitialVelocity1.setObjectName(projMotCommonObjInitVel)
+        # commonParametersLayout.addWidget(projectileInitialVelocity1)
+        # ## Initial Time Of Model
+        # initialTime1 = QLineEdit()
+        # initialTime1.setMinimumWidth(textFieldMinWidth)
+        # initialTime1.setMinimumHeight(textFieldMinHeight)
+        # initialTime1.setPlaceholderText("Enter Initial Time Of Model In (s)")
+        # initialTime1.setDisabled(True)
+        # initialTime1.setObjectName(projMotCommonObjInitTime)
+        # commonParametersLayout.addWidget(initialTime1)
+        # ## Final Time Of Model
+        # finalTime1 = QLineEdit()
+        # finalTime1.setMinimumWidth(textFieldMinWidth)
+        # finalTime1.setMinimumHeight(textFieldMinHeight)
+        # finalTime1.setPlaceholderText("Enter Final Time Of Model In (s)")
+        # finalTime1.setDisabled(True)
+        # finalTime1.setObjectName(projMotCommonObjFinalTime)
+        # commonParametersLayout.addWidget(finalTime1)
+        # ## Clear Parameters Button
+        # commonParametersClearBtn = QPushButton("Clear Common Parameters")
+        # commonParametersClearBtn.setMinimumWidth(buttonMinWidth)
+        # commonParametersClearBtn.setMinimumHeight(buttonMinHeight)
+        # commonParametersClearBtn.setDisabled(True)
+        # commonParametersClearBtn.setObjectName(projMotCommonObjClearParamBtn)
+        # commonParametersClearBtn.clicked.connect(self.ClearCommonParam)
+        # commonParametersLayout.addWidget(commonParametersClearBtn)
+        # ## Random Parameters Button
+        # commonParametersRandomBtn = QPushButton("Randomize Parameters")
+        # commonParametersRandomBtn.setMinimumWidth(buttonMinWidth)
+        # commonParametersRandomBtn.setMinimumHeight(buttonMinHeight)
+        # commonParametersRandomBtn.setObjectName(projMotCommonObjRandBtn)
+        # commonParametersRandomBtn.clicked.connect(self.RandomCommon)
+        # commonParametersLayout.addWidget(commonParametersRandomBtn)
+        # # Custom Parameters
+        # ## Header
+        # customParametersHeader = QLabel("Custom Parameters")
+        # customParametersHeaderFont = customParametersHeader.font()
+        # customParametersHeaderFont.setPointSize(headerSize)
+        # customParametersHeader.setFont(customParametersHeaderFont)
+        # customParametersHeader.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        # customParametersLayout.addWidget(customParametersHeader)
+        # ## Mass
+        # customObj = QLineEdit()
+        # customObj.setMinimumHeight(textFieldMinHeight)
+        # customObj.setPlaceholderText("Enter Mass Of Object In (Kg)")
+        # customObj.textChanged.connect(self.CustomObjChanged)
+        # customObj.setObjectName(projMotCustomObjMass)
+        # customObjParametersLayout.addWidget(customObj)
+        # ## Radius Of Mass
+        # customRadius = QLineEdit()
+        # customRadius.setMinimumHeight(textFieldMinHeight)
+        # customRadius.setPlaceholderText("Enter Radius Of Mass In (m)")
+        # customRadius.textChanged.connect(self.CustomObjChanged)
+        # customRadius.setObjectName(projMotCustomObjRadius)
+        # customObjParametersLayout.addWidget(customRadius)
+        # customParametersLayout.addLayout(customObjParametersLayout)
+        # ## Projectile Motion Initial Position
+        # projectileInitialPosition2 = QLineEdit()
+        # projectileInitialPosition2.setMinimumWidth(textFieldMinWidth)
+        # projectileInitialPosition2.setMinimumHeight(textFieldMinHeight)
+        # projectileInitialPosition2.setPlaceholderText("Enter Initial Position In (m)")
+        # projectileInitialPosition2.setDisabled(True)
+        # projectileInitialPosition2.setObjectName(projMotCustomObjInitPos)
+        # customParametersLayout.addWidget(projectileInitialPosition2)
+        # ## Projectile Motion Initial Velocity
+        # projectileInitialVelocity2 = QLineEdit()
+        # projectileInitialVelocity2.setMinimumWidth(textFieldMinWidth)
+        # projectileInitialVelocity2.setMinimumHeight(textFieldMinHeight)
+        # projectileInitialVelocity2.setPlaceholderText("Enter Initial Velocity In (m/s)")
+        # projectileInitialVelocity2.setDisabled(True)
+        # projectileInitialVelocity2.setObjectName(projMotCustomObjInitVel)
+        # customParametersLayout.addWidget(projectileInitialVelocity2)
+        # ## Initial Time Of Model
+        # initialTime2 = QLineEdit()
+        # initialTime2.setMinimumWidth(textFieldMinWidth)
+        # initialTime2.setMinimumHeight(textFieldMinHeight)
+        # initialTime2.setPlaceholderText("Enter Initial Time Of Model In (s)")
+        # initialTime2.setDisabled(True)
+        # initialTime2.setObjectName(projMotCustomObjInitTime)
+        # customParametersLayout.addWidget(initialTime2)
+        # ## Final Time Of Model
+        # finalTime2 = QLineEdit()
+        # finalTime2.setMinimumWidth(textFieldMinWidth)
+        # finalTime2.setMinimumHeight(textFieldMinHeight)
+        # finalTime2.setPlaceholderText("Enter Final Time Of Model In (s)")
+        # finalTime2.setDisabled(True)
+        # finalTime2.setObjectName(projMotCustomObjFinalTime)
+        # customParametersLayout.addWidget(finalTime2)
+        # ## Clear Parameters Button
+        # customParametersClearBtn = QPushButton("Clear Custom Parameters")
+        # customParametersClearBtn.setMinimumWidth(buttonMinWidth)
+        # customParametersClearBtn.setMinimumHeight(buttonMinHeight)
+        # customParametersClearBtn.setDisabled(True)
+        # customParametersClearBtn.setObjectName(projMotCustomObjClearParamBtn)
+        # customParametersClearBtn.clicked.connect(self.ClearCustomParam)
+        # customParametersLayout.addWidget(customParametersClearBtn)
+        # ## Random Parameters Button
+        # customParametersRandomBtn = QPushButton("Randomize Parameters")
+        # customParametersRandomBtn.setMinimumWidth(buttonMinWidth)
+        # customParametersRandomBtn.setMinimumHeight(buttonMinHeight)
+        # customParametersRandomBtn.setObjectName(projMotCustomObjRandBtn)
+        # customParametersRandomBtn.clicked.connect(self.RandomCustom)
+        # customParametersLayout.addWidget(customParametersRandomBtn)
+        # # Parameters layouts layout addition
+        # parametersLayout.addLayout(commonParametersLayout)
+        # parametersLayout.addLayout(customParametersLayout)
+        # # Plot Selection
+        # plotSelectionHeader = QLabel("Choose Plot(s)")
+        # plotSelectionHeaderFont = plotSelectionHeader.font()
+        # plotSelectionHeaderFont.setPointSize(headerSize)
+        # plotSelectionHeader.setFont(plotSelectionHeaderFont)
+        # plotSelectionHeader.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        # plotSelectionLayout.addWidget(plotSelectionHeader)
+        # ## 2D Position Plot
+        # projMotPosPlot = QCheckBox("2D Position Plot")
+        # projMotPosPlot.setDisabled(True)
+        # projMotPosPlot.setObjectName(projMotPosPlotCheck)
+        # plotSelectionCBLayout.addWidget(projMotPosPlot)
+        # ## 2D Position Animation
+        # projMotPosAni = QCheckBox("2D Position Animation")
+        # projMotPosAni.setDisabled(True)
+        # projMotPosAni.setObjectName(projMotPosAniCheck)
+        # plotSelectionCBLayout.addWidget(projMotPosAni)
+        # ## 2D Velocity Plot
+        # projMotVelPlot = QCheckBox("2D Velocity Plot")
+        # projMotVelPlot.setDisabled(True)
+        # projMotVelPlot.setObjectName(projMotVelPlotCheck)
+        # plotSelectionCBLayout.addWidget(projMotVelPlot)
+        # ## 2D Velocity Animation
+        # projMotVelAni = QCheckBox("2D Velocity Animation")
+        # projMotVelAni.setDisabled(True)
+        # projMotVelAni.setObjectName(projMotVelAniCheck)
+        # plotSelectionCBLayout.addWidget(projMotVelAni)
+        # ## Select all plots
+        # selectAllPlotsBtn = QPushButton("Select All Plots")
+        # selectAllPlotsBtn.setMinimumWidth(buttonMinWidth)
+        # selectAllPlotsBtn.setMinimumHeight(buttonMinHeight)
+        # selectAllPlotsBtn.setDisabled(True)
+        # selectAllPlotsBtn.setObjectName(projMotCBSelectAll)
+        # selectAllPlotsBtn.clicked.connect(self.SelectAllPlots)
+        # plotSelectionBtnLayout.addWidget(selectAllPlotsBtn)
+        # ## Unselect all plots
+        # unselectAllPlotsBtn = QPushButton("Unselect All Plots")
+        # unselectAllPlotsBtn.setMinimumWidth(buttonMinWidth)
+        # unselectAllPlotsBtn.setMinimumHeight(buttonMinHeight)
+        # unselectAllPlotsBtn.setDisabled(True)
+        # unselectAllPlotsBtn.setObjectName(projMotCBUnselectAll)
+        # unselectAllPlotsBtn.clicked.connect(self.UnselectAllPlots)
+        # plotSelectionBtnLayout.addWidget(unselectAllPlotsBtn)
+        # ## Plot selection layouts layout addition
+        # plotSelectionLayout.addLayout(plotSelectionHeaderLayout)
+        # plotSelectionLayout.addLayout(plotSelectionCBLayout)
+        # plotSelectionLayout.addLayout(plotSelectionBtnLayout)
+        # # Buttons
+        # buttonsHeader = QLabel("Calculate / Clear Selection")
+        # buttonsHeaderFont = buttonsHeader.font()
+        # buttonsHeaderFont.setPointSize(20)
+        # buttonsHeader.setFont(buttonsHeaderFont)
+        # buttonsHeader.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        # buttonHeaderLayout.addWidget(buttonsHeader)
+        # ## Calculate Button
+        # calculateButton = QPushButton("Calculate")
+        # calculateButton.setMinimumWidth(buttonMinWidth)
+        # calculateButton.setMinimumHeight(buttonMinHeight)
+        # calculateButton.setDisabled(True)
+        # calculateButton.setObjectName(projMotCalculateBtn)
+        # calculateButton.clicked.connect(self.OpenPlot)
+        # buttonMainBtnsLayout.addWidget(calculateButton)
+        # ## Clear Button
+        # clearButton = QPushButton("Clear")
+        # clearButton.setMinimumWidth(buttonMinWidth)
+        # clearButton.setMinimumHeight(buttonMinHeight)
+        # clearButton.setDisabled(True)
+        # clearButton.setObjectName(projMotClearBtn)
+        # clearButton.clicked.connect(self.ClearAllInputs)
+        # buttonMainBtnsLayout.addWidget(clearButton)
+        # ## Main Window Button
+        # mainWindowButton = QPushButton("Return Home")
+        # mainWindowButton.setMinimumWidth(buttonMinWidth)
+        # mainWindowButton.setMinimumHeight(buttonMinHeight)
+        # mainWindowButton.setObjectName(projMotMainWinBtn)
+        # mainWindowButton.clicked.connect(self.ReturnHome)
+        # buttonMainBtnsLayout.addWidget(mainWindowButton)
+        # ## Button layouts layout addition
+        # buttonLayout.addLayout(buttonHeaderLayout)
+        # buttonLayout.addLayout(buttonMainBtnsLayout)
+        # # Main layout widget addition
+        # mainLayout.addLayout(parametersLayout)
+        # mainLayout.addLayout(plotSelectionLayout)
+        # mainLayout.addLayout(buttonLayout)
+        # # Add layouts
+        # self.setLayout(mainLayout)
 
     """ Calculate - Assigns parameters of input fields to be fed to the projectile motion solver
         Input:
@@ -1037,6 +993,271 @@ class ProjectileMotionWindow(QWidget):
         clearButton = self.findChild(QPushButton, projMotClearBtn)
         mainButtonArr = [calcButton, clearButton]
         return commonArr, customArr, checkBoxArr, mainButtonArr
+
+    def InitUI(self):
+        # Object names
+        objSelCBName = "Object Selection Combo Box"
+        objSelMassLEName = "Object's Mass"
+        objSelRadLEName = "Object's Radius"
+        objSelName = "Object's Name"
+        objSelClearBtnName = "Clear Object Parameters"
+        objSelRandBtnName = "Randomize Object Parameters"
+        icInitPosName = "Initial Position"
+        icInitVelName = "Initial Velocity"
+        icTimeSpanName = "Time Span"
+        icProjName = "Projectile's Name"
+        icClearBtnName = "Clear Initial Conditions"
+        icRandBtnName = "Randomize Initial Conditions"
+        plotSelPosPlotCBName = "2D Position Plot"
+        plotSelPosAniCBName = "2D Position Animation"
+        plotSelVelPlotCBName = "2D Velocity Plot"
+        plotSelVelAniCBName = "2D Velocity Animation"
+        plotSelSelAllBtnName = "Select All Plots"
+        plotSelUnselAllBtnName = "Unselect All Plots"
+        calcBtnName = "Calculate"
+        clearBtnName = "Clear"
+        randomBtnName = "Random"
+        homeBtnName = "Home"
+        # Widget sizes
+        headerSize = 20
+        comboBoxMinWidth = 200
+        comboBoxMinHeight = 25
+        lineEditMinWidth = 200
+        lineEditMinHeight = 25
+        buttonMinWidth = 200
+        buttonMinHeight = 35
+        # Combo box items
+        selectObjectCB = "Select Object:"
+        arbitraryObjectCB = "Arbitrary Object"
+        sunCB = "Sun"
+        mercCB = "Mercury"
+        venCB = "Venus"
+        earCB = "Earth"
+        moonCB = "Moon"
+        marsCB = "Mars"
+        jupCB = "Jupiter"
+        satCB = "Saturn"
+        uraCB = "Uranus"
+        nepCB = "Neptune"
+        pluCB = "Pluto"
+        cbItems = [selectObjectCB, arbitraryObjectCB, sunCB, mercCB, venCB, earCB, moonCB, marsCB, jupCB, satCB, uraCB, nepCB, pluCB]
+        # Title of Window
+        self.setWindowTitle("Projectile Motion Simulation")
+        # Height and Width of Window
+        self.resize(800,500)
+        self.setMinimumWidth(800)
+        self.setMinimumHeight(500)
+        # Layouts
+        ## Main layout
+        mainLayout = QVBoxLayout()
+        mainLayout.setContentsMargins(25,25,25,25)
+        mainLayout.setSpacing(20)
+        ## Parameters layout
+        parametersLayout = QHBoxLayout()
+        parametersLayout.setContentsMargins(5,5,5,5)
+        parametersLayout.setSpacing(10)
+        ## Object selection layout
+        objSelLayout = QVBoxLayout()
+        objSelLayout.setContentsMargins(0,0,0,0)
+        objSelLayout.setSpacing(5)
+        ## Initial conditions layout
+        icLayout = QVBoxLayout()
+        icLayout.setContentsMargins(0,0,0,0)
+        icLayout.setSpacing(5)
+        ## Plot selection layout
+        plotSelLayout = QVBoxLayout()
+        plotSelLayout.setContentsMargins(0,0,0,0)
+        plotSelLayout.setSpacing(5)
+        ## Plot checkboxes layout
+        plotCheckLayout = QHBoxLayout()
+        plotCheckLayout.setContentsMargins(0,0,0,0)
+        plotCheckLayout.setSpacing(5)
+        ## Plot selection buttons layout
+        plotButtonLayout = QHBoxLayout()
+        plotButtonLayout.setContentsMargins(0,0,0,0)
+        plotButtonLayout.setSpacing(5)
+        ## Main buttons layout
+        mainButtonsLayout = QVBoxLayout()
+        mainButtonsLayout.setContentsMargins(0,0,0,0)
+        mainButtonsLayout.setSpacing(5)
+        ## Main buttons button layout
+        mainButtonsBtnLayout = QHBoxLayout()
+        mainButtonsBtnLayout.setContentsMargins(0,0,0,0)
+        mainButtonsBtnLayout.setSpacing(5)
+        ###################################
+        ##### Object selection widgets
+        ###################################
+        ### Object selection header
+        objSelHeader = QLabel("Object Selection")
+        objSelLayout.addWidget(objSelHeader, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ### Object selection combo box
+        objSelCB = QComboBox()
+        objSelCB.setObjectName(objSelCBName)
+        objSelCB.setMinimumWidth(comboBoxMinWidth)
+        objSelCB.setMinimumHeight(comboBoxMinHeight)
+        objSelCB.addItems(cbItems)
+        objSelLayout.addWidget(objSelCB, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ### Object selection mass line edit
+        objSelMassLE = QLineEdit()
+        objSelMassLE.setObjectName(objSelMassLEName)
+        objSelMassLE.setMinimumWidth(lineEditMinWidth)
+        objSelMassLE.setMinimumHeight(lineEditMinHeight)
+        objSelMassLE.setPlaceholderText("Enter mass of object in (Kg)")
+        objSelLayout.addWidget(objSelMassLE, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ### Object selection radius line edit
+        objSelRadLE = QLineEdit()
+        objSelRadLE.setObjectName(objSelRadLEName)
+        objSelRadLE.setMinimumWidth(lineEditMinWidth)
+        objSelRadLE.setMinimumHeight(lineEditMinHeight)
+        objSelRadLE.setPlaceholderText("Enter radius of object in (m)")
+        objSelLayout.addWidget(objSelRadLE, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ### Object selection name line edit
+        objSelNameLE = QLineEdit()
+        objSelNameLE.setObjectName(objSelName)
+        objSelNameLE.setMinimumWidth(lineEditMinWidth)
+        objSelNameLE.setMinimumHeight(lineEditMinHeight)
+        objSelNameLE.setPlaceholderText("Enter name of object")
+        objSelLayout.addWidget(objSelNameLE, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ### Object selection clear parameters button
+        objSelClearBtn = QPushButton("Clear Parameters")
+        objSelClearBtn.setObjectName(objSelClearBtnName)
+        objSelClearBtn.setMinimumWidth(buttonMinWidth)
+        objSelClearBtn.setMinimumHeight(buttonMinHeight)
+        objSelLayout.addWidget(objSelClearBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ### Object selection randomize parameters button
+        objSelRandBtn = QPushButton("Random Object")
+        objSelRandBtn.setObjectName(objSelRandBtnName)
+        objSelRandBtn.setMinimumWidth(buttonMinWidth)
+        objSelRandBtn.setMinimumHeight(buttonMinHeight)
+        objSelLayout.addWidget(objSelRandBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ###################################
+        ##### Initial conditions widgets
+        ###################################
+        ### Initial conditions header
+        icHeader = QLabel("Projectile Initial Conditions")
+        icLayout.addWidget(icHeader, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ### Initial conditions initial position line edit
+        icInitPosLE = QLineEdit()
+        icInitPosLE.setObjectName(icInitPosName)
+        icInitPosLE.setMinimumWidth(lineEditMinWidth)
+        icInitPosLE.setMinimumHeight(lineEditMinHeight)
+        icInitPosLE.setPlaceholderText("Enter initial position in (m)")
+        icLayout.addWidget(icInitPosLE, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ### Initial conditions initial velocity line edit
+        icInitVelLE = QLineEdit()
+        icInitVelLE.setObjectName(icInitVelName)
+        icInitVelLE.setMinimumWidth(lineEditMinWidth)
+        icInitVelLE.setMinimumHeight(lineEditMinHeight)
+        icInitVelLE.setPlaceholderText("Enter initial velocity in (m/s)")
+        icLayout.addWidget(icInitVelLE, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ### Initial conditions time span line edit
+        icTimeSpanLE = QLineEdit()
+        icTimeSpanLE.setObjectName(icTimeSpanName)
+        icTimeSpanLE.setMinimumWidth(lineEditMinWidth)
+        icTimeSpanLE.setMinimumHeight(lineEditMinHeight)
+        icTimeSpanLE.setPlaceholderText("Enter time span of model in (s)")
+        icLayout.addWidget(icTimeSpanLE, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ### Initial conditions projectile name line edit
+        icProjNameLE = QLineEdit()
+        icProjNameLE.setObjectName(icProjName)
+        icProjNameLE.setMinimumWidth(lineEditMinWidth)
+        icProjNameLE.setMinimumHeight(lineEditMinHeight)
+        icProjNameLE.setPlaceholderText("Enter name of projectile")
+        icLayout.addWidget(icProjNameLE, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ### Initial conditions clear parameters button
+        icClearBtn = QPushButton("Clear Parameters")
+        icClearBtn.setObjectName(icClearBtnName)
+        icClearBtn.setMinimumWidth(buttonMinWidth)
+        icClearBtn.setMinimumHeight(buttonMinHeight)
+        icLayout.addWidget(icClearBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ### Initial conditions random parameters button
+        icRandBtn = QPushButton("Random Initial Conditions")
+        icRandBtn.setObjectName(icRandBtnName)
+        icRandBtn.setMinimumWidth(buttonMinWidth)
+        icRandBtn.setMinimumHeight(buttonMinHeight)
+        icLayout.addWidget(icRandBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Parameters layout layouts addition
+        parametersLayout.addLayout(objSelLayout)
+        parametersLayout.addLayout(icLayout)
+        ###################################
+        ##### Plot selection widgets
+        ###################################
+        ### Plot selection header
+        plotSelHeader = QLabel("Select Plot(s)")
+        plotSelLayout.addWidget(plotSelHeader, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ### Plot selection checkboxes
+        #### 2D Position Plot
+        plotSelPosPlotCB = QCheckBox("2D Position Plot")
+        plotSelPosPlotCB.setObjectName(plotSelPosPlotCBName)
+        plotCheckLayout.addWidget(plotSelPosPlotCB)
+        #### 2D Position Animation
+        plotSelPosAniCB = QCheckBox("2D Position Animation")
+        plotSelPosAniCB.setObjectName(plotSelPosAniCBName)
+        plotCheckLayout.addWidget(plotSelPosAniCB)
+        #### 2D Velocity Plot
+        plotSelVelPlotCB = QCheckBox("2D Velocity Plot")
+        plotSelVelPlotCB.setObjectName(plotSelVelPlotCBName)
+        plotCheckLayout.addWidget(plotSelVelPlotCB)
+        #### 2D Velocity Animation
+        plotSelVelAniCB = QCheckBox("2D Velocity Animation")
+        plotSelVelAniCB.setObjectName(plotSelVelAniCBName)
+        plotCheckLayout.addWidget(plotSelVelAniCB)
+        ### Plot selection select all button
+        plotSelSelAllBtn = QPushButton("Select All Plots")
+        plotSelSelAllBtn.setObjectName(plotSelSelAllBtnName)
+        plotSelSelAllBtn.setMinimumWidth(buttonMinWidth)
+        plotSelSelAllBtn.setMinimumHeight(buttonMinHeight)
+        plotButtonLayout.addWidget(plotSelSelAllBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ### Plot selection unselect all button
+        plotSelUnselAllBtn = QPushButton("Unselect All Plots")
+        plotSelUnselAllBtn.setObjectName(plotSelUnselAllBtnName)
+        plotSelUnselAllBtn.setMinimumWidth(buttonMinWidth)
+        plotSelUnselAllBtn.setMinimumHeight(buttonMinHeight)
+        plotButtonLayout.addWidget(plotSelUnselAllBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Plot selection layout layouts addition
+        plotSelLayout.addLayout(plotCheckLayout)
+        plotSelLayout.addLayout(plotButtonLayout)
+        ###################################
+        ##### Main Buttons
+        ###################################
+        ## Main buttons header
+        mainButtonsHeader = QLabel("Calculate / Clear All / Randomize All / Return Home")
+        mainButtonsLayout.addWidget(mainButtonsHeader, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Main buttons calculate button
+        calculateBtn = QPushButton("Calculate")
+        calculateBtn.setObjectName(calcBtnName)
+        calculateBtn.setMinimumWidth(buttonMinWidth - 50)
+        calculateBtn.setMinimumHeight(buttonMinHeight)
+        mainButtonsBtnLayout.addWidget(calculateBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Main buttons clear button
+        clearBtn = QPushButton("Clear All")
+        clearBtn.setObjectName(clearBtnName)
+        clearBtn.setMinimumWidth(buttonMinWidth - 50)
+        clearBtn.setMinimumHeight(buttonMinHeight)
+        mainButtonsBtnLayout.addWidget(clearBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Main buttons random button
+        randomBtn = QPushButton("Randomize All")
+        randomBtn.setObjectName(randomBtnName)
+        randomBtn.setMinimumWidth(buttonMinWidth - 50)
+        randomBtn.setMinimumHeight(buttonMinHeight)
+        mainButtonsBtnLayout.addWidget(randomBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Main buttons home button
+        homeBtn = QPushButton("Return Home")
+        homeBtn.setObjectName(homeBtnName)
+        homeBtn.setMinimumWidth(buttonMinWidth - 50)
+        homeBtn.setMinimumHeight(buttonMinHeight)
+        mainButtonsBtnLayout.addWidget(homeBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Main buttons layout layouts addition
+        mainButtonsLayout.addLayout(mainButtonsBtnLayout)
+        # Add layouts
+        mainLayout.addLayout(parametersLayout)
+        mainLayout.addLayout(plotSelLayout)
+        mainLayout.addLayout(mainButtonsLayout)
+        # Spacers
+        spacer = QSpacerItem(0, 10, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        mainLayout.addSpacerItem(spacer)
+        # Set layout
+        self.setLayout(mainLayout)
 
     """ OpenPlot - Opens a window for a given plot
         Input:
