@@ -50,6 +50,7 @@ class ProjectileMotionCanvas(FigureCanvasQTAgg):
             * If the plotType is 0, plot the Position versus time 2D plot
                 * Create the plot
                 * Set the title, labels, and legend
+                * Add the notes to the bottom of the plot
                 * Draw the plot on the canvas
             * If the plotType is 1, plot the Position versus time animation
                 * Create an array for the point and trail of the plot
@@ -58,10 +59,12 @@ class ProjectileMotionCanvas(FigureCanvasQTAgg):
                 * Create the animate inner function
                 * Call the animation for the canvas
                 * Set the title, labels, and legend
+                * Add the notes to the bottom of the plot
                 * Draw the animation on the canvas
             * If the plotType is 2, plot the Velocity versus time 2D plot
                 * Create the plot
                 * Set the title, labels, and legend
+                * Add the notes to the bottom of the plot
                 * Draw the plot on the canvas
             * If the plotType is 3, plot the Velocity versus time animation
                 * Create an array for the point and trail of the plot
@@ -70,6 +73,7 @@ class ProjectileMotionCanvas(FigureCanvasQTAgg):
                 * Create the animate inner function
                 * Call the animation for the canvas
                 * Set the title, labels, and legend
+                * Add the notes to the bottom of the plot
                 * Draw the animation on the canvas
         Output:
             This function does not return a value
@@ -79,6 +83,8 @@ class ProjectileMotionCanvas(FigureCanvasQTAgg):
         position, velocity, time = ProjectileMotionSolver(obj, ic, t0, tn)
         # Position Plot
         if (plotType == 0):
+            # Clear axes
+            self.axes.clear()
             # Plot
             self.axes.plot(time, position, '-', color = 'green', linewidth = 1, label = projectileName)
             # Title, labels, legend
@@ -86,10 +92,19 @@ class ProjectileMotionCanvas(FigureCanvasQTAgg):
             self.axes.set_xlabel(f"Time In Seconds (s)", fontsize = TWODPLOTABELS)
             self.axes.set_ylabel(f"Vertical Position In (m)", fontsize = TWODPLOTABELS)
             self.axes.legend()
+            # Notes
+            self.figure.subplots_adjust(bottom=0.35)
+            objNotes = f"Object: {objName}, Mass = {obj[0]} $(Kg)$, Radius = {obj[1]} $(m)$"
+            initNotes = f"Initial Conditions: {projectileName}, Initial Vertical Position = {ic[0]} $(m)$, Initial Vertical Velocity = {ic[1]} $(m/s)$"
+            finalNotes = f"Final Conditions: {projectileName}, Final Vertical Position = {round(position[-1],2)} $(m)$, Final Vertical Velocity = {round(velocity[-1],2)} $(m/s)$"
+            timeNotes = f"Simulation From {t0} $(s)$ to {tn} $(s)$"
+            self.figure.text(0.1, 0.05, objNotes + "\n" + initNotes + "\n" + finalNotes + "\n" + timeNotes, ha='left', va='bottom', fontsize=TWODNOTES)
             # Draw plot on canvas
             self.draw()
         # Position animation
         if (plotType == 1):
+            # Clear axes
+            self.axes.clear()
             # Arrays for point and trail
             projectile, = self.axes.plot([], [], 'o', color='green', markersize=2, label=projectileName)
             projectileTrail, = self.axes.plot([], [], '-', color='green', linewidth=1, alpha=0.5)
@@ -113,10 +128,19 @@ class ProjectileMotionCanvas(FigureCanvasQTAgg):
             self.axes.set_xlabel(f"Time In Seconds (s)", fontsize = TWODANIMLABELS)
             self.axes.set_ylabel(f"Vertical Position In (m)", fontsize = TWODANIMLABELS)
             self.axes.legend()
+            # Notes
+            self.figure.subplots_adjust(bottom=0.35)
+            objNotes = f"Object: {objName}, Mass = {obj[0]} $(Kg)$, Radius = {obj[1]} $(m)$"
+            initNotes = f"Initial Conditions: {projectileName}, Initial Vertical Position = {ic[0]} $(m)$, Initial Vertical Velocity = {ic[1]} $(m/s)$"
+            finalNotes = f"Final Conditions: {projectileName}, Final Vertical Position = {round(position[-1],2)} $(m)$, Final Vertical Velocity = {round(velocity[-1],2)} $(m/s)$"
+            timeNotes = f"Simulation From {t0} $(s)$ to {tn} $(s)$"
+            self.figure.text(0.1, 0.05, objNotes + "\n" + initNotes + "\n" + finalNotes + "\n" + timeNotes, ha='left', va='bottom', fontsize=TWODNOTES)
             # Draw animation on canvas
             self.draw()
         # Velocity plot
         if (plotType == 2):
+            # Clear axes
+            self.axes.clear()
             # Plot
             self.axes.plot(time, velocity, '-', color = 'green', linewidth = 1, label = projectileName)
             # Title, labels, legend
@@ -124,10 +148,19 @@ class ProjectileMotionCanvas(FigureCanvasQTAgg):
             self.axes.set_xlabel(f"Time In Seconds (s)", fontsize = TWODPLOTABELS)
             self.axes.set_ylabel(f"Vertical Velocity In $(\\frac{{m}}{{s}})$", fontsize = TWODPLOTABELS)
             self.axes.legend()
+            # Notes
+            self.figure.subplots_adjust(bottom=0.35)
+            objNotes = f"Object: {objName}, Mass = {obj[0]} $(Kg)$, Radius = {obj[1]} $(m)$"
+            initNotes = f"Initial Conditions: {projectileName}, Initial Vertical Position = {ic[0]} $(m)$, Initial Vertical Velocity = {ic[1]} $(m/s)$"
+            finalNotes = f"Final Conditions: {projectileName}, Final Vertical Position = {round(position[-1],2)} $(m)$, Final Vertical Velocity = {round(velocity[-1],2)} $(m/s)$"
+            timeNotes = f"Simulation From {t0} $(s)$ to {tn} $(s)$"
+            self.figure.text(0.1, 0.05, objNotes + "\n" + initNotes + "\n" + finalNotes + "\n" + timeNotes, ha='left', va='bottom', fontsize=TWODNOTES)
             # Draw plot on canvas
             self.draw()
         # Velocity animation
         if (plotType == 3):
+            # Clear axes
+            self.axes.clear()
             # Arrays for point and trail
             projectile, = self.axes.plot([], [], 'o', color='green', markersize=2, label=projectileName)
             projectileTrail, = self.axes.plot([], [], '-', color='green', linewidth=1, alpha=0.5)
@@ -154,6 +187,13 @@ class ProjectileMotionCanvas(FigureCanvasQTAgg):
             self.axes.set_xlabel(f"Time In Seconds (s)", fontsize = TWODANIMLABELS)
             self.axes.set_ylabel(f"Vertical Velocity In $(\\frac{{m}}{{s}})$", fontsize = TWODPLOTABELS)
             self.axes.legend()
+            # Notes
+            self.figure.subplots_adjust(bottom=0.35)
+            objNotes = f"Object: {objName}, Mass = {obj[0]} $(Kg)$, Radius = {obj[1]} $(m)$"
+            initNotes = f"Initial Conditions: {projectileName}, Initial Vertical Position = {ic[0]} $(m)$, Initial Vertical Velocity = {ic[1]} $(m/s)$"
+            finalNotes = f"Final Conditions: {projectileName}, Final Vertical Position = {round(position[-1],2)} $(m)$, Final Vertical Velocity = {round(velocity[-1],2)} $(m/s)$"
+            timeNotes = f"Simulation From {t0} $(s)$ to {tn} $(s)$"
+            self.figure.text(0.1, 0.05, objNotes + "\n" + initNotes + "\n" + finalNotes + "\n" + timeNotes, ha='left', va='bottom', fontsize=TWODNOTES)
             # Draw animation on canvas
             self.draw()
 
