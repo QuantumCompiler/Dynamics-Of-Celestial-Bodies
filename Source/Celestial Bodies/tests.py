@@ -175,42 +175,63 @@ ballIc = [100, 0]
 #         else:
 #             self.textField.setDisabled(False)
 
-class MyWindow(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.initUI()
+# class MyWindow(QWidget):
+#     def __init__(self):
+#         super().__init__()
+#         self.initUI()
 
-    def initUI(self):
-        # Create the text fields
-        self.mainTextField = QLineEdit(self)
-        self.otherTextField1 = QLineEdit(self)
-        self.otherTextField2 = QLineEdit(self)
+#     def initUI(self):
+#         # Create the text fields
+#         self.mainTextField = QLineEdit(self)
+#         self.otherTextField1 = QLineEdit(self)
+#         self.otherTextField2 = QLineEdit(self)
 
-        # Create the combo box
-        self.comboBox = QComboBox(self)
-        self.comboBox.addItem("Option 1")
-        self.comboBox.addItem("Option 2")
+#         # Create the combo box
+#         self.comboBox = QComboBox(self)
+#         self.comboBox.addItem("Option 1")
+#         self.comboBox.addItem("Option 2")
 
-        # Layout
-        layout = QVBoxLayout(self)
-        layout.addWidget(self.mainTextField)
-        layout.addWidget(self.otherTextField1)
-        layout.addWidget(self.otherTextField2)
-        layout.addWidget(self.comboBox)
+#         # Layout
+#         layout = QVBoxLayout(self)
+#         layout.addWidget(self.mainTextField)
+#         layout.addWidget(self.otherTextField1)
+#         layout.addWidget(self.otherTextField2)
+#         layout.addWidget(self.comboBox)
 
-        # Connect the signal to the slot
-        self.mainTextField.textChanged.connect(self.onTextChange)
+#         # Connect the signal to the slot
+#         self.mainTextField.textChanged.connect(self.onTextChange)
 
-        self.setLayout(layout)
+#         self.setLayout(layout)
 
-    def onTextChange(self, text):
-        # Disable the combo box and other text fields if the main text field is not empty
-        isDisabled = bool(text)
-        self.comboBox.setDisabled(isDisabled)
-        self.otherTextField1.setDisabled(isDisabled)
-        self.otherTextField2.setDisabled(isDisabled)
+#     def onTextChange(self, text):
+#         # Disable the combo box and other text fields if the main text field is not empty
+#         isDisabled = bool(text)
+#         self.comboBox.setDisabled(isDisabled)
+#         self.otherTextField1.setDisabled(isDisabled)
+#         self.otherTextField2.setDisabled(isDisabled)
 
-app = QApplication(sys.argv)
-mainWindow = MyWindow()
-mainWindow.show()
-sys.exit(app.exec())
+# app = QApplication(sys.argv)
+# mainWindow = MyWindow()
+# mainWindow.show()
+# sys.exit(app.exec())
+
+# Create a figure and an axes
+fig, ax = plt.subplots()
+
+# Plot some data
+ax.plot([0, 1], [0, 1], label='Line')
+
+# Add title and labels
+ax.set_title("Example Plot")
+ax.set_xlabel("X-axis label")
+ax.set_ylabel("Y-axis label")
+
+# Adjust the bottom margin to create space below the x-axis
+fig.subplots_adjust(bottom=0.25)  # Increase bottom margin to create more space
+
+# Add notes with careful positioning
+# The y-coordinate is chosen to be less than the bottom margin but above 0
+fig.text(0.1, 0.05, "Note: This is an important note about the plot.", ha='left', va='bottom')
+
+# Show the plot
+plt.show()
