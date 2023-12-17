@@ -142,49 +142,75 @@ ballIc = [100, 0]
 # mainWindow.show()
 # sys.exit(app.exec())
 
-class ExampleApp(QWidget):
+# class MyWindow(QWidget):
+#     def __init__(self):
+#         super().__init__()
+#         self.initUI()
+
+#     def initUI(self):
+#         # Create combo box and add items
+#         self.comboBox = QComboBox(self)
+#         self.comboBox.addItem("Select an option")  # First item
+#         self.comboBox.addItem("Option 1")
+#         self.comboBox.addItem("Option 2")
+#         # ...
+
+#         # Create text field
+#         self.textField = QLineEdit(self)
+
+#         # Layout
+#         layout = QVBoxLayout(self)
+#         layout.addWidget(self.comboBox)
+#         layout.addWidget(self.textField)
+
+#         # Connect the signal to the slot
+#         self.comboBox.currentIndexChanged.connect(self.onComboChange)
+
+#         self.setLayout(layout)
+
+#     def onComboChange(self, index):
+#         # Disable text field if first index is selected
+#         if index == 0:
+#             self.textField.setDisabled(True)
+#         else:
+#             self.textField.setDisabled(False)
+
+class MyWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.initUI()
 
     def initUI(self):
-        # Create two horizontal layouts
-        hbox1 = QHBoxLayout()
-        hbox2 = QHBoxLayout()
+        # Create the text fields
+        self.mainTextField = QLineEdit(self)
+        self.otherTextField1 = QLineEdit(self)
+        self.otherTextField2 = QLineEdit(self)
 
-        # Add widgets to the first horizontal layout
-        hbox1.addWidget(QPushButton("Button 1.1"))
-        hbox1.addWidget(QPushButton("Button 1.2"))
+        # Create the combo box
+        self.comboBox = QComboBox(self)
+        self.comboBox.addItem("Option 1")
+        self.comboBox.addItem("Option 2")
 
-        # Add widgets to the second horizontal layout
-        hbox2.addWidget(QPushButton("Button 2.1"))
-        hbox2.addWidget(QPushButton("Button 2.2"))
+        # Layout
+        layout = QVBoxLayout(self)
+        layout.addWidget(self.mainTextField)
+        layout.addWidget(self.otherTextField1)
+        layout.addWidget(self.otherTextField2)
+        layout.addWidget(self.comboBox)
 
-        # Set spacing between widgets in the horizontal layouts
-        hbox1.setSpacing(100)  # spacing between widgets in hbox1
-        hbox2.setSpacing(50)  # spacing between widgets in hbox2
+        # Connect the signal to the slot
+        self.mainTextField.textChanged.connect(self.onTextChange)
 
-        # Create a vertical layout
-        vbox = QVBoxLayout()
+        self.setLayout(layout)
 
-        # Add the horizontal layouts to the vertical layout
-        vbox.addLayout(hbox1)
-        vbox.addLayout(hbox2)
-
-        # Set the spacing between the horizontal layouts
-        vbox.setSpacing(50)  # spacing between hbox1 and hbox2
-
-        # Set the contents margins (left, top, right, bottom)
-        vbox.setContentsMargins(10, 10, 10, 10)
-
-        # Set the layout of the main widget
-        self.setLayout(vbox)
-
-        # Window settings
-        self.setGeometry(300, 300, 300, 200)
-        self.setWindowTitle('Layout Spacing Example')
+    def onTextChange(self, text):
+        # Disable the combo box and other text fields if the main text field is not empty
+        isDisabled = bool(text)
+        self.comboBox.setDisabled(isDisabled)
+        self.otherTextField1.setDisabled(isDisabled)
+        self.otherTextField2.setDisabled(isDisabled)
 
 app = QApplication(sys.argv)
-mainWindow = ExampleApp()
+mainWindow = MyWindow()
 mainWindow.show()
 sys.exit(app.exec())
