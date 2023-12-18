@@ -594,6 +594,25 @@ class ProjectileMotionWindow(QWidget):
         # # Add layouts
         # self.setLayout(mainLayout)
 
+    """ CheckAllInputs - Check if all necessary inputs have been entered
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab the children from the input fields
+            * Check for valid inputs in combo box, object selection, initial conditions, and check boxes
+        Output:
+            This function does not return a value
+    """
+    def CheckAllInputs(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Valid inputs
+        comboBoxValid = children[0][0].currentIndex() != 0
+        objectSelValid = all(isinstance(widget, QLineEdit) and widget.text() != "" for widget in children[0][1:4])
+        initConValid = all(isinstance(widget, QLineEdit) and widget.text() != "" for widget in children[1][0:4])
+        checkBoxValid = any(isinstance(widget, QCheckBox) and widget.isChecked() == True for widget in children[2][0:5])
+
+
     """ ClearIC - Clear initial conditions parameters
         Input:
             This function does not have any unique input parameters
@@ -614,7 +633,9 @@ class ProjectileMotionWindow(QWidget):
                 widget.setText("")
                 widget.setDisabled(True)
             elif isinstance(widget, QPushButton):
-                if (widget == children[1][4]):
+                if (widget == children[1][-1]):
+                    widget.setEnabled(True)
+                else:
                     widget.setDisabled(True)
 
     """ ClearObj - Clear object field parameters
@@ -640,9 +661,11 @@ class ProjectileMotionWindow(QWidget):
                 widget.setText("")
                 widget.setDisabled(True)
             elif isinstance(widget, QPushButton):
-                if (widget == children[0][4]):
+                if (widget == children[0][-1]):
+                    widget.setEnabled(True)
+                else:
                     widget.setDisabled(True)
-    
+        
     """ GrabChildren - Grabs the children from the window
         Input:
             There are no unique input parameters for this function
@@ -791,6 +814,8 @@ class ProjectileMotionWindow(QWidget):
         objSelCB.setMinimumWidth(comboBoxMinWidth)
         objSelCB.setMinimumHeight(comboBoxMinHeight)
         objSelCB.addItems(cbItems)
+        objSelCB.currentIndexChanged.connect(self.ObjectOnChange)
+        objSelCB.currentIndexChanged.connect(self.CheckAllInputs)
         objSelLayout.addWidget(objSelCB, alignment = Qt.AlignmentFlag.AlignHCenter)
         ### Object selection mass line edit
         objSelMassLE = QLineEdit()
@@ -799,6 +824,7 @@ class ProjectileMotionWindow(QWidget):
         objSelMassLE.setMinimumHeight(lineEditMinHeight)
         objSelMassLE.setPlaceholderText("Enter mass of object in (Kg)")
         objSelMassLE.setDisabled(True)
+        objSelMassLE.textChanged.connect(self.CheckAllInputs)
         objSelLayout.addWidget(objSelMassLE, alignment = Qt.AlignmentFlag.AlignHCenter)
         ### Object selection radius line edit
         objSelRadLE = QLineEdit()
@@ -807,6 +833,7 @@ class ProjectileMotionWindow(QWidget):
         objSelRadLE.setMinimumHeight(lineEditMinHeight)
         objSelRadLE.setPlaceholderText("Enter radius of object in (m)")
         objSelRadLE.setDisabled(True)
+        objSelRadLE.textChanged.connect(self.CheckAllInputs)
         objSelLayout.addWidget(objSelRadLE, alignment = Qt.AlignmentFlag.AlignHCenter)
         ### Object selection name line edit
         objSelNameLE = QLineEdit()
@@ -815,6 +842,7 @@ class ProjectileMotionWindow(QWidget):
         objSelNameLE.setMinimumHeight(lineEditMinHeight)
         objSelNameLE.setPlaceholderText("Enter name of object")
         objSelNameLE.setDisabled(True)
+        objSelNameLE.textChanged.connect(self.CheckAllInputs)
         objSelLayout.addWidget(objSelNameLE, alignment = Qt.AlignmentFlag.AlignHCenter)
         ### Object selection clear parameters button
         objSelClearBtn = QPushButton("Clear Parameters")
@@ -844,6 +872,7 @@ class ProjectileMotionWindow(QWidget):
         icInitPosLE.setMinimumHeight(lineEditMinHeight)
         icInitPosLE.setPlaceholderText("Enter initial position in (m)")
         icInitPosLE.setDisabled(True)
+        icInitPosLE.textChanged.connect(self.CheckAllInputs)
         icLayout.addWidget(icInitPosLE, alignment = Qt.AlignmentFlag.AlignHCenter)
         ### Initial conditions initial velocity line edit
         icInitVelLE = QLineEdit()
@@ -852,6 +881,7 @@ class ProjectileMotionWindow(QWidget):
         icInitVelLE.setMinimumHeight(lineEditMinHeight)
         icInitVelLE.setPlaceholderText("Enter initial velocity in (m/s)")
         icInitVelLE.setDisabled(True)
+        icInitVelLE.textChanged.connect(self.CheckAllInputs)
         icLayout.addWidget(icInitVelLE, alignment = Qt.AlignmentFlag.AlignHCenter)
         ### Initial conditions time span line edit
         icTimeSpanLE = QLineEdit()
@@ -860,6 +890,7 @@ class ProjectileMotionWindow(QWidget):
         icTimeSpanLE.setMinimumHeight(lineEditMinHeight)
         icTimeSpanLE.setPlaceholderText("Enter time span of model in (s)")
         icTimeSpanLE.setDisabled(True)
+        icTimeSpanLE.textChanged.connect(self.CheckAllInputs)
         icLayout.addWidget(icTimeSpanLE, alignment = Qt.AlignmentFlag.AlignHCenter)
         ### Initial conditions projectile name line edit
         icProjNameLE = QLineEdit()
@@ -868,6 +899,7 @@ class ProjectileMotionWindow(QWidget):
         icProjNameLE.setMinimumHeight(lineEditMinHeight)
         icProjNameLE.setPlaceholderText("Enter name of projectile")
         icProjNameLE.setDisabled(True)
+        icProjNameLE.textChanged.connect(self.CheckAllInputs)
         icLayout.addWidget(icProjNameLE, alignment = Qt.AlignmentFlag.AlignHCenter)
         ### Initial conditions clear parameters button
         icClearBtn = QPushButton("Clear Parameters")
@@ -898,21 +930,25 @@ class ProjectileMotionWindow(QWidget):
         plotSelPosPlotCB = QCheckBox("2D Position Plot")
         plotSelPosPlotCB.setObjectName(plotSelPosPlotCBName)
         plotSelPosPlotCB.setDisabled(True)
+        plotSelPosPlotCB.stateChanged.connect(self.CheckAllInputs)
         plotCheckLayout.addWidget(plotSelPosPlotCB)
         #### 2D Position Animation
         plotSelPosAniCB = QCheckBox("2D Position Animation")
         plotSelPosAniCB.setObjectName(plotSelPosAniCBName)
         plotSelPosAniCB.setDisabled(True)
+        plotSelPosAniCB.stateChanged.connect(self.CheckAllInputs)
         plotCheckLayout.addWidget(plotSelPosAniCB)
         #### 2D Velocity Plot
         plotSelVelPlotCB = QCheckBox("2D Velocity Plot")
         plotSelVelPlotCB.setObjectName(plotSelVelPlotCBName)
         plotSelVelPlotCB.setDisabled(True)
+        plotSelVelPlotCB.stateChanged.connect(self.CheckAllInputs)
         plotCheckLayout.addWidget(plotSelVelPlotCB)
         #### 2D Velocity Animation
         plotSelVelAniCB = QCheckBox("2D Velocity Animation")
         plotSelVelAniCB.setObjectName(plotSelVelAniCBName)
         plotSelVelAniCB.setDisabled(True)
+        plotSelVelAniCB.stateChanged.connect(self.CheckAllInputs)
         plotCheckLayout.addWidget(plotSelVelAniCB)
         ### Plot selection select all button
         plotSelSelAllBtn = QPushButton("Select All Plots")
@@ -949,7 +985,6 @@ class ProjectileMotionWindow(QWidget):
         clearBtn.setObjectName(clearBtnName)
         clearBtn.setMinimumWidth(buttonMinWidth - 50)
         clearBtn.setMinimumHeight(buttonMinHeight)
-        clearBtn.setDisabled(True)
         mainButtonsBtnLayout.addWidget(clearBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         ## Main buttons random button
         randomBtn = QPushButton("Randomize All")
@@ -976,6 +1011,43 @@ class ProjectileMotionWindow(QWidget):
         # Set layout
         self.setLayout(mainLayout)
 
+    """ ObjectOnChange - Modifies input parameters based upon field values
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab children from fields
+            * If the combo box is set to the default value
+                * Set the combo box, and random buttons to enabled
+                * Set others to disabled
+            * Otherwise
+                * Enable all the children
+        Output:
+            This function does not return a value
+    """
+    def ObjectOnChange(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Combo box set to default
+        if (children[0][0].currentIndex() == 0):
+            for widget in children[0]:
+                if isinstance(widget, QLineEdit):
+                    widget.setText("")
+                    widget.setDisabled(True)
+                if isinstance(widget, QPushButton):
+                    if (widget == children[0][-1]):
+                        widget.setEnabled(True)
+                    else:
+                        widget.setDisabled(True)
+        # Combo box not set to default
+        else:
+            currentIndex = children[0][0].currentIndex()
+            for widget in children[0]:
+                widget.setEnabled(True)
+            if (currentIndex != 1):
+                children[0][1].setText(str(round(MASSESARR[currentIndex - 2], 2)))
+                children[0][2].setText(str(round(RADIUSARR[currentIndex - 2], 2)))
+                children[0][3].setText(str(children[0][0].currentText()))
+
     """ RandomIC - Randomizes initial conditions
         Input:
             This function does not have any unique input parameters
@@ -983,7 +1055,7 @@ class ProjectileMotionWindow(QWidget):
             * Grab children from text fields
             * Rename children for the object selection
             * Generate random values for the initial conditions fields
-            * Enable children in the object selection and initial conditions fields
+            * Enable children in the initial conditions fields
         Output:
             This function does not return a value
     """
@@ -1000,9 +1072,9 @@ class ProjectileMotionWindow(QWidget):
         initVel.setText(str(round(random.uniform(random.uniform(-1000, 0), random.uniform(0, 1000)), 2)))
         timeSpan.setText(str(random.randint(random.randint(5, 15), random.randint(15, 30))))
         projName.setText(str("Projectile"))
-        for widgets in children[0:2]:
-            for widget in widgets:
-                widget.setEnabled(True)
+        # Enable initial conditions
+        for widget in children[1]:
+            widget.setEnabled(True)
 
     """ RandomObj - Randomizes object selection parameters
         Input:
@@ -1015,7 +1087,6 @@ class ProjectileMotionWindow(QWidget):
                 * Generate random parameters from common objects
             * If it is not
                 * Generate arbitrary random parameters for custom objects
-            * Enable children in the object selection and initial conditions fields
         Output:
             This function does not return a value
     """
@@ -1053,10 +1124,6 @@ class ProjectileMotionWindow(QWidget):
             massLE.setText(str(round(random.uniform(random.uniform(0.01,0.99) * MASSESARR[cbIndex - 2], random.uniform(1.00, 10.0) * MASSESARR[cbIndex - 2]), 2)))
             radiusLE.setText(str(round(random.uniform(random.uniform(0.01,0.99) * RADIUSARR[cbIndex - 2], random.uniform(1.00, 10.0) * RADIUSARR[cbIndex - 2]), 2)))
             objName.setText(str(comboBox.currentText()))
-        # Enable children
-        for widgets in children[0:2]:
-            for widget in widgets:
-                widget.setEnabled(True)
 
     """ ReturnHome - Returns home and closes the current window
         Input:
