@@ -271,33 +271,11 @@ class ProjectileMotionPlotWindow(QWidget):
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
 ##### Simulation Window
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
+        
+""" ProjectileMotionWindow - Window for the projectile motion simulation
+    Member Functions:
 
-# Object Names
-# projMotCommonObjectDD = "Common Object Dropdown"
-# projMotCommonObjInitPos = "Common Object Projectile Initial Position"
-# projMotCommonObjInitVel = "Common Object Projectile Initial Velocity"
-# projMotCommonObjInitTime = "Common Object Initial Time"
-# projMotCommonObjFinalTime = "Common Object Final Time"
-# projMotCommonObjClearParamBtn = "Clear Common Parameters"
-# projMotCommonObjRandBtn = "Randomize Common Parameters"
-# projMotCustomObjMass = "Custom Object Mass"
-# projMotCustomObjRadius = "Custom Object Radius"
-# projMotCustomObjInitPos = "Custom Object Projectile Initial Position"
-# projMotCustomObjInitVel = "Custom Object Projectile Initial Velocity"
-# projMotCustomObjInitTime = "Custom Object Initial Time"
-# projMotCustomObjFinalTime = "Custom Object Final Time"
-# projMotCustomObjClearParamBtn = "Clear Custom Parameters"
-# projMotCustomObjRandBtn = "Randomize Custom Parameters"
-# projMotPosPlotCheck = "2D Position Plot Checkbox"
-# projMotPosAniCheck = "2D Position Animation Checkbox"
-# projMotVelPlotCheck = "2D Velocity Plot Checkbox"
-# projMotVelAniCheck = "2D Velocity Animation Checkbox"
-# projMotCBSelectAll = "Select All Projectile Motion Plots"
-# projMotCBUnselectAll = "Unselect All Projectile Motion Plots"
-# projMotCalculateBtn = "2D Calculate Button"
-# projMotClearBtn = "2D Clear Button"
-# projMotMainWinBtn = "Return Home"
-
+"""
 # Object names
 objSelCBName = "Object Selection Combo Box"
 objSelMassLEName = "Object's Mass"
@@ -316,17 +294,15 @@ plotSelPosAniCBName = "2D Position Animation"
 plotSelVelPlotCBName = "2D Velocity Plot"
 plotSelVelAniCBName = "2D Velocity Animation"
 plotSelSelAllBtnName = "Select All Plots"
+plotSelRandBtnName = "Select Random Check Boxes"
 plotSelUnselAllBtnName = "Unselect All Plots"
 calcBtnName = "Calculate"
 clearBtnName = "Clear"
 randomBtnName = "Random"
 homeBtnName = "Home"
-
-""" ProjectileMotionWindow - Window for the projectile motion simulation
-    Member Functions:
-
-"""
 class ProjectileMotionWindow(QWidget):
+    # Main window signal
+    mainWindowSignal = pyqtSignal()
     """ Constructor - Constructs window with widgets and layouts of widgets
         Input:
             This function does not have any unique input parameters
@@ -335,264 +311,25 @@ class ProjectileMotionWindow(QWidget):
         Output:
             This function does not return a value
     """
-    # Main window signal
-    mainWindowSignal = pyqtSignal()
     def __init__(self):
         super().__init__()
         self.InitUI()
-        # # Widget sizes
-        # headerSize = 20
-        # comboBoxMinWidth = 200
-        # comboBoxMinHeight = 25
-        # textFieldMinWidth = 200
-        # textFieldMinHeight = 25
-        # buttonMinWidth = 175
-        # buttonMinHeight = 35
-        # # Title of Window
-        # self.setWindowTitle("Projectile Motion Simulation")
-        # # Height and Width of Window
-        # self.resize(800,500)
-        # self.setMinimumWidth(800)
-        # self.setMinimumHeight(500)
-        # # Layouts
-        # mainLayout = QVBoxLayout()
-        # ## Parameters layouts
-        # parametersLayout = QHBoxLayout()
-        # commonParametersLayout = QVBoxLayout()
-        # customParametersLayout = QVBoxLayout()
-        # customObjParametersLayout = QHBoxLayout()
-        # ## Plot selection layouts
-        # plotSelectionLayout = QVBoxLayout()
-        # plotSelectionHeaderLayout = QHBoxLayout()
-        # plotSelectionCBLayout = QHBoxLayout()
-        # plotSelectionBtnLayout = QHBoxLayout()
-        # # Main buttons layout
-        # buttonLayout = QVBoxLayout()
-        # buttonHeaderLayout = QHBoxLayout()
-        # buttonMainBtnsLayout = QHBoxLayout()
-        # # Margins
-        # mainLayout.setContentsMargins(25,25,25,25)
-        # ## Header
-        # commonParametersHeader = QLabel("Common Parameters")
-        # commonParametersHeaderFont = commonParametersHeader.font()
-        # commonParametersHeaderFont.setPointSize(headerSize)
-        # commonParametersHeader.setFont(commonParametersHeaderFont)
-        # commonParametersHeader.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        # commonParametersLayout.addWidget(commonParametersHeader)
-        # ## Common Masses Dropdown
-        # commonObjectsDropdown = QComboBox()
-        # commonObjectsDropdown.setMinimumWidth(comboBoxMinWidth)
-        # commonObjectsDropdown.setMinimumHeight(comboBoxMinHeight)
-        # commonObjectsDropdown.addItems(["Select Common Object", "Sun", "Mercury", "Venus", "Earth", "Moon", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"])
-        # commonObjectsDropdown.currentIndexChanged.connect(self.CommmonObjChanged)
-        # commonObjectsDropdown.setObjectName(projMotCommonObjectDD)
-        # commonParametersLayout.addWidget(commonObjectsDropdown)
-        # ## Projectile Motion Initial Position
-        # projectileInitialPosition1 = QLineEdit()
-        # projectileInitialPosition1.setMinimumWidth(textFieldMinWidth)
-        # projectileInitialPosition1.setMinimumHeight(textFieldMinHeight)
-        # projectileInitialPosition1.setPlaceholderText("Enter Initial Position In (m)")
-        # projectileInitialPosition1.setDisabled(True)
-        # projectileInitialPosition1.setObjectName(projMotCommonObjInitPos)
-        # commonParametersLayout.addWidget(projectileInitialPosition1)
-        # ## Projectile Motion Initial Velocity
-        # projectileInitialVelocity1 = QLineEdit()
-        # projectileInitialVelocity1.setMinimumWidth(textFieldMinWidth)
-        # projectileInitialVelocity1.setMinimumHeight(textFieldMinHeight)
-        # projectileInitialVelocity1.setPlaceholderText("Enter Initial Velocity In (m/s)")
-        # projectileInitialVelocity1.setDisabled(True)
-        # projectileInitialVelocity1.setObjectName(projMotCommonObjInitVel)
-        # commonParametersLayout.addWidget(projectileInitialVelocity1)
-        # ## Initial Time Of Model
-        # initialTime1 = QLineEdit()
-        # initialTime1.setMinimumWidth(textFieldMinWidth)
-        # initialTime1.setMinimumHeight(textFieldMinHeight)
-        # initialTime1.setPlaceholderText("Enter Initial Time Of Model In (s)")
-        # initialTime1.setDisabled(True)
-        # initialTime1.setObjectName(projMotCommonObjInitTime)
-        # commonParametersLayout.addWidget(initialTime1)
-        # ## Final Time Of Model
-        # finalTime1 = QLineEdit()
-        # finalTime1.setMinimumWidth(textFieldMinWidth)
-        # finalTime1.setMinimumHeight(textFieldMinHeight)
-        # finalTime1.setPlaceholderText("Enter Final Time Of Model In (s)")
-        # finalTime1.setDisabled(True)
-        # finalTime1.setObjectName(projMotCommonObjFinalTime)
-        # commonParametersLayout.addWidget(finalTime1)
-        # ## Clear Parameters Button
-        # commonParametersClearBtn = QPushButton("Clear Common Parameters")
-        # commonParametersClearBtn.setMinimumWidth(buttonMinWidth)
-        # commonParametersClearBtn.setMinimumHeight(buttonMinHeight)
-        # commonParametersClearBtn.setDisabled(True)
-        # commonParametersClearBtn.setObjectName(projMotCommonObjClearParamBtn)
-        # commonParametersClearBtn.clicked.connect(self.ClearCommonParam)
-        # commonParametersLayout.addWidget(commonParametersClearBtn)
-        # ## Random Parameters Button
-        # commonParametersRandomBtn = QPushButton("Randomize Parameters")
-        # commonParametersRandomBtn.setMinimumWidth(buttonMinWidth)
-        # commonParametersRandomBtn.setMinimumHeight(buttonMinHeight)
-        # commonParametersRandomBtn.setObjectName(projMotCommonObjRandBtn)
-        # commonParametersRandomBtn.clicked.connect(self.RandomCommon)
-        # commonParametersLayout.addWidget(commonParametersRandomBtn)
-        # # Custom Parameters
-        # ## Header
-        # customParametersHeader = QLabel("Custom Parameters")
-        # customParametersHeaderFont = customParametersHeader.font()
-        # customParametersHeaderFont.setPointSize(headerSize)
-        # customParametersHeader.setFont(customParametersHeaderFont)
-        # customParametersHeader.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        # customParametersLayout.addWidget(customParametersHeader)
-        # ## Mass
-        # customObj = QLineEdit()
-        # customObj.setMinimumHeight(textFieldMinHeight)
-        # customObj.setPlaceholderText("Enter Mass Of Object In (Kg)")
-        # customObj.textChanged.connect(self.CustomObjChanged)
-        # customObj.setObjectName(projMotCustomObjMass)
-        # customObjParametersLayout.addWidget(customObj)
-        # ## Radius Of Mass
-        # customRadius = QLineEdit()
-        # customRadius.setMinimumHeight(textFieldMinHeight)
-        # customRadius.setPlaceholderText("Enter Radius Of Mass In (m)")
-        # customRadius.textChanged.connect(self.CustomObjChanged)
-        # customRadius.setObjectName(projMotCustomObjRadius)
-        # customObjParametersLayout.addWidget(customRadius)
-        # customParametersLayout.addLayout(customObjParametersLayout)
-        # ## Projectile Motion Initial Position
-        # projectileInitialPosition2 = QLineEdit()
-        # projectileInitialPosition2.setMinimumWidth(textFieldMinWidth)
-        # projectileInitialPosition2.setMinimumHeight(textFieldMinHeight)
-        # projectileInitialPosition2.setPlaceholderText("Enter Initial Position In (m)")
-        # projectileInitialPosition2.setDisabled(True)
-        # projectileInitialPosition2.setObjectName(projMotCustomObjInitPos)
-        # customParametersLayout.addWidget(projectileInitialPosition2)
-        # ## Projectile Motion Initial Velocity
-        # projectileInitialVelocity2 = QLineEdit()
-        # projectileInitialVelocity2.setMinimumWidth(textFieldMinWidth)
-        # projectileInitialVelocity2.setMinimumHeight(textFieldMinHeight)
-        # projectileInitialVelocity2.setPlaceholderText("Enter Initial Velocity In (m/s)")
-        # projectileInitialVelocity2.setDisabled(True)
-        # projectileInitialVelocity2.setObjectName(projMotCustomObjInitVel)
-        # customParametersLayout.addWidget(projectileInitialVelocity2)
-        # ## Initial Time Of Model
-        # initialTime2 = QLineEdit()
-        # initialTime2.setMinimumWidth(textFieldMinWidth)
-        # initialTime2.setMinimumHeight(textFieldMinHeight)
-        # initialTime2.setPlaceholderText("Enter Initial Time Of Model In (s)")
-        # initialTime2.setDisabled(True)
-        # initialTime2.setObjectName(projMotCustomObjInitTime)
-        # customParametersLayout.addWidget(initialTime2)
-        # ## Final Time Of Model
-        # finalTime2 = QLineEdit()
-        # finalTime2.setMinimumWidth(textFieldMinWidth)
-        # finalTime2.setMinimumHeight(textFieldMinHeight)
-        # finalTime2.setPlaceholderText("Enter Final Time Of Model In (s)")
-        # finalTime2.setDisabled(True)
-        # finalTime2.setObjectName(projMotCustomObjFinalTime)
-        # customParametersLayout.addWidget(finalTime2)
-        # ## Clear Parameters Button
-        # customParametersClearBtn = QPushButton("Clear Custom Parameters")
-        # customParametersClearBtn.setMinimumWidth(buttonMinWidth)
-        # customParametersClearBtn.setMinimumHeight(buttonMinHeight)
-        # customParametersClearBtn.setDisabled(True)
-        # customParametersClearBtn.setObjectName(projMotCustomObjClearParamBtn)
-        # customParametersClearBtn.clicked.connect(self.ClearCustomParam)
-        # customParametersLayout.addWidget(customParametersClearBtn)
-        # ## Random Parameters Button
-        # customParametersRandomBtn = QPushButton("Randomize Parameters")
-        # customParametersRandomBtn.setMinimumWidth(buttonMinWidth)
-        # customParametersRandomBtn.setMinimumHeight(buttonMinHeight)
-        # customParametersRandomBtn.setObjectName(projMotCustomObjRandBtn)
-        # customParametersRandomBtn.clicked.connect(self.RandomCustom)
-        # customParametersLayout.addWidget(customParametersRandomBtn)
-        # # Parameters layouts layout addition
-        # parametersLayout.addLayout(commonParametersLayout)
-        # parametersLayout.addLayout(customParametersLayout)
-        # # Plot Selection
-        # plotSelectionHeader = QLabel("Choose Plot(s)")
-        # plotSelectionHeaderFont = plotSelectionHeader.font()
-        # plotSelectionHeaderFont.setPointSize(headerSize)
-        # plotSelectionHeader.setFont(plotSelectionHeaderFont)
-        # plotSelectionHeader.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        # plotSelectionLayout.addWidget(plotSelectionHeader)
-        # ## 2D Position Plot
-        # projMotPosPlot = QCheckBox("2D Position Plot")
-        # projMotPosPlot.setDisabled(True)
-        # projMotPosPlot.setObjectName(projMotPosPlotCheck)
-        # plotSelectionCBLayout.addWidget(projMotPosPlot)
-        # ## 2D Position Animation
-        # projMotPosAni = QCheckBox("2D Position Animation")
-        # projMotPosAni.setDisabled(True)
-        # projMotPosAni.setObjectName(projMotPosAniCheck)
-        # plotSelectionCBLayout.addWidget(projMotPosAni)
-        # ## 2D Velocity Plot
-        # projMotVelPlot = QCheckBox("2D Velocity Plot")
-        # projMotVelPlot.setDisabled(True)
-        # projMotVelPlot.setObjectName(projMotVelPlotCheck)
-        # plotSelectionCBLayout.addWidget(projMotVelPlot)
-        # ## 2D Velocity Animation
-        # projMotVelAni = QCheckBox("2D Velocity Animation")
-        # projMotVelAni.setDisabled(True)
-        # projMotVelAni.setObjectName(projMotVelAniCheck)
-        # plotSelectionCBLayout.addWidget(projMotVelAni)
-        # ## Select all plots
-        # selectAllPlotsBtn = QPushButton("Select All Plots")
-        # selectAllPlotsBtn.setMinimumWidth(buttonMinWidth)
-        # selectAllPlotsBtn.setMinimumHeight(buttonMinHeight)
-        # selectAllPlotsBtn.setDisabled(True)
-        # selectAllPlotsBtn.setObjectName(projMotCBSelectAll)
-        # selectAllPlotsBtn.clicked.connect(self.SelectAllPlots)
-        # plotSelectionBtnLayout.addWidget(selectAllPlotsBtn)
-        # ## Unselect all plots
-        # unselectAllPlotsBtn = QPushButton("Unselect All Plots")
-        # unselectAllPlotsBtn.setMinimumWidth(buttonMinWidth)
-        # unselectAllPlotsBtn.setMinimumHeight(buttonMinHeight)
-        # unselectAllPlotsBtn.setDisabled(True)
-        # unselectAllPlotsBtn.setObjectName(projMotCBUnselectAll)
-        # unselectAllPlotsBtn.clicked.connect(self.UnselectAllPlots)
-        # plotSelectionBtnLayout.addWidget(unselectAllPlotsBtn)
-        # ## Plot selection layouts layout addition
-        # plotSelectionLayout.addLayout(plotSelectionHeaderLayout)
-        # plotSelectionLayout.addLayout(plotSelectionCBLayout)
-        # plotSelectionLayout.addLayout(plotSelectionBtnLayout)
-        # # Buttons
-        # buttonsHeader = QLabel("Calculate / Clear Selection")
-        # buttonsHeaderFont = buttonsHeader.font()
-        # buttonsHeaderFont.setPointSize(20)
-        # buttonsHeader.setFont(buttonsHeaderFont)
-        # buttonsHeader.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        # buttonHeaderLayout.addWidget(buttonsHeader)
-        # ## Calculate Button
-        # calculateButton = QPushButton("Calculate")
-        # calculateButton.setMinimumWidth(buttonMinWidth)
-        # calculateButton.setMinimumHeight(buttonMinHeight)
-        # calculateButton.setDisabled(True)
-        # calculateButton.setObjectName(projMotCalculateBtn)
-        # calculateButton.clicked.connect(self.OpenPlot)
-        # buttonMainBtnsLayout.addWidget(calculateButton)
-        # ## Clear Button
-        # clearButton = QPushButton("Clear")
-        # clearButton.setMinimumWidth(buttonMinWidth)
-        # clearButton.setMinimumHeight(buttonMinHeight)
-        # clearButton.setDisabled(True)
-        # clearButton.setObjectName(projMotClearBtn)
-        # clearButton.clicked.connect(self.ClearAllInputs)
-        # buttonMainBtnsLayout.addWidget(clearButton)
-        # ## Main Window Button
-        # mainWindowButton = QPushButton("Return Home")
-        # mainWindowButton.setMinimumWidth(buttonMinWidth)
-        # mainWindowButton.setMinimumHeight(buttonMinHeight)
-        # mainWindowButton.setObjectName(projMotMainWinBtn)
-        # mainWindowButton.clicked.connect(self.ReturnHome)
-        # buttonMainBtnsLayout.addWidget(mainWindowButton)
-        # ## Button layouts layout addition
-        # buttonLayout.addLayout(buttonHeaderLayout)
-        # buttonLayout.addLayout(buttonMainBtnsLayout)
-        # # Main layout widget addition
-        # mainLayout.addLayout(parametersLayout)
-        # mainLayout.addLayout(plotSelectionLayout)
-        # mainLayout.addLayout(buttonLayout)
-        # # Add layouts
-        # self.setLayout(mainLayout)
+
+    """ CheckAllCB - Check all checkboxes
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab all the children from the fields
+            * Set all checkboxes to checked
+        Output:
+            This function does not return a value
+    """
+    def CheckAllCB(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Set CBs to true
+        for widget in children[2][0:5]:
+            widget.setChecked(True)
 
     """ CheckAllInputs - Check if all necessary inputs have been entered
         Input:
@@ -600,6 +337,7 @@ class ProjectileMotionWindow(QWidget):
         Algorithm:
             * Grab the children from the input fields
             * Check for valid inputs in combo box, object selection, initial conditions, and check boxes
+            * Enable fields as previous fields are fully complete
         Output:
             This function does not return a value
     """
@@ -611,7 +349,66 @@ class ProjectileMotionWindow(QWidget):
         objectSelValid = all(isinstance(widget, QLineEdit) and widget.text() != "" for widget in children[0][1:4])
         initConValid = all(isinstance(widget, QLineEdit) and widget.text() != "" for widget in children[1][0:4])
         checkBoxValid = any(isinstance(widget, QCheckBox) and widget.isChecked() == True for widget in children[2][0:5])
+        # Combo box invalid
+        if (comboBoxValid == False):
+            self.ClearObj()
+            self.ClearIC()
+            self.UnselectAllCB()
+            for widget in children[0]:
+                if (widget == children[0][0] or widget == children[0][-1]):
+                    widget.setEnabled(True)
+                else:
+                    widget.setDisabled(True)
+            for widget in children[1]:
+                if (widget == children[1][-1]):
+                    widget.setEnabled(True)
+                else:
+                    widget.setDisabled(True)
+        # Object selection valid
+        if (objectSelValid == True):
+            for widget in children[1]:
+                widget.setEnabled(True)
+        else:
+            for widget in children[1]:
+                if (widget != children[1][-1]):
+                    widget.setDisabled(True)
+                else:
+                    widget.setEnabled(True)
+        # Object selection and initial conditions valid
+        if (objectSelValid == True and initConValid == True):
+            for widget in children[2]:
+                widget.setEnabled(True)
+        elif (objectSelValid == False):
+            self.UnselectAllCB()
+            for widget in children[1]:
+                if (widget != children[1][-1]):
+                    widget.setDisabled(True)
+                else:
+                    widget.setEnabled(True)
+            for widget in children[2]:
+                widget.setDisabled(True)
+        elif (initConValid == False):
+            self.UnselectAllCB()
+            for widget in children[2]:
+                widget.setDisabled(True)
+        # All fields valid
+        if (objectSelValid == True and initConValid == True and checkBoxValid == True):
+            children[3][0].setEnabled(True)
+        else:
+            children[3][0].setDisabled(True)
 
+    """ ClearAll - Clears all input fields
+        Input:
+            There are not unique input parameters in this function
+        Algorithm:
+            * Call inner functions
+        Output:
+            This function does not return a value
+    """
+    def ClearAll(self):
+        self.UnselectAllCB()
+        self.ClearIC()
+        self.ClearObj()
 
     """ ClearIC - Clear initial conditions parameters
         Input:
@@ -620,7 +417,6 @@ class ProjectileMotionWindow(QWidget):
             * Grab the children from the fields
             * Iterate over the widgets in the initial conditions fields
                 * Clear the line edits
-                * Set the clear button to disabled
         Output:
             This function does not return a value
     """
@@ -631,12 +427,6 @@ class ProjectileMotionWindow(QWidget):
         for widget in children[1]:
             if isinstance(widget, QLineEdit):
                 widget.setText("")
-                widget.setDisabled(True)
-            elif isinstance(widget, QPushButton):
-                if (widget == children[1][-1]):
-                    widget.setEnabled(True)
-                else:
-                    widget.setDisabled(True)
 
     """ ClearObj - Clear object field parameters
         Input:
@@ -646,7 +436,6 @@ class ProjectileMotionWindow(QWidget):
             * Iterate over the widgets in the object selection fields
                 * Set the combo box index to 0
                 * Clear the line edits
-                * Set the clear button to disabled
         Output:
             This function does not return a value
     """
@@ -659,12 +448,6 @@ class ProjectileMotionWindow(QWidget):
                 widget.setCurrentIndex(0)
             elif isinstance(widget, QLineEdit):
                 widget.setText("")
-                widget.setDisabled(True)
-            elif isinstance(widget, QPushButton):
-                if (widget == children[0][-1]):
-                    widget.setEnabled(True)
-                else:
-                    widget.setDisabled(True)
         
     """ GrabChildren - Grabs the children from the window
         Input:
@@ -695,7 +478,8 @@ class ProjectileMotionWindow(QWidget):
                 plotSelection[2] - Plot selection 2D velocity plot check box
                 plotSelection[3] - Plot selection 2D velocity animation check box
                 plotSelection[4] - Plot selection select all button
-                plotSelection[5] - Plot selection unselect all button
+                plotSelection[5] - Plot selection random all button
+                plotSelection[6] - Plot selection unselect all button
             mainButtons - Array of main button buttons
                 mainButtons[0] - Main buttons calculate button
                 mainButtons[1] - Main buttons clear button
@@ -725,8 +509,9 @@ class ProjectileMotionWindow(QWidget):
         velPlot = self.findChild(QCheckBox, plotSelVelPlotCBName)
         velAni = self.findChild(QCheckBox, plotSelVelAniCBName)
         selAll = self.findChild(QPushButton, plotSelSelAllBtnName)
+        randAll = self.findChild(QPushButton, plotSelRandBtnName)
         unSelAll = self.findChild(QPushButton, plotSelUnselAllBtnName)
-        plotSelection = [posPlot, posAni, velPlot, velAni, selAll, unSelAll]
+        plotSelection = [posPlot, posAni, velPlot, velAni, selAll, randAll, unSelAll]
         # Main button children
         calc = self.findChild(QPushButton, calcBtnName)
         clear = self.findChild(QPushButton, clearBtnName)
@@ -956,13 +741,23 @@ class ProjectileMotionWindow(QWidget):
         plotSelSelAllBtn.setMinimumWidth(buttonMinWidth)
         plotSelSelAllBtn.setMinimumHeight(buttonMinHeight)
         plotSelSelAllBtn.setDisabled(True)
+        plotSelSelAllBtn.clicked.connect(self.CheckAllCB)
         plotButtonLayout.addWidget(plotSelSelAllBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ### Plot selection randomize button
+        plotSelRandBtn = QPushButton("Randomize Plots")
+        plotSelRandBtn.setObjectName(plotSelRandBtnName)
+        plotSelRandBtn.setMinimumWidth(buttonMinWidth)
+        plotSelRandBtn.setMinimumHeight(buttonMinHeight)
+        plotSelRandBtn.setDisabled(True)
+        plotSelRandBtn.clicked.connect(self.RandomCB)
+        plotButtonLayout.addWidget(plotSelRandBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         ### Plot selection unselect all button
         plotSelUnselAllBtn = QPushButton("Unselect All Plots")
         plotSelUnselAllBtn.setObjectName(plotSelUnselAllBtnName)
         plotSelUnselAllBtn.setMinimumWidth(buttonMinWidth)
         plotSelUnselAllBtn.setMinimumHeight(buttonMinHeight)
         plotSelUnselAllBtn.setDisabled(True)
+        plotSelUnselAllBtn.clicked.connect(self.UnselectAllCB)
         plotButtonLayout.addWidget(plotSelUnselAllBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         ## Plot selection layout layouts addition
         plotSelLayout.addLayout(plotCheckLayout)
@@ -985,12 +780,14 @@ class ProjectileMotionWindow(QWidget):
         clearBtn.setObjectName(clearBtnName)
         clearBtn.setMinimumWidth(buttonMinWidth - 50)
         clearBtn.setMinimumHeight(buttonMinHeight)
+        clearBtn.clicked.connect(self.ClearAll)
         mainButtonsBtnLayout.addWidget(clearBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         ## Main buttons random button
         randomBtn = QPushButton("Randomize All")
         randomBtn.setObjectName(randomBtnName)
         randomBtn.setMinimumWidth(buttonMinWidth - 50)
         randomBtn.setMinimumHeight(buttonMinHeight)
+        randomBtn.clicked.connect(self.RandomAll)
         mainButtonsBtnLayout.addWidget(randomBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         ## Main buttons home button
         homeBtn = QPushButton("Return Home")
@@ -1017,8 +814,7 @@ class ProjectileMotionWindow(QWidget):
         Algorithm:
             * Grab children from fields
             * If the combo box is set to the default value
-                * Set the combo box, and random buttons to enabled
-                * Set others to disabled
+                * Clear the inputs
             * Otherwise
                 * Enable all the children
         Output:
@@ -1029,15 +825,7 @@ class ProjectileMotionWindow(QWidget):
         children = self.GrabChildren()
         # Combo box set to default
         if (children[0][0].currentIndex() == 0):
-            for widget in children[0]:
-                if isinstance(widget, QLineEdit):
-                    widget.setText("")
-                    widget.setDisabled(True)
-                if isinstance(widget, QPushButton):
-                    if (widget == children[0][-1]):
-                        widget.setEnabled(True)
-                    else:
-                        widget.setDisabled(True)
+            self.ClearObj()
         # Combo box not set to default
         else:
             currentIndex = children[0][0].currentIndex()
@@ -1046,7 +834,58 @@ class ProjectileMotionWindow(QWidget):
             if (currentIndex != 1):
                 children[0][1].setText(str(round(MASSESARR[currentIndex - 2], 2)))
                 children[0][2].setText(str(round(RADIUSARR[currentIndex - 2], 2)))
-                children[0][3].setText(str(children[0][0].currentText()))
+            else:
+                children[0][1].setText("")
+                children[0][2].setText("")
+            children[0][3].setText(str(children[0][0].currentText()))
+
+    """ RandomAll - Randomize all input fields
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Call inner functions
+        Output:
+            This function does not return a value
+    """
+    def RandomAll(self):
+        # Randomize inner functions
+        self.RandomObj()
+        self.RandomIC()
+        self.RandomCB()
+
+    """ RandomCB - Randomizes checkboxes to be selected
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab children from fields
+            * Generate boolean array
+            * Iterate over checkboxes
+                * If the random integer modulo 2 is 0
+                    * Check the current box, add the boolean to the array
+                * If otherwise
+                    * Don't check the current box, add the boolean to the array
+            * Check if all booleans in array are false
+                * If they are, choose a random box to check
+        Output:
+            This function does not return a value
+    """
+    def RandomCB(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Randomize checkboxes
+        boolArr = []
+        for widget in children[2][0:4]:
+            randInt = random.randint(1,100)
+            if (randInt % 2 == 0):
+                widget.setChecked(True)
+                boolArr.append(True)
+            else:
+                widget.setChecked(False)
+                boolArr.append(False)
+        allFalse = all(vals == False for vals in boolArr)
+        if (allFalse == True):
+            randInt = random.randint(0,3)
+            children[2][randInt].setChecked(True)
 
     """ RandomIC - Randomizes initial conditions
         Input:
@@ -1062,19 +901,23 @@ class ProjectileMotionWindow(QWidget):
     def RandomIC(self):
         # Grab children
         children = self.GrabChildren()
+        # Valid inputs
+        comboBoxValid = children[0][0].currentIndex() != 0
+        objectSelValid = all(isinstance(widget, QLineEdit) and widget.text() != "" for widget in children[0][1:4])
         # Rename children
         initPos = children[1][0]
         initVel = children[1][1]
         timeSpan = children[1][2]
         projName = children[1][3]
         # Randomize children values
-        initPos.setText(str(round(random.uniform(random.uniform(-2000, 0), random.uniform(0, 2000)), 2)))
-        initVel.setText(str(round(random.uniform(random.uniform(-1000, 0), random.uniform(0, 1000)), 2)))
-        timeSpan.setText(str(random.randint(random.randint(5, 15), random.randint(15, 30))))
-        projName.setText(str("Projectile"))
-        # Enable initial conditions
-        for widget in children[1]:
-            widget.setEnabled(True)
+        if (comboBoxValid == True and objectSelValid == True):
+            initPos.setText(str(round(random.uniform(random.uniform(-2000, 0), random.uniform(0, 2000)), 2)))
+            initVel.setText(str(round(random.uniform(random.uniform(-1000, 0), random.uniform(0, 1000)), 2)))
+            timeSpan.setText(str(random.randint(random.randint(5, 15), random.randint(15, 30))))
+            projName.setText(str("Projectile"))
+            # Enable initial conditions
+            for widget in children[1]:
+                widget.setEnabled(True)
 
     """ RandomObj - Randomizes object selection parameters
         Input:
@@ -1139,6 +982,22 @@ class ProjectileMotionWindow(QWidget):
         self.mainWindowSignal.emit()
         # Close current window
         self.close()
+
+    """ UnselectAllCB - Unselect all checkboxes
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab all the children from the fields
+            * Uncheck all checkboxes
+        Output:
+            This function does not return a value
+    """
+    def UnselectAllCB(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Uncheck all CBs
+        for widget in children[2][0:5]:
+            widget.setChecked(False)    
 
     # """ Calculate - Assigns parameters of input fields to be fed to the projectile motion solver
     #     Input:
@@ -1269,85 +1128,6 @@ class ProjectileMotionWindow(QWidget):
     #         dialogBox.setLayout(layout)
     #         dialogBox.exec()
     #         return None, None, None, None, None
-    
-    # """ ClearAllInputs - Clears all the inputs of the window
-    #     Input:
-    #         This function does not have any unique input parameters
-    #     Algorithm:
-    #         * Call the member functions for all of the input fields
-    #     Output:
-    #         This function does not return a value
-    # """
-    # def ClearAllInputs(self):
-    #     # Call functions
-    #     self.ClearCommonParam()
-    #     self.ClearCustomParam()
-    #     self.UnselectAllPlots()
-
-    # """ CommmonObjChanged - Enables / Disables and resets children based on index of the combo box
-    #     Input:
-    #         index - Index of the common object combo box
-    #     Algorithm:
-    #         * Grab the children from the window
-    #         * If the combo box index is currently zero
-    #             * Disable and reset the common parameters children
-    #             * Disable and reset the custom parameters children
-    #             * Disable and reset the Plot selection / Main buttons children
-    #         * If the combo box is another index
-    #             * Enable the common parameters children
-    #             * Disable and reset the custom parameters children
-    #             * Enable the Plot selection / Main buttons children
-    #     Output:
-    #         This function does not return a value
-    # """
-    # def CommmonObjChanged(self, index):
-    #     # Grab children
-    #     children = self.GrabChildren()
-    #     # Index zero
-    #     if (index == 0):
-    #         ## Reset common
-    #         for widget in children[0]:
-    #             if isinstance(widget, QLineEdit):
-    #                 widget.setText("")
-    #                 widget.setDisabled(True)
-    #             if isinstance(widget, QPushButton):
-    #                 if (widget.objectName() == projMotCommonObjRandBtn):
-    #                     widget.setEnabled(True)
-    #                 else:
-    #                     widget.setDisabled(True)
-    #         ## Reset custom 
-    #         for widget in children[1]:
-    #             if isinstance(widget, QLineEdit):
-    #                 widget.setText("")
-    #                 if ((widget.objectName() == projMotCustomObjMass) or (widget.objectName() == projMotCustomObjRadius)):
-    #                     widget.setEnabled(True)
-    #                 else:
-    #                     widget.setDisabled(True)
-    #             if isinstance(widget, QPushButton):
-    #                 if (widget.objectName() == projMotCustomObjRandBtn):
-    #                     widget.setEnabled(True)
-    #                 else:
-    #                     widget.setDisabled(True)
-    #         ## Reset Plot selection / Main buttons 
-    #         for widgets in children[2:]:
-    #             for widget in widgets:
-    #                 if isinstance(widget, QCheckBox):
-    #                     widget.setChecked(False)
-    #                 widget.setDisabled(True)
-    #     # Other index
-    #     else:
-    #         ## Enable common
-    #         for widget in children[0]:
-    #             widget.setEnabled(True)
-    #         ## Disable custom
-    #         for widget in children[1]:
-    #             if isinstance(widget, QLineEdit):
-    #                 widget.setText("")
-    #             widget.setDisabled(True)
-    #         ## Enable Plot selection / Main buttons
-    #         for widgets in children[2:]:
-    #             for widget in widgets:
-    #                 widget.setEnabled(True)
 
     # """ OpenPlot - Opens a window for a given plot
     #     Input:
@@ -1402,44 +1182,3 @@ class ProjectileMotionWindow(QWidget):
     #             layout.addWidget(warningLabel)
     #             dialogBox.setLayout(layout)
     #             dialogBox.exec()
-
-    # """ SelectAllPlots - Selects all plot options
-    #     Input:
-    #         This function does not have any unique input parameters
-    #     Algorithm:
-    #         * Grab the checkbox children
-    #         * Create an array for the checkbox children
-    #         * Set all the children to checked
-    #     Output:
-    #         This function does not return a value
-    # """
-    # def SelectAllPlots(self):
-    #     # Grab children
-    #     posPlotCheck = self.findChild(QCheckBox, projMotPosPlotCheck)
-    #     posAniCheck = self.findChild(QCheckBox, projMotPosAniCheck)
-    #     velPlotCheck = self.findChild(QCheckBox, projMotVelPlotCheck)
-    #     velAniCheck = self.findChild(QCheckBox, projMotVelAniCheck)
-    #     # Boxes array
-    #     arr = [posPlotCheck, posAniCheck, velPlotCheck, velAniCheck]
-    #     # Set to checked
-    #     for i in range(len(arr)):
-    #         arr[i].setChecked(True)
-    
-    # """ UnselectAllPlots - Unselects all plot options
-    #     Input:
-    #         This function does not have any unique input parameters
-    #     Algorithm:
-    #         * Grab the checkbox children
-    #         * Create an array for the checkbox children
-    #         * Set all the children to unchecked
-    #     Output:
-    #         This function does not return a value
-    # """
-    # def UnselectAllPlots(self):
-    #     posPlotCheck = self.findChild(QCheckBox, projMotPosPlotCheck)
-    #     posAniCheck = self.findChild(QCheckBox, projMotPosAniCheck)
-    #     velPlotCheck = self.findChild(QCheckBox, projMotVelPlotCheck)
-    #     velAniCheck = self.findChild(QCheckBox, projMotVelAniCheck)
-    #     arr = [posPlotCheck, posAniCheck, velPlotCheck, velAniCheck]
-    #     for i in range(len(arr)):
-    #         arr[i].setChecked(False)
