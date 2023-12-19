@@ -215,23 +215,78 @@ ballIc = [100, 0]
 # mainWindow.show()
 # sys.exit(app.exec())
 
-# Create a figure and an axes
-fig, ax = plt.subplots()
+# # Create a figure and an axes
+# fig, ax = plt.subplots()
 
-# Plot some data
-ax.plot([0, 1], [0, 1], label='Line')
+# # Plot some data
+# ax.plot([0, 1], [0, 1], label='Line')
 
-# Add title and labels
-ax.set_title("Example Plot")
-ax.set_xlabel("X-axis label")
-ax.set_ylabel("Y-axis label")
+# # Add title and labels
+# ax.set_title("Example Plot")
+# ax.set_xlabel("X-axis label")
+# ax.set_ylabel("Y-axis label")
 
-# Adjust the bottom margin to create space below the x-axis
-fig.subplots_adjust(bottom=0.25)  # Increase bottom margin to create more space
+# # Adjust the bottom margin to create space below the x-axis
+# fig.subplots_adjust(bottom=0.25)  # Increase bottom margin to create more space
 
-# Add notes with careful positioning
-# The y-coordinate is chosen to be less than the bottom margin but above 0
-fig.text(0.1, 0.05, "Note: This is an important note about the plot.", ha='left', va='bottom')
+# # Add notes with careful positioning
+# # The y-coordinate is chosen to be less than the bottom margin but above 0
+# fig.text(0.1, 0.05, "Note: This is an important note about the plot.", ha='left', va='bottom')
 
-# Show the plot
-plt.show()
+# # Show the plot
+# plt.show()
+
+class SubWindow(QWidget):
+    def __init__(self, main_window, title):
+        super().__init__()
+        self.main_window = main_window
+
+        self.setWindowTitle(title)
+        self.resize(300, 200)
+
+        # You can add more UI elements and logic here
+
+    def closeEvent(self, event):
+        self.main_window.show()  # Show the main window when the sub window is closed
+        super().closeEvent(event)
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("Main Window")
+        self.resize(400, 300)
+
+        # Buttons to open sub windows
+        self.openSubWindow1Button = QPushButton("Open SubWindow 1", self)
+        self.openSubWindow1Button.clicked.connect(self.openSubWindow1)
+        self.openSubWindow2Button = QPushButton("Open SubWindow 2", self)
+        self.openSubWindow2Button.clicked.connect(self.openSubWindow2)
+
+        # Layout
+        layout = QVBoxLayout()
+        layout.addWidget(self.openSubWindow1Button)
+        layout.addWidget(self.openSubWindow2Button)
+
+        # Central widget
+        centralWidget = QWidget()
+        centralWidget.setLayout(layout)
+        self.setCentralWidget(centralWidget)
+
+    def openSubWindow1(self):
+        self.subWindow1 = SubWindow(self, "Sub Window 1")
+        self.subWindow1.show()
+        self.hide()  # Hide the main window
+
+    def openSubWindow2(self):
+        self.subWindow2 = SubWindow(self, "Sub Window 2")
+        self.subWindow2.show()
+        self.hide()  # Hide the main window
+
+def main():
+    app = QApplication(sys.argv)
+    mainWin = MainWindow()
+    mainWin.show()
+    sys.exit(app.exec())
+
+main()
