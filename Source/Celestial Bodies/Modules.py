@@ -11,6 +11,7 @@ import os
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import *
+from PyQt6.QtGui import *
 import random
 import sys
 import matplotlib
