@@ -329,9 +329,10 @@ calcBtnName = "Calculate"
 clearBtnName = "Clear"
 randomBtnName = "Random"
 homeBtnName = "Home"
+
 class ProjectileMotionWindow(QWidget):
     # Main window signal
-    mainWindowSignal = pyqtSignal()
+    mainWindowPMSignal = pyqtSignal()
     """ Constructor - Constructs window with widgets and layouts of widgets
         Input:
             This function does not have any unique input parameters
@@ -688,7 +689,9 @@ class ProjectileMotionWindow(QWidget):
         self.resize(800,500)
         self.setMinimumWidth(800)
         self.setMinimumHeight(500)
-        # Layouts
+        ###################################
+        ##### Layouts
+        ###################################
         ## Main layout
         mainLayout = QVBoxLayout()
         mainLayout.setContentsMargins(25,25,25,25)
@@ -937,6 +940,9 @@ class ProjectileMotionWindow(QWidget):
         mainButtonsBtnLayout.addWidget(homeBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         ## Main buttons layout layouts addition
         mainButtonsLayout.addLayout(mainButtonsBtnLayout)
+        ###################################
+        ##### Spacers / Set Layout
+        ###################################
         # Add layouts
         mainLayout.addLayout(parametersLayout)
         mainLayout.addLayout(plotSelLayout)
@@ -1151,7 +1157,7 @@ class ProjectileMotionWindow(QWidget):
     """
     def ReturnHome(self):
         # Emit signal
-        self.mainWindowSignal.emit()
+        self.mainWindowPMSignal.emit()
         # Close current window
         self.close()
 
