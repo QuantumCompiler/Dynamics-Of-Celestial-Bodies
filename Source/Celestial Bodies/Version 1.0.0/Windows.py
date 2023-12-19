@@ -1,4 +1,5 @@
 from ProjectileMotion import *
+from TwoBodies import *
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
 ##### Main Window
@@ -13,13 +14,13 @@ class MainWindow(QMainWindow):
         Input:
             This function does not have any unique input parameters
         Algorithm:
-            
         Output:
             This function does not return a value
     """
     def __init__(self):
         # Object Names
         pmButtonName = "Projectile Motion Button"
+        twoButtonName = "Two Body Button"
         # Height / Width Of Widgets
         minBtnWidth = 400
         minBtnHeight = 50
@@ -36,17 +37,25 @@ class MainWindow(QMainWindow):
         ## Main layout
         mainLayout = QVBoxLayout()
         mainLayout.setContentsMargins(25,25,25,25)
-        mainLayout.setSpacing(50)
+        mainLayout.setSpacing(25)
         ## Header
         header = QLabel("Choose A Simulation")
         mainLayout.addWidget(header, alignment = Qt.AlignmentFlag.AlignHCenter)
         # Buttons
+        ## Projectile motion button
         pmBtn = QPushButton("Projectile Motion")
         pmBtn.setObjectName(pmButtonName)
         pmBtn.setMinimumWidth(minBtnWidth)
         pmBtn.setMinimumHeight(minBtnHeight)
         pmBtn.clicked.connect(self.OpenProjectileMotionWindow)
         mainLayout.addWidget(pmBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Two body button
+        twoBtn = QPushButton("Two Body")
+        twoBtn.setObjectName(twoButtonName)
+        twoBtn.setMinimumWidth(minBtnWidth)
+        twoBtn.setMinimumHeight(minBtnHeight)
+        twoBtn.clicked.connect(self.OpenTwoBodyWindow)
+        mainLayout.addWidget(twoBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         # Spacer after the button
         spacer = QSpacerItem(0, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
         mainLayout.addSpacerItem(spacer)
@@ -68,7 +77,14 @@ class MainWindow(QMainWindow):
     def OpenProjectileMotionWindow(self):
         if not self.secondWindow:
             self.secondWindow = ProjectileMotionWindow()
-        self.secondWindow.mainWindowSignal.connect(self.show)
+        self.secondWindow.mainWindowPMSignal.connect(self.show)
+        self.secondWindow.show()
+        self.hide()
+
+    def OpenTwoBodyWindow(self):
+        if not self.secondWindow:
+            self.secondWindow = TwoBodyWindow()
+        # self.secondWindow.mainWindowSignal.connect(self.show)
         self.secondWindow.show()
         self.hide()
 
