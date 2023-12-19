@@ -331,18 +331,17 @@ randomBtnName = "Random"
 homeBtnName = "Home"
 
 class ProjectileMotionWindow(QWidget):
-    # Main window signal
-    mainWindowPMSignal = pyqtSignal()
     """ Constructor - Constructs window with widgets and layouts of widgets
         Input:
-            This function does not have any unique input parameters
+            mainWindow - The main window of the application
         Algorithm:
             * Call the init ui function
         Output:
             This function does not return a value
     """
-    def __init__(self):
+    def __init__(self, mainWindow):
         super().__init__()
+        self.mainWindow = mainWindow
         self.InitUI()
 
     """ Calculate - Generates the plots for projectile motion
@@ -648,7 +647,7 @@ class ProjectileMotionWindow(QWidget):
         
     """ InitUI - Initializes UI with layouts and widgets
         Input:
-            This function does not have any unique input parameters
+            There are no unique input parameters for this function
         Algorithm:
             * Set size of window and title
             * Create layouts
@@ -885,7 +884,7 @@ class ProjectileMotionWindow(QWidget):
         plotSelSelAllBtn.clicked.connect(self.CheckAllCB)
         plotButtonLayout.addWidget(plotSelSelAllBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         ### Plot selection randomize button
-        plotSelRandBtn = QPushButton("Randomize Plots")
+        plotSelRandBtn = QPushButton("Random Plots")
         plotSelRandBtn.setObjectName(plotSelRandBtnName)
         plotSelRandBtn.setMinimumWidth(buttonMinWidth)
         plotSelRandBtn.setMinimumHeight(buttonMinHeight)
@@ -925,7 +924,7 @@ class ProjectileMotionWindow(QWidget):
         clearBtn.clicked.connect(self.ClearAll)
         mainButtonsBtnLayout.addWidget(clearBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         ## Main buttons random button
-        randomBtn = QPushButton("Randomize All")
+        randomBtn = QPushButton("Random All")
         randomBtn.setObjectName(randomBtnName)
         randomBtn.setMinimumWidth(buttonMinWidth - 50)
         randomBtn.setMinimumHeight(buttonMinHeight)
@@ -1150,15 +1149,13 @@ class ProjectileMotionWindow(QWidget):
         Input:
             This function does not have any unique input parameters
         Algorithm:
-            * Emit the signal that was created with the class
+            * Open the main window
             * Close the window
         Output:
             This function does not return a values
     """
     def ReturnHome(self):
-        # Emit signal
-        self.mainWindowPMSignal.emit()
-        # Close current window
+        self.mainWindow.show()
         self.close()
 
     """ UnselectAllCB - Unselect all checkboxes
@@ -1175,4 +1172,4 @@ class ProjectileMotionWindow(QWidget):
         children = self.GrabChildren()
         # Uncheck all CBs
         for widget in children[2][0:5]:
-            widget.setChecked(False)            
+            widget.setChecked(False)
