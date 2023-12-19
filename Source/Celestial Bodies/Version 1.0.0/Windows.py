@@ -30,7 +30,8 @@ class MainWindow(QMainWindow):
         # Height and width of window
         self.setMinimumWidth(800)
         self.setMinimumHeight(500)
-        self.secondWindow = None
+        self.projWindow = None
+        self.twoBWindow = None
         centralWidget = QWidget()
         self.setCentralWidget(centralWidget)
         # Layouts
@@ -66,26 +67,30 @@ class MainWindow(QMainWindow):
         Input:
             This function does not have any unique input parameters
         Algorithm:
-            * Make sure the current window is not the second window made in the constructor
-            * Set the second window to the projectile motion window
-            * Connect to the main window signal made in the Projectile motion class
-            * Open the second window
+            * Assign the projectile motion window
+            * Show the projectile motion window
             * Hide the main window
         Output:
             This function does not return a value
     """
     def OpenProjectileMotionWindow(self):
-        if not self.secondWindow:
-            self.secondWindow = ProjectileMotionWindow()
-        self.secondWindow.mainWindowPMSignal.connect(self.show)
-        self.secondWindow.show()
+        self.projWindow = ProjectileMotionWindow(self)
+        self.projWindow.show()
         self.hide()
 
+    """ OpenTwoBodyWindow - Opens the two body window
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Assign the two body window
+            * Show the two body window
+            * Hide the main window
+        Output:
+            This function does not return a value
+    """
     def OpenTwoBodyWindow(self):
-        if not self.secondWindow:
-            self.secondWindow = TwoBodyWindow()
-        # self.secondWindow.mainWindowSignal.connect(self.show)
-        self.secondWindow.show()
+        self.twoBWindow = TwoBodyWindow(self)
+        self.twoBWindow.show()
         self.hide()
 
 """ RunProgram - Runs the program from the main window
