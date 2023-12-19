@@ -109,8 +109,15 @@ class ProjectileMotionCanvas(FigureCanvasQTAgg):
             projectile, = self.axes.plot([], [], 'o', color='green', markersize=2, label=projectileName)
             projectileTrail, = self.axes.plot([], [], '-', color='green', linewidth=1, alpha=0.5)
             # Max and min of axes
-            self.axes.set_xlim(min(time) - 0.05 * max(time), 1.05 * max(time))
-            self.axes.set_ylim(min(position) - 0.05 * max(position), 1.05 * max(position))
+            minPos = min(position)
+            maxPos = max(position)
+            self.axes.set_xlim(-0.05 * max(time), 1.05 * max(time))
+            if (minPos < 0):
+                self.axes.set_ylim(1.05 * minPos, 1.05 * maxPos)
+            elif (minPos == 0):
+                self.axes.set_ylim(-0.05 * maxPos, 1.05 * maxPos)
+            else:
+                self.axes.set_ylim(-0.05 * minPos, 1.05 * maxPos)
             # Initialize function
             def init():
                 projectile.set_data([], [])
@@ -165,11 +172,16 @@ class ProjectileMotionCanvas(FigureCanvasQTAgg):
             projectile, = self.axes.plot([], [], 'o', color='green', markersize=2, label=projectileName)
             projectileTrail, = self.axes.plot([], [], '-', color='green', linewidth=1, alpha=0.5)
             # Max and min of axes
-            self.axes.set_xlim(min(time) - 0.05 * max(time), 1.05 * max(time))
-            if (max(velocity) <= 0):
-                self.axes.set_ylim(min(velocity) - 0.05 * max(velocity), 0.05 * abs(min(velocity)))
+            # Max and min of axes
+            minVel = min(velocity)
+            maxVel = max(velocity)
+            self.axes.set_xlim(-0.05 * max(time), 1.05 * max(time))
+            if (minVel < 0):
+                self.axes.set_ylim(1.05 * minVel, 1.05 * maxVel)
+            elif (minVel == 0):
+                self.axes.set_ylim(-0.05 * maxVel, 1.05 * maxVel)
             else:
-                self.axes.set_ylim(min(velocity) - 0.05 * max(velocity), 1.05 * max(velocity))
+                self.axes.set_ylim(-0.05 * minVel, 1.05 * maxVel)
             # Initialize function
             def init():
                 projectile.set_data([], [])
@@ -239,7 +251,7 @@ class ProjectileMotionPlotWindow(QWidget):
         # Window sizes
         self.resize(800,500)
         self.setMinimumWidth(800)
-        self.setMinimumHeight(500)
+        self.setMinimumHeight(400)
         # Layout
         self.layout = QVBoxLayout()
         # Canvas for plot
@@ -274,7 +286,24 @@ class ProjectileMotionPlotWindow(QWidget):
         
 """ ProjectileMotionWindow - Window for the projectile motion simulation
     Member Functions:
-
+        Constructor - Constructs window with widgets and layouts of widgets
+        Calculate - Generates the plots for projectile motion
+        CheckAllCB - Check all checkboxes
+        CheckAllInputs - Check if all necessary inputs have been entered
+        ClearAll - Clears all input fields
+        ClearIC - Clear initial conditions parameters
+        ClearObj - Clear object field parameters
+        GrabChildren - Grabs the children from the window
+        InitUI - Initializes UI with layouts and widgets
+        IsNum - Checks to see if an input is able to be converted to a number
+        IsPositive - Checks if a number is positive
+        ObjectOnChange - Modifies input parameters based upon field values
+        RandomAll - Randomize all input fields
+        RandomCB - Randomizes checkboxes to be selected
+        RandomIC - Randomizes initial conditions
+        RandomObj - Randomizes object selection parameters
+        ReturnHome - Returns home and closes the current window
+        UnselectAllCB - Unselect all checkboxes
 """
 # Object names
 objSelCBName = "Object Selection Combo Box"
@@ -314,6 +343,102 @@ class ProjectileMotionWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.InitUI()
+
+    """ Calculate - Generates the plots for projectile motion
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab children from the fields
+            * Grab input fields from window
+            * Add some of the values to arrays
+            * Generate plots depending upon what checkboxes are checked
+        Output:
+            This function does not return a value
+    """
+    def Calculate(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Values from fields
+        objSel = []
+        icSel = []
+        # Valid object selection
+        for widget in children[0][1:3]:
+            widVal1 = self.IsNum(widget.text())
+            if (widVal1 == True):
+                widVal2 = self.IsPositive(float(str(widget.text())))
+                objSel.append(widVal2)
+            else:
+                objSel.append(widVal)
+        # Valid initial conditions
+        for widget in children[1][0:3]:
+            widVal1 = self.IsNum(widget.text())
+            if (widVal1 == True):
+                if (widget == children[1][2]):
+                    widVal2 = self.IsPositive(float(str(widget.text())))
+                    icSel.append(widVal2)
+                else:
+                    continue
+            else:
+                icSel.append(widVal1)
+        objects = all(val == True for val in objSel)
+        initialCondtions = all(val == True for val in icSel)
+        # Valid inputs
+        if (objects and initialCondtions):
+            mass = float(str(children[0][1].text()))
+            radius = float(str(children[0][2].text()))
+            objName = str(children[0][3].text())
+            initPos = float(str(children[1][0].text()))
+            initVel = float(str(children[1][1].text()))
+            timeSpan = float(str(children[1][2].text()))
+            projName = str(children[1][3].text())
+            posPlot = children[2][0]
+            posAni = children[2][1]
+            velPlot = children[2][2]
+            velAni = children[2][3]
+            # Casting values for functions
+            objArr = [mass, radius]
+            icArr = [initPos, initVel]
+            # Plot(s)
+            if (posPlot.isChecked() == True):
+                self.posPlot = ProjectileMotionPlotWindow(0, objArr, icArr, 0, timeSpan, objName, projName, "Projectile Motion Plot: Position Vs. Time")
+                self.posPlot.show()
+            if (posAni.isChecked() == True):
+                self.posAni = ProjectileMotionPlotWindow(1, objArr, icArr, 0, timeSpan, objName, projName, "Projectile Motion Animation: Position Vs. Time")
+                self.posAni.show()
+            if (velPlot.isChecked() == True):
+                self.velPlot = ProjectileMotionPlotWindow(2, objArr, icArr, 0, timeSpan, objName, projName, "Projectile Motion Plot: Velocity Vs. Time")
+                self.velPlot.show()
+            if (velAni.isChecked() == True):
+                self.velAni = ProjectileMotionPlotWindow(3, objArr, icArr, 0, timeSpan, objName, projName, "Projectile Motion Animation: Velocity Vs. Time")
+                self.velAni.show()
+        # Invalid inputs
+        else:
+            if (objects == False):
+                dialogBox = QDialog(self)
+                dialogBox.setWindowTitle("Invalid Object")
+                dialogBox.setFixedSize(400, 75)
+                warningLabel = QLabel("Please enter positive values in the object selection field.", dialogBox)
+                warningFont = warningLabel.font()
+                warningFont.setPointSize(13)
+                warningLabel.setFont(warningFont)
+                warningLabel.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+                layout = QVBoxLayout()
+                layout.addWidget(warningLabel)
+                dialogBox.setLayout(layout)
+                dialogBox.exec()
+            if (initialCondtions == False):
+                dialogBox = QDialog(self)
+                dialogBox.setWindowTitle("Invalid Initial Conditions")
+                dialogBox.setFixedSize(400, 75)
+                warningLabel = QLabel("Please enter a positive nonzero time span.", dialogBox)
+                warningFont = warningLabel.font()
+                warningFont.setPointSize(13)
+                warningLabel.setFont(warningFont)
+                warningLabel.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+                layout = QVBoxLayout()
+                layout.addWidget(warningLabel)
+                dialogBox.setLayout(layout)
+                dialogBox.exec()
 
     """ CheckAllCB - Check all checkboxes
         Input:
@@ -520,6 +645,19 @@ class ProjectileMotionWindow(QWidget):
         mainButtons = [calc, clear, rand, home]
         return objArr, icArr, plotSelection, mainButtons
         
+    """ InitUI - Initializes UI with layouts and widgets
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Set size of window and title
+            * Create layouts
+            * Create widgets for each layout
+            * Add widgets to layouts
+            * Add layouts to main layout
+            * Set the main layout
+        Output:
+            This function does not return a value
+    """
     def InitUI(self):
         # Widget sizes
         headerSize = 20
@@ -774,6 +912,7 @@ class ProjectileMotionWindow(QWidget):
         calculateBtn.setMinimumWidth(buttonMinWidth - 50)
         calculateBtn.setMinimumHeight(buttonMinHeight)
         calculateBtn.setDisabled(True)
+        calculateBtn.clicked.connect(self.Calculate)
         mainButtonsBtnLayout.addWidget(calculateBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         ## Main buttons clear button
         clearBtn = QPushButton("Clear All")
@@ -807,6 +946,39 @@ class ProjectileMotionWindow(QWidget):
         mainLayout.addSpacerItem(spacer)
         # Set layout
         self.setLayout(mainLayout)
+
+    """ IsNum - Checks to see if an input is able to be converted to a number
+        Input:
+            string - String value that is trying to be converted to a float
+        Algorithm:
+            * Try the conversion, if it succeeds, return true
+            * Otherwise, return false
+        Output:
+            This function returns a boolean value for if a value has been successfully converted
+    """
+    def IsNum(self, string):
+        # Try conversion
+        try:
+            float(string)
+            return True
+        # Conversion failed
+        except ValueError:
+            return False
+
+    """ IsPositive - Checks if a number is positive
+        Input:
+            value - Value that is being checked
+        Algorithm:
+            * If the value is non zero and positive, return True
+            * Otherwise, return False
+        Output:
+            This function returns a boolean value for if a number is positive
+    """
+    def IsPositive(self, value):
+        if (value > 0):
+            return True
+        else:
+            return False
 
     """ ObjectOnChange - Modifies input parameters based upon field values
         Input:
@@ -997,188 +1169,4 @@ class ProjectileMotionWindow(QWidget):
         children = self.GrabChildren()
         # Uncheck all CBs
         for widget in children[2][0:5]:
-            widget.setChecked(False)    
-
-    # """ Calculate - Assigns parameters of input fields to be fed to the projectile motion solver
-    #     Input:
-    #         There are not unique input parameters for this function
-    #     Algorithm:
-    #         * Grab the children from the parameters and plot selection input fields
-    #         * Create parameters that are to be returned from the calculation
-    #         * Check if the common field parameters are the only parameters entered
-    #             * Get the values from the children in the input fields
-    #             * Assign the proper values to obj for the parameter that was selected
-    #                 * obj[0] - Object's mass
-    #                 * obj[1] - Object's radius
-    #             * Assign the return parameters to the other input fields
-    #                 * ic[0] - Projectile's initial vertical position
-    #                 * ic[1] - Projectile's initial vertical velocity
-    #         * Check if the custom field parameters are the only parameters entered
-    #             * Get the values from the children in the input fields
-    #             * Assign the return parameters to the input fields
-    #         * Otherwise, create a dialog box that tells the user they have incorrectly entered parameters
-    #         * Return the parameters to be fed to the model
-    #     Output:
-    #         obj - Array of object parameters
-    #             obj[0] - Object's mass
-    #             obj[1] - Object's radius
-    #         ic - Array of initial conditions of projectile
-    #             ic[0] - Initial vertical position
-    #             ic[1] - Initial vertical velocity
-    #         initTime - Initial time of model
-    #         finTime - Final time of model
-    #         objectName - Name of object
-    # """
-    # def Calculate(self):
-    #     # Grab children from input fields
-    #     children = self.GrabChildren()
-    #     # Parameters to be fed into solver
-    #     obj = []
-    #     objName = ""
-    #     ic = []
-    #     initPos = 0
-    #     initVel = 0
-    #     initTime = 0
-    #     finTime = 0
-    #     commonEntered = (any(isinstance(widget, QComboBox) and widget.currentText() != "Select Common Object" for widget in children[0]) and all(isinstance(widget, QLineEdit) and widget.text() != "" for widget in children[0][1:5]))
-    #     customEntered = (all(isinstance(widget, QLineEdit) and widget.text() != "" for widget in children[1][0:6]))
-    #     # Common field entered, custom not
-    #     if (commonEntered):
-    #         objectSelection = children[0][0].currentText()
-    #         initialPos = float(children[0][1].text())
-    #         initialVel = float(children[0][2].text())
-    #         initialTime = float(children[0][3].text())
-    #         finalTime = float(children[0][4].text())
-    #         # Assign object parameters
-    #         if (objectSelection == "Sun"):
-    #             obj.append(MSUN)
-    #             obj.append(RSUN)
-    #         elif (objectSelection == "Mercury"):
-    #             obj.append(MMERCURY)
-    #             obj.append(RMERCURY)
-    #         elif (objectSelection == "Venus"):
-    #             obj.append(MVENUS)
-    #             obj.append(RVENUS)
-    #         elif (objectSelection == "Earth"):
-    #             obj.append(MEARTH)
-    #             obj.append(REARTH)
-    #         elif (objectSelection == "Moon"):
-    #             obj.append(MMOON)
-    #             obj.append(RMOON)
-    #         elif (objectSelection == "Mars"):
-    #             obj.append(MMARS)
-    #             obj.append(RMARS)
-    #         elif (objectSelection == "Jupiter"):
-    #             obj.append(MJUPITER)
-    #             obj.append(RJUPITER)
-    #         elif (objectSelection == "Saturn"):
-    #             obj.append(MSATURN)
-    #             obj.append(RSATURN)
-    #         elif (objectSelection == "Uranus"):
-    #             obj.append(MURANUS)
-    #             obj.append(RURANUS)
-    #         elif (objectSelection == "Neptune"):
-    #             obj.append(MNEPTUNE)
-    #             obj.append(RNEPTUNE)
-    #         elif (objectSelection == "Pluto"):
-    #             obj.append(MPLUTO)
-    #             obj.append(RPLUTO)
-    #         objName = objectSelection
-    #         # Assign return values to input field values
-    #         initPos = initialPos
-    #         initVel = initialVel
-    #         ic.append(initPos)
-    #         ic.append(initVel)
-    #         initTime = initialTime
-    #         finTime = finalTime
-    #         return obj, ic, initTime, finTime, objName
-    #     # Custom field entered, common not
-    #     elif (commonEntered == False and customEntered == True):
-    #         # Convert input fields to correct data type
-    #         objectMass = float(children[1][0].text())
-    #         objectRadius = float(children[1][1].text())
-    #         initialPos = float(children[1][2].text())
-    #         initialVel = float(children[1][3].text())
-    #         initialTime = float(children[1][4].text())
-    #         finalTime = float(children[1][5].text())
-    #         # Assign object parameters
-    #         obj.append(objectMass)
-    #         obj.append(objectRadius)
-    #         objName = "Arbitrary Mass"
-    #         # Assign return values to input field values
-    #         initPos = initialPos
-    #         initVel = initialVel
-    #         ic.append(initPos)
-    #         ic.append(initVel)
-    #         initTime = initialTime
-    #         finTime = finalTime
-    #         return obj, ic, initTime, finTime, objName
-    #     # Invalid entries
-    #     else:
-    #         dialogBox = QDialog(self)
-    #         dialogBox.setWindowTitle("Invalid Entries")
-    #         dialogBox.setFixedSize(400, 75)
-    #         warningLabel = QLabel("Please enter in all values in the given fields.", dialogBox)
-    #         warningFont = warningLabel.font()
-    #         warningFont.setPointSize(13)
-    #         warningLabel.setFont(warningFont)
-    #         warningLabel.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-    #         layout = QVBoxLayout()
-    #         layout.addWidget(warningLabel)
-    #         dialogBox.setLayout(layout)
-    #         dialogBox.exec()
-    #         return None, None, None, None, None
-
-    # """ OpenPlot - Opens a window for a given plot
-    #     Input:
-    #         This function does not have any unique input parameters
-    #     Algorithm:
-    #         * Call the calculate member function
-    #         * Grab the children for the checkboxes
-    #         * Check for if a specific checkbox checked
-    #             * If it is, create a canvas with the parameters returned from Calculate for the type of plot
-    #                 * 0 - 2D Position versus time plot
-    #                 * 1 - 2D Position versus time animation
-    #                 * 2 - 2D Velocity versus time plot
-    #                 * 3 - 2D Velocity versus time animation
-    #             * If no boxes are checked, generate a dialog window that tells the user they need to select a plot
-    #     Output:
-    #         This function does not return a value
-    # """
-    # def OpenPlot(self):
-    #     # Call calculate
-    #     calc = self.Calculate()
-    #     # Check for not none
-    #     if all(values is not None for values in calc):        
-    #         # Grab children
-    #         children = self.GrabChildren()
-    #         # Position Plot
-    #         if (children[2][0].isChecked() == True):
-    #             self.posPlot = ProjectileMotionPlotWindow(0, calc[0], calc[1], calc[2], calc[3], calc[4], "Projectile", "Projectile Motion Plot: Position Vs. Time")
-    #             self.posPlot.show()
-    #         # Position Animation
-    #         if (children[2][1].isChecked() == True):
-    #             self.posAni = ProjectileMotionPlotWindow(1, calc[0], calc[1], calc[2], calc[3], calc[4], "Projectile", "Projectile Motion Animation: Position Vs. Time")
-    #             self.posAni.show()
-    #         # Velocity Plot
-    #         if (children[2][2].isChecked() == True):
-    #             self.velPlot = ProjectileMotionPlotWindow(2, calc[0], calc[1], calc[2], calc[3], calc[4], "Projectile", "Projectile Motion Plot: Velocity Vs. Time")
-    #             self.velPlot.show()
-    #         # Velocity Animation
-    #         if (children[2][3].isChecked() == True):
-    #             self.velAni = ProjectileMotionPlotWindow(3, calc[0], calc[1], calc[2], calc[3], calc[4], "Projectile", "Projectile Motion Animation: Velocity Vs. Time")
-    #             self.velAni.show()
-    #         # No boxes checked
-    #         if (children[2][0].isChecked() == False and children[2][1].isChecked() == False and children[2][2].isChecked() == False and children[2][3].isChecked() == False):
-    #             dialogBox = QDialog(self)
-    #             dialogBox.setWindowTitle("Invalid Entries")
-    #             dialogBox.setFixedSize(400, 75)
-    #             warningLabel = QLabel("Please select plot(s) for entered input values.", dialogBox)
-    #             warningFont = warningLabel.font()
-    #             warningFont.setPointSize(13)
-    #             warningLabel.setFont(warningFont)
-    #             warningLabel.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-    #             layout = QVBoxLayout()
-    #             layout.addWidget(warningLabel)
-    #             dialogBox.setLayout(layout)
-    #             dialogBox.exec()
+            widget.setChecked(False)            
