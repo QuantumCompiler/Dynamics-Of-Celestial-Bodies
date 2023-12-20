@@ -94,11 +94,34 @@ class TwoBodyWindow(QWidget):
         self.mainWindow = mainWindow
         self.InitUI()
 
+    """ ClearAll - Clears all input fields
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab children
+            * Call member functions
+            * Set checkboxes to default value
+        Output:
+            This function does not return a value
+    """
+    def ClearAll(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Member functions
+        self.UnselectAllPlots()
+        self.ClearTime()
+        self.ClearMass2Params()
+        self.ClearMass1Params()
+        # Reset checkboxes
+        children[0][0].setCurrentIndex(0)
+        children[1][0].setCurrentIndex(0)
+
     """ ClearMass1Params - Clears the mass 1 parameters children
         Input:
             This function does not have any unique input parameters
         Algorithm:
-
+            * Grab the children from the window
+            * Clear all the line edits in the field
         Output:
             This function does not return a value
     """
@@ -108,6 +131,59 @@ class TwoBodyWindow(QWidget):
         # Clear children
         for widget in children[0][1:9]:
             widget.setText("")
+
+    """ ClearMass2Params - Clears the mass 2 parameters children
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab the children from the window
+            * Clear all the line edits in the field
+        Output:
+            This function does not return a value
+    """
+    def ClearMass2Params(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Clear children
+        for widget in children[1][1:9]:
+            widget.setText("")
+
+    """ ClearTime - Clears the time value line edit
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab children from window
+            * Clear the line edit
+        Output:
+            This function does not return a value
+    """
+    def ClearTime(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Clear field
+        children[2][0].setText("")
+
+    """ ConnectSignals - Connects the signals member functions to applicable widgets
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab children from window
+            * Connect widgets to the signals member function
+        Output:
+            This function does not return a value
+    """
+    def ConnectSignals(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Connect widgets
+        for widgets in children:
+            for widget in widgets:
+                if isinstance(widget, QComboBox):
+                    widget.currentIndexChanged.connect(self.Signals)
+                if isinstance(widget, QLineEdit):
+                    widget.textChanged.connect(self.Signals)
+                if isinstance(widget, QCheckBox):
+                    widget.stateChanged.connect(self.Signals)
 
     """ DefaultState - Default state for widgets
         Input:
@@ -133,7 +209,7 @@ class TwoBodyWindow(QWidget):
                 widget.setDisabled(True)
         # Disable time values children function
         def DefaultTime():
-            for widget in children[2][0:2]:
+            for widget in children[2]:
                 widget.setDisabled(True)
         # Disable mass 2 parameters children function
         def DefaultMass2():
@@ -262,11 +338,11 @@ class TwoBodyWindow(QWidget):
                 widget.setEnabled(True)
         # Enable time values function
         def EnableTimeVals():
-            for widget in children[1]:
+            for widget in children[2]:
                 widget.setEnabled(True)
         # Enable mass 1 parameters function
         def EnableMass2Params():
-            for widget in children[2]:
+            for widget in children[1]:
                 widget.setEnabled(True)
         # Enable checkboxes function
         def EnableCB():
@@ -593,12 +669,14 @@ class TwoBodyWindow(QWidget):
         timeSpanClearBtn.setObjectName(timeValClearBtnName)
         timeSpanClearBtn.setMinimumWidth(buttonMinWidth)
         timeSpanClearBtn.setMinimumHeight(buttonMinHeight)
+        timeSpanClearBtn.clicked.connect(self.ClearTime)
         timeValLayout.addWidget(timeSpanClearBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         # Randomize time span buttons
         timeSpanRandBtn = QPushButton("Random Time Span")
         timeSpanRandBtn.setObjectName(timeValRandBtnName)
         timeSpanRandBtn.setMinimumWidth(buttonMinWidth)
         timeSpanRandBtn.setMinimumHeight(buttonMinHeight)
+        timeSpanRandBtn.clicked.connect(self.RandomTime)
         timeValLayout.addWidget(timeSpanRandBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         # Time values spacer
         timeSpacer = QSpacerItem(0, 10, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
@@ -615,6 +693,7 @@ class TwoBodyWindow(QWidget):
         mass2ComboBox.setMinimumWidth(comboBoxMinWidth)
         mass2ComboBox.setMinimumHeight(comboBoxMinHeight)
         mass2ComboBox.addItems(cbItems)
+        mass2ComboBox.currentIndexChanged.connect(self.OnMass2CBChange)
         mass2ParamLayout.addWidget(mass2ComboBox, alignment = Qt.AlignmentFlag.AlignHCenter)
         # Mass 2 name line edit
         mass2NameLE = QLineEdit()
@@ -681,12 +760,14 @@ class TwoBodyWindow(QWidget):
         mass2ClearBtn.setObjectName(mass2ClearBtnName)
         mass2ClearBtn.setMinimumWidth(buttonMinWidth)
         mass2ClearBtn.setMinimumHeight(buttonMinHeight)
+        mass2ClearBtn.clicked.connect(self.ClearMass2Params)
         mass2ParamLayout.addWidget(mass2ClearBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         # Randomize Mass 2 parameters button
         mass2RandBtn = QPushButton("Random Mass 2 Parameters")
         mass2RandBtn.setObjectName(mass2RandBtnName)
         mass2RandBtn.setMinimumWidth(buttonMinWidth)
         mass2RandBtn.setMinimumHeight(buttonMinHeight)
+        mass2RandBtn.clicked.connect(self.RandomMass2)
         mass2ParamLayout.addWidget(mass2RandBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         # Mass 2 parameters spacer
         mass2Spacer = QSpacerItem(0, 10, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
@@ -738,18 +819,21 @@ class TwoBodyWindow(QWidget):
         plotSelAllBtn.setObjectName(plotSelAllBtnName)
         plotSelAllBtn.setMinimumWidth(buttonMinWidth)
         plotSelAllBtn.setMinimumHeight(buttonMinHeight)
+        plotSelAllBtn.clicked.connect(self.SelectAllPlots)
         plotSelBtnLayout.addWidget(plotSelAllBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         ## Random all checkboxes button
         plotSelRandBtn = QPushButton("Random Plots")
         plotSelRandBtn.setObjectName(plotSelRandBtnName)
         plotSelRandBtn.setMinimumWidth(buttonMinWidth)
         plotSelRandBtn.setMinimumHeight(buttonMinHeight)
+        plotSelRandBtn.clicked.connect(self.RandomPlots)
         plotSelBtnLayout.addWidget(plotSelRandBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         ## Unselect all checkboxes button
         plotSelUnsBtn = QPushButton("Unselect All Plots")
         plotSelUnsBtn.setObjectName(plotSelUnsBtnName)
         plotSelUnsBtn.setMinimumWidth(buttonMinWidth)
         plotSelUnsBtn.setMinimumHeight(buttonMinHeight)
+        plotSelUnsBtn.clicked.connect(self.UnselectAllPlots)
         plotSelBtnLayout.addWidget(plotSelUnsBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         # Add layouts to parent
         plotSelLayout.addLayout(plotSel2DCBLayout)
@@ -775,12 +859,14 @@ class TwoBodyWindow(QWidget):
         clearBtn.setObjectName(clearBtnName)
         clearBtn.setMinimumWidth(buttonMinWidth - 50)
         clearBtn.setMinimumHeight(buttonMinHeight)
+        clearBtn.clicked.connect(self.ClearAll)
         mainBtnLayout.addWidget(clearBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         ## Random button
         randomBtn = QPushButton("Random All")
         randomBtn.setObjectName(randomBtnName)
         randomBtn.setMinimumWidth(buttonMinWidth - 50)
         randomBtn.setMinimumHeight(buttonMinHeight)
+        randomBtn.clicked.connect(self.RandomAll)
         mainBtnLayout.addWidget(randomBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         ## Home button
         homeBtn = QPushButton("Return Home")
@@ -808,6 +894,8 @@ class TwoBodyWindow(QWidget):
         self.setLayout(mainLayout)
         # Default state
         self.DefaultState(5)
+        # Connect signals function
+        self.ConnectSignals()
 
     """ OnMass1CBChange - Event handler for when mass 1's checkbox is changed
         Input:
@@ -848,8 +936,65 @@ class TwoBodyWindow(QWidget):
                 children[0][7].setText(str(VELMATRIX[currentIndex - 2][1]))
                 children[0][8].setText(str(VELMATRIX[currentIndex - 2][2]))
             else:
-                for widget in children[0][1:9]:
+                for widget in children[0][2:9]:
                     widget.setText("")
+
+    """ OnMass2CBChange - Event handler for when mass 2's checkbox is changed
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab the children from the window
+            * Grab the current index of the combo box
+            * If the combo box is set to 0
+                * Clear the parameters
+                * Return the field to its default state
+            * Otherwise
+                * If the combo box is set to anything but 1
+                    * Populate the fields with parameters for that object
+                * Otherwise
+                    * Clear the line edits of the field
+        Output:
+            This function does not return a value
+    """
+    def OnMass2CBChange(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Current index
+        currentIndex = children[1][0].currentIndex()
+        # Combo box set to 0
+        if (currentIndex == 0):
+            self.ClearMass2Params()
+            self.DefaultState(2)
+        # Otherwise 
+        else:
+            self.EnableFields(2)
+            children[1][1].setText(str(cbItems[currentIndex]))
+            if (currentIndex != 1):
+                children[1][2].setText(str(MASSESARR[currentIndex - 2]))
+                children[1][3].setText(str(POSMATRIX[currentIndex - 2][0]))
+                children[1][4].setText(str(POSMATRIX[currentIndex - 2][1]))
+                children[1][5].setText(str(POSMATRIX[currentIndex - 2][2]))
+                children[1][6].setText(str(VELMATRIX[currentIndex - 2][0]))
+                children[1][7].setText(str(VELMATRIX[currentIndex - 2][1]))
+                children[1][8].setText(str(VELMATRIX[currentIndex - 2][2]))
+            else:
+                for widget in children[1][2:9]:
+                    widget.setText("")
+
+    """ RandomAll - Randomizes all input fields
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Call member functions
+        Output:
+            This function does not return a value
+    """
+    def RandomAll(self):
+        # Member functions
+        self.RandomMass1()
+        self.RandomMass2()
+        self.RandomTime()
+        self.RandomPlots()
 
     """ RandomMass1 - Randomizes the mass 1 parameters
         Input:
@@ -862,7 +1007,7 @@ class TwoBodyWindow(QWidget):
             * Otherwise
                 * Randomize values for arbitrary object
         Output:
-
+            This function does not return a value
     """
     def RandomMass1(self):
         # Grab children
@@ -873,7 +1018,7 @@ class TwoBodyWindow(QWidget):
         if (randIndex != 1):
             children[0][0].setCurrentIndex(randIndex)
         # Arbitrary object
-        else:
+        elif (randIndex == 1):
             children[0][0].setCurrentIndex(randIndex)
             randomMass = round(random.uniform(0.01 * MPLUTO, random.uniform(1, 1e10) * random.choice(MASSESARR)),2)
             randomXPos = round(random.uniform(0, random.choice([-1,1]) * random.randint(1,20) * random.choice(POSMATRIX[1:][1])),2)
@@ -886,6 +1031,133 @@ class TwoBodyWindow(QWidget):
             for i in range(len(randomArr)):
                 children[0][i + 2].setText(str(randomArr[i]))
 
+    """ RandomMass2 - Randomizes the mass 2 parameters
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab children from the window
+            * Generate a random index for the combo box
+            * If the object is not the arbitrary object
+                * Set the combo box to the random index
+            * Otherwise
+                * Randomize values for arbitrary object
+        Output:
+            This function does not return a value
+    """
+    def RandomMass2(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Generate random number
+        randIndex = random.randint(1,12)
+        # Not arbitrary object
+        if (randIndex != 1):
+            children[1][0].setCurrentIndex(randIndex)
+        # Arbitrary object
+        elif (randIndex == 1):
+            children[1][0].setCurrentIndex(randIndex)
+            randomMass = round(random.uniform(0.01 * MPLUTO, random.uniform(1, 1e10) * random.choice(MASSESARR)),2)
+            randomXPos = round(random.uniform(0, random.choice([-1,1]) * random.randint(1,20) * random.choice(POSMATRIX[1:][1])),2)
+            randomYPos = round(random.uniform(0, random.choice([-1,1]) * random.randint(1,20) * random.choice(POSMATRIX[1:][1])),2)
+            randomZPos = round(random.uniform(0, random.choice([-1,1]) * random.randint(1,20) * random.choice(POSMATRIX[1:][1])),2)
+            randomXVel = round(random.uniform(0, random.choice([-1,1]) * random.randint(1,20) * random.choice(VELMATRIX[1:][1])),2)
+            randomYVel = round(random.uniform(0, random.choice([-1,1]) * random.randint(1,20) * random.choice(VELMATRIX[1:][1])),2)
+            randomZVel = round(random.uniform(0, random.choice([-1,1]) * random.randint(1,20) * random.choice(VELMATRIX[1:][1])),2)
+            randomArr = [randomMass, randomXPos, randomYPos, randomZPos, randomXVel, randomYVel, randomZVel]
+            for i in range(len(randomArr)):
+                children[1][i + 2].setText(str(randomArr[i]))
+
+    """ RandomPlots - Randomizes the checkboxes that get selected
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab children from window
+            * Generate random integers and append them to an array
+            * Check boxes based upon the modulo of a given random integer being zero
+            * Check if no boxes where checked
+                * If no boxes were checked, set a random checkbox to be checked
+        Output:
+            This function does not return a value
+    """
+    def RandomPlots(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Random integers
+        randInts = []
+        for i in range(2,10):
+            randInts.append(random.randint(1,1000))
+        # Check boxes
+        self.UnselectAllPlots()
+        index = 0
+        boolArr = []
+        for widget in children[3][0:8]:
+            if (randInts[index] % (index + 2) == 0):
+                widget.setChecked(True)
+                boolArr.append(True)
+            else:
+                boolArr.append(False)
+            index += 1
+        # Check if all are false
+        allFalse = all(vals == False for vals in boolArr)
+        if (allFalse == True):
+            randIndex = random.randint(0,8)
+            children[3][randIndex].setChecked(True)
+
+    """ RandomTime - Randomizes the time span
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab children
+        Output:
+            This function does not return a value
+    """
+    def RandomTime(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Generate random value
+        randTime = round(random.uniform(0, 1000), 2)
+        # Set random time
+        children[2][0].setText(str(randTime))
+
+    """ Signals - Checks for specific conditions of line edits and combo boxes
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab the children from the window
+            * Grab boolean values from fields
+            * Enable time value field on specific conditions
+            * Enable checkboxes on specific conditions
+            * Enable calculate button on specific conditions
+        Output:
+            This function does not return a value
+    """
+    def Signals(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Check for combo boxes
+        mass1ComboBox = children[0][0].currentIndex() != 0
+        mass2ComboBox = children[1][0].currentIndex() != 0
+        mass1Params = all(isinstance(widget, QLineEdit) and widget.text() != "" for widget in children[0][1:9])
+        mass2Params = all(isinstance(widget, QLineEdit) and widget.text() != "" for widget in children[1][1:9])
+        timeVals = children[2][0].text() != ""
+        checkBoxes = any(isinstance(widget, QCheckBox) and widget.isChecked() == True for widget in children[3][0:8])
+        # Enable time values
+        if (mass1ComboBox == True or mass2ComboBox == True):
+            self.EnableFields(1)
+        else:
+            self.ClearTime()
+            self.DefaultState(1)
+        # Enable checkboxes
+        if (mass1Params == True and mass2Params == True and timeVals == True):
+            self.EnableFields(3)
+        else:
+            self.UnselectAllPlots()
+            self.DefaultState(3)
+        # Enable calculate button
+        if (mass1Params == True and mass2Params == True and timeVals == True and checkBoxes == True):
+            self.EnableFields(4)
+        else:
+            self.DefaultState(4)
+
     """ ReturnHome - Returns home and closes the current window
         Input:
             This function does not have any unique input parameters
@@ -897,4 +1169,37 @@ class TwoBodyWindow(QWidget):
     """
     def ReturnHome(self):
         self.mainWindow.show()
-        self.close()    
+        self.close()
+
+    """ SelectAllPlots - Selects all plot checkboxes
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab children from window
+            * Set all checkboxes to checked
+        Output:
+            This function does not return a value
+    """
+    def SelectAllPlots(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Select all plots
+        for widget in children[3][0:8]:
+            widget.setChecked(True)
+
+    """ UnselectAllPlots - Unselects all plot checkboxes
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab children from window
+            * Clear all checkboxes
+        Output:
+            This function does not return a value
+    """
+    def UnselectAllPlots(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Unselect all plots
+        for widget in children[3][0:8]:
+            widget.setChecked(False)
+
