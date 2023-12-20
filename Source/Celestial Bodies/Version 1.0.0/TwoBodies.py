@@ -106,40 +106,66 @@ class TwoBodyWindow(QWidget):
         # Grab children
         children = self.GrabChildren()
         # Clear children
-        children[0][0].setCurrentIndex(0)
         for widget in children[0][1:9]:
             widget.setText("")
 
     """ DefaultState - Default state for widgets
         Input:
-            This function does not have a unique input parameter
+            field - Field that is to be set to default
         Algorithm:
             * Grab children from window
-            * Disable mass 1 parameters children
-            * Disable time values children
-            * Disable mass 2 parameters children
-            * Disable checkboxes children
-            * Disable calculate button
+            * Define disable mass 1 function
+            * Define disable time function
+            * Define disable mass 2 function
+            * Define disable checkboxes function
+            * Define disable calculate function
+            * Define disable all function
+            * Set the field(s) to default based upon the input parameter
         Output:
             This function does not return a value
     """
-    def DefaultState(self):
+    def DefaultState(self, field):
         # Enable children
         children = self.GrabChildren()
-        # Disable mass 1 parameters children
-        for widget in children[0][2:10]:
-            widget.setDisabled(True)
-        # Disable time values children
-        for widget in children[2][0:2]:
-            widget.setDisabled(True)
-        # Disable mass 2 parameters children
-        for widget in children[1][2:10]:
-            widget.setDisabled(True)
-        # Disable checkboxes children
-        for widget in children[3]:
-            widget.setDisabled(True)
-        # Disable calculate button
-        children[4][0].setDisabled(True)
+        # Disable mass 1 parameters children function
+        def DefaultMass1():
+            for widget in children[0][2:10]:
+                widget.setDisabled(True)
+        # Disable time values children function
+        def DefaultTime():
+            for widget in children[2][0:2]:
+                widget.setDisabled(True)
+        # Disable mass 2 parameters children function
+        def DefaultMass2():
+            for widget in children[1][2:10]:
+                widget.setDisabled(True)
+        # Disable checkboxes children function
+        def DefaultCB():
+            for widget in children[3]:
+                widget.setDisabled(True)
+        # Disable calculate button function
+        def DefaultCalcBtn():
+            children[4][0].setDisabled(True)
+        # Disable all function
+        def DefaultAll():
+            DefaultMass1()
+            DefaultTime()
+            DefaultMass2()
+            DefaultCB()
+            DefaultCalcBtn()
+        # Set fields to default state
+        if (field == 0):
+            DefaultMass1()
+        elif (field == 1):
+            DefaultTime()
+        elif (field == 2):
+            DefaultMass2()
+        elif (field == 3):
+            DefaultCB()
+        elif (field == 4):
+            DefaultCalcBtn()
+        elif (field == 5):
+            DefaultAll()
 
     """ DisableFields - Disables fields based upon input parameter
         Input:
@@ -470,6 +496,7 @@ class TwoBodyWindow(QWidget):
         mass1NameLE.setMinimumWidth(lineEditMinWidth)
         mass1NameLE.setMinimumHeight(lineEditMinHeight)
         mass1NameLE.setPlaceholderText("Mass 1 Name")
+        # mass1NameLE.textChanged.connect(self.OnMass1Change)
         mass1ParamLayout.addWidget(mass1NameLE)
         # Mass 1 mass line edit
         mass1MassLE = QLineEdit()
@@ -477,6 +504,7 @@ class TwoBodyWindow(QWidget):
         mass1MassLE.setMinimumWidth(lineEditMinWidth)
         mass1MassLE.setMinimumHeight(lineEditMinHeight)
         mass1MassLE.setPlaceholderText("Mass 1 In (Kg)")
+        # mass1MassLE.textChanged.connect(self.OnMass1Change)
         mass1ParamLayout.addWidget(mass1MassLE)
         ## Mass 1 initial x position line edit
         mass1XPosLE = QLineEdit()
@@ -484,6 +512,7 @@ class TwoBodyWindow(QWidget):
         mass1XPosLE.setMinimumWidth(int(lineEditMinWidth / 2))
         mass1XPosLE.setMinimumHeight(int(lineEditMinHeight / 2))
         mass1XPosLE.setPlaceholderText("Initial X Position In (m)")
+        # mass1XPosLE.textChanged.connect(self.OnMass1Change)
         mass1XValsLayout.addWidget(mass1XPosLE)
         ## Mass 1 initial x velocity line edit
         mass1XVelLE = QLineEdit()
@@ -491,6 +520,7 @@ class TwoBodyWindow(QWidget):
         mass1XVelLE.setMinimumWidth(int(lineEditMinWidth / 2))
         mass1XVelLE.setMinimumHeight(int(lineEditMinHeight / 2))
         mass1XVelLE.setPlaceholderText("Initial X Velocity In (m/s)")
+        # mass1XVelLE.textChanged.connect(self.OnMass1Change)
         mass1XValsLayout.addWidget(mass1XVelLE)
         ## Mass 1 initial y position line edit
         mass1YPosLE = QLineEdit()
@@ -498,6 +528,7 @@ class TwoBodyWindow(QWidget):
         mass1YPosLE.setMinimumWidth(int(lineEditMinWidth / 2))
         mass1YPosLE.setMinimumHeight(int(lineEditMinHeight / 2))
         mass1YPosLE.setPlaceholderText("Initial Y Position In (m)")
+        # mass1YPosLE.textChanged.connect(self.OnMass1Change)
         mass1YValsLayout.addWidget(mass1YPosLE)
         ## Mass 1 initial y velocity line edit
         mass1YVelLE = QLineEdit()
@@ -505,6 +536,7 @@ class TwoBodyWindow(QWidget):
         mass1YVelLE.setMinimumWidth(int(lineEditMinWidth / 2))
         mass1YVelLE.setMinimumHeight(int(lineEditMinHeight / 2))
         mass1YVelLE.setPlaceholderText("Initial Y Velocity In (m/s)")
+        # mass1YVelLE.textChanged.connect(self.OnMass1Change)
         mass1YValsLayout.addWidget(mass1YVelLE)
         ## Mass 1 initial z position line edit
         mass1ZPosLE = QLineEdit()
@@ -512,6 +544,7 @@ class TwoBodyWindow(QWidget):
         mass1ZPosLE.setMinimumWidth(int(lineEditMinWidth / 2))
         mass1ZPosLE.setMinimumHeight(int(lineEditMinHeight / 2))
         mass1ZPosLE.setPlaceholderText("Initial Z Position In (m)")
+        # mass1ZPosLE.textChanged.connect(self.OnMass1Change)
         mass1ZValsLayout.addWidget(mass1ZPosLE)
         ## Mass 1 initial z velocity line edit
         mass1ZVelLE = QLineEdit()
@@ -519,6 +552,7 @@ class TwoBodyWindow(QWidget):
         mass1ZVelLE.setMinimumWidth(int(lineEditMinWidth / 2))
         mass1ZVelLE.setMinimumHeight(int(lineEditMinHeight / 2))
         mass1ZVelLE.setPlaceholderText("Initial Z Velocity In (m/s)")
+        # mass1ZVelLE.textChanged.connect(self.OnMass1Change)
         mass1ZValsLayout.addWidget(mass1ZVelLE)
         ## Add layouts to parent
         mass1ParamLayout.addLayout(mass1XValsLayout)
@@ -773,21 +807,22 @@ class TwoBodyWindow(QWidget):
         # Set layout
         self.setLayout(mainLayout)
         # Default state
-        self.DefaultState()
+        self.DefaultState(5)
 
-    """ OnMass1CBChange - Event handler for when mass 1's combo box is changed
+    """ OnMass1CBChange - Event handler for when mass 1's checkbox is changed
         Input:
             This function does not have any unique input parameters
         Algorithm:
-            * Grab children from window
-            * Get the current index of the combo box
+            * Grab the children from the window
+            * Grab the current index of the combo box
             * If the combo box is set to 0
-                * Clear the mass 1 parameters
-                * Return the children to their default state
+                * Clear the parameters
+                * Return the field to its default state
             * Otherwise
-                * Enable all the children
-                * Set the parameters in the fields to their values based upon the object
-                * Generate random values for arbitrary object
+                * If the combo box is set to anything but 1
+                    * Populate the fields with parameters for that object
+                * Otherwise
+                    * Clear the line edits of the field
         Output:
             This function does not return a value
     """
@@ -799,8 +834,7 @@ class TwoBodyWindow(QWidget):
         # Combo box set to 0
         if (currentIndex == 0):
             self.ClearMass1Params()
-            for widget in children[0][2:10]:
-                widget.setDisabled(True)
+            self.DefaultState(0)
         # Otherwise 
         else:
             self.EnableFields(0)
@@ -814,16 +848,8 @@ class TwoBodyWindow(QWidget):
                 children[0][7].setText(str(VELMATRIX[currentIndex - 2][1]))
                 children[0][8].setText(str(VELMATRIX[currentIndex - 2][2]))
             else:
-                randomMass = random.uniform(0.01 * MPLUTO, random.uniform(1, 1e10) * random.choice(MASSESARR))
-                randomXPos = random.uniform(0, random.choice([-1,1]) * random.randint(1,20) * random.choice(POSMATRIX[1:][1]))
-                randomYPos = random.uniform(0, random.choice([-1,1]) * random.randint(1,20) * random.choice(POSMATRIX[1:][1]))
-                randomZPos = random.uniform(0, random.choice([-1,1]) * random.randint(1,20) * random.choice(POSMATRIX[1:][1]))
-                randomXVel = random.uniform(0, random.choice([-1,1]) * random.randint(1,20) * random.choice(VELMATRIX[1:][1]))
-                randomYVel = random.uniform(0, random.choice([-1,1]) * random.randint(1,20) * random.choice(VELMATRIX[1:][1]))
-                randomZVel = random.uniform(0, random.choice([-1,1]) * random.randint(1,20) * random.choice(VELMATRIX[1:][1]))
-                randomArr = [randomMass, randomXPos, randomYPos, randomZPos, randomXVel, randomYVel, randomZVel]
-                for i in range(len(randomArr)):
-                    children[0][i + 2].setText(str(randomArr[i]))
+                for widget in children[0][1:9]:
+                    widget.setText("")
 
     """ RandomMass1 - Randomizes the mass 1 parameters
         Input:
@@ -831,7 +857,10 @@ class TwoBodyWindow(QWidget):
         Algorithm:
             * Grab children from the window
             * Generate a random index for the combo box
-            * Set the combo box to the random index
+            * If the object is not the arbitrary object
+                * Set the combo box to the random index
+            * Otherwise
+                * Randomize values for arbitrary object
         Output:
 
     """
@@ -840,7 +869,22 @@ class TwoBodyWindow(QWidget):
         children = self.GrabChildren()
         # Generate random number
         randIndex = random.randint(1,12)
-        children[0][0].setCurrentIndex(randIndex)
+        # Not arbitrary object
+        if (randIndex != 1):
+            children[0][0].setCurrentIndex(randIndex)
+        # Arbitrary object
+        else:
+            children[0][0].setCurrentIndex(randIndex)
+            randomMass = round(random.uniform(0.01 * MPLUTO, random.uniform(1, 1e10) * random.choice(MASSESARR)),2)
+            randomXPos = round(random.uniform(0, random.choice([-1,1]) * random.randint(1,20) * random.choice(POSMATRIX[1:][1])),2)
+            randomYPos = round(random.uniform(0, random.choice([-1,1]) * random.randint(1,20) * random.choice(POSMATRIX[1:][1])),2)
+            randomZPos = round(random.uniform(0, random.choice([-1,1]) * random.randint(1,20) * random.choice(POSMATRIX[1:][1])),2)
+            randomXVel = round(random.uniform(0, random.choice([-1,1]) * random.randint(1,20) * random.choice(VELMATRIX[1:][1])),2)
+            randomYVel = round(random.uniform(0, random.choice([-1,1]) * random.randint(1,20) * random.choice(VELMATRIX[1:][1])),2)
+            randomZVel = round(random.uniform(0, random.choice([-1,1]) * random.randint(1,20) * random.choice(VELMATRIX[1:][1])),2)
+            randomArr = [randomMass, randomXPos, randomYPos, randomZPos, randomXVel, randomYVel, randomZVel]
+            for i in range(len(randomArr)):
+                children[0][i + 2].setText(str(randomArr[i]))
 
     """ ReturnHome - Returns home and closes the current window
         Input:
