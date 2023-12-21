@@ -5,32 +5,6 @@ from Models import *
 ##### Solvers
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
 
-""" ProjectileMotionSolver - Solves projectile motion for a projectile on a given object
-    Input:
-        obj - List of object parameters where projectile motion is occurring
-            obj[0] - Mass of object
-            obj[1] - Distance from center of mass of object
-        ic - Initial conditions of projectile
-            ic[0] - Initial vertical position of projectile
-            ic[1] - Initial vertical velocity of projectile
-        t0 - Initial time of model
-        tn - Final time of model
-    Algorithm:
-        * Calculate the number of steps for the RK4 solver
-        * Call the RK4 solver
-        * Return the lists
-    Output:
-        pos - List of positions of projectile
-        vel - List of velocities of projectile
-        time - List of times of model
-"""
-def ProjectileMotionSolver(obj, ic, t0, tn):
-    # Steps
-    h = (tn - t0) / 10000
-    # RK4 Solver
-    pos, vel, time = RK4ProjectileMotion(ProjectileMotion, obj, ic, t0, tn, h)
-    return pos, vel, time
-
 """ CoupledTwoBodySolver - Solves the 2 Body problem with an RK4
     Input:
         massList - Array of masses:
@@ -76,7 +50,7 @@ def CoupledTwoBodySolver(massList, ic, t0, tn):
     # Steps
     h = (tn - t0) / 10000
     # RK4 solver
-    mass1Pos, mass2Pos, mass1Vel, mass2Vel, time = RK4TwoBody(TwoCoupledBodies, massList, ic, t0, tn, h)
+    mass1Pos, mass2Pos, mass1Vel, mass2Vel, time = RK4TwoBody(TwoCoupledBodiesModel, massList, ic, t0, tn, h)
     return mass1Pos, mass2Pos, mass1Vel, mass2Vel, time
 
 """ CoupledThreeBodySolver - Solves the 3 Body problem with an RK4
@@ -138,174 +112,12 @@ def CoupledThreeBodySolver(massList, ic, t0, tn):
     # Steps
     h = (tn - t0) / 10000
     # RK4 Solver
-    mass1Pos, mass2Pos, mass3Pos, mass1Vel, mass2Vel, mass3Vel, time = RK4ThreeBody(ThreeCoupledBodies, massList, ic, t0, tn, h)
+    mass1Pos, mass2Pos, mass3Pos, mass1Vel, mass2Vel, mass3Vel, time = RK4ThreeBody(ThreeCoupledBodiesModel, massList, ic, t0, tn, h)
     return mass1Pos, mass2Pos, mass3Pos, mass1Vel, mass2Vel, mass3Vel, time
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
 ##### Two Bodies
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
-
-##### ##### ##### ##### ##### ##### ##### ##### ##### #####
-##### Projectile Motion Position
-##### ##### ##### ##### ##### ##### ##### ##### ##### #####
-
-""" ProjectileMotionPositionPlot - Position plot of projectile motion
-    Input:
-        obj - List of object parameters where projectile motion is occurring
-            obj[0] - Mass of object
-            obj[1] - Distance from center of mass of object
-        ic - Initial conditions of projectile
-            ic[0] - Initial vertical position of projectile
-            ic[1] - Initial vertical velocity of projectile
-        t0 - Initial time of model
-        tn - Final time of model
-    Algorithm:
-        * Call the solver for projectile motion
-        * Plot the position versus time
-    Output:
-        This function does not return a value
-"""
-def ProjectileMotionPositionPlot(obj, ic, t0, tn, objName, projectileName):
-    # Solver
-    position, velocity, time = ProjectileMotionSolver(obj, ic, t0, tn)
-    # Plot
-    plt.plot(time, position, '-', color = 'green', linewidth = 1, label = projectileName)
-    plt.title(f"Projectile Motion Plot Of Position Under The Influence Of {objName}", fontsize = TWODPLOTTITLE)
-    plt.xlabel(f"Time In Seconds (s)", fontsize = TWODPLOTABELS)
-    plt.ylabel(f"Vertical Position In (m)", fontsize = TWODPLOTABELS)
-    plt.legend()
-    plt.show()
-
-""" ProjectileMotionPositionAnim - Position animation plot of projectile motion
-    Input:
-        obj - List of object parameters where projectile motion is occurring
-            obj[0] - Mass of object
-            obj[1] - Distance from center of mass of object
-        ic - Initial conditions of projectile
-            ic[0] - Initial vertical position of projectile
-            ic[1] - Initial vertical velocity of projectile
-        t0 - Initial time of model
-        tn - Final time of model
-    Algorithm:
-        * Call the RK4 solver
-        * Calculate the max and min positions
-        * Set the max and min for the axii
-        * Format the scales of the axii
-        * Set up the animation parameters
-        * Define the init function
-        * Define the animation function
-        * Call the animation
-        * Set the title and labels
-    Output:
-        This function does not return a value
-"""
-def ProjectileMotionPositionAnim(obj, ic, t0, tn, objName, projectileName):
-    # Solver
-    position, velocity, time = ProjectileMotionSolver(obj, ic, t0, tn)
-    fig, ax = plt.subplots()
-    # Animation parameters
-    projectile, = ax.plot([], [], 'o', color = 'green', markersize = 2, label = projectileName)
-    projectileTrail, = ax.plot([], [], '-', color = 'green', linewidth = 1, alpha = 0.5)
-    plt.xlim(min(time) - 0.05 * max(time), 1.05 * max(time))
-    plt.ylim(min(position) - 0.05 * max(position), 1.05 * max(position))
-    # Init Inner Function
-    def init(): 
-        projectile.set_data([], [])
-        projectileTrail.set_data([], [])
-        return projectile, projectileTrail
-    # Animate Inner Function
-    def animate(k):
-        projectile.set_data([time[k], position[k]])
-        projectileTrail.set_data(time[:k+1], position[:k+1])
-        return projectile, projectileTrail
-    # Animation
-    ani = FuncAnimation(fig, animate, init_func=init, frames=len(time), interval=1e-5, blit=True, repeat=True)
-    # Title and labels
-    ax.set_title(f"Projectile Motion Animation Of Position Under The Influence Of {objName}", fontsize = TWODANIMTITLE)
-    ax.set_xlabel(f"Time In Seconds (s)", fontsize = TWODANIMLABELS)
-    ax.set_ylabel(f"Vertical Position In (m)", fontsize = TWODANIMLABELS)
-    ax.legend()
-
-##### ##### ##### ##### ##### ##### ##### ##### ##### #####
-##### Projectile Motion Velocity
-##### ##### ##### ##### ##### ##### ##### ##### ##### #####
-
-""" ProjectileMotionVelocityPlot - Velocity plot of projectile motion
-    Input:
-        obj - List of object parameters where projectile motion is occurring
-            obj[0] - Mass of object
-            obj[1] - Distance from center of mass of object
-        ic - Initial conditions of projectile
-            ic[0] - Initial vertical position of projectile
-            ic[1] - Initial vertical velocity of projectile
-        t0 - Initial time of model
-        tn - Final time of model
-    Algorithm:
-        * Call the solver for projectile motion
-        * Plot the velocity versus time
-    Output:
-        This function does not return a value
-"""
-def ProjectileMotionVelocityPlot(obj, ic, t0, tn, objName, projectileName):
-    # Solver
-    position, velocity, time = ProjectileMotionSolver(obj, ic, t0, tn)
-    # Plot
-    plt.plot(time, velocity, '-', color = 'green', linewidth = 1, label = projectileName)
-    plt.title(f"Projectile Motion Plot Of Velocity Under The Influence Of {objName}", fontsize = TWODPLOTTITLE)
-    plt.xlabel(f"Time In Seconds (s)", fontsize = TWODPLOTABELS)
-    plt.ylabel(f"Vertical Velocity In $(\\frac{{m}}{{s}})$", fontsize = TWODPLOTABELS)
-    plt.legend()
-    plt.show()
-
-""" ProjectileMotionVelocityAnim - Velocity animation plot of projectile motion
-    Input:
-        obj - List of object parameters where projectile motion is occurring
-            obj[0] - Mass of object
-            obj[1] - Distance from center of mass of object
-        ic - Initial conditions of projectile
-            ic[0] - Initial vertical position of projectile
-            ic[1] - Initial vertical velocity of projectile
-        t0 - Initial time of model
-        tn - Final time of model
-    Algorithm:
-        * Call the RK4 solver
-        * Calculate the max and min positions
-        * Set the max and min for the axii
-        * Format the scales of the axii
-        * Set up the animation parameters
-        * Define the init function
-        * Define the animation function
-        * Call the animation
-        * Set the title and labels
-    Output:
-        This function does not return a value
-"""
-def ProjectileMotionVelocityAnim(obj, ic, t0, tn, objName, projectileName):
-    # Solver
-    position, velocity, time = ProjectileMotionSolver(obj, ic, t0, tn)
-    fig, ax = plt.subplots()
-    # Animation parameters
-    projectile, = ax.plot([], [], 'o', color = 'green', markersize = 2, label = projectileName)
-    projectileTrail, = ax.plot([], [], '-', color = 'green', linewidth = 1, alpha = 0.5)
-    plt.xlim(min(time) - 0.05 * max(time), 1.05 * max(time))
-    plt.ylim(1.05 * min(velocity), 0.05 * abs(min(velocity)))
-    # Init Inner Function
-    def init():
-        projectile.set_data([], [])
-        projectileTrail.set_data([], [])
-        return projectile, projectileTrail
-    # Animate Inner Function
-    def animate(k):
-        projectile.set_data([time[k], velocity[k]])
-        projectileTrail.set_data(time[:k+1], velocity[:k+1])
-        return projectile, projectileTrail
-    # Animation
-    ani = FuncAnimation(fig, animate, init_func=init, frames=len(time), interval=1e-5, blit=True, repeat=True)
-    # Title and labels
-    ax.set_title(f"Projectile Motion Animation Of Velocity Under The Influence Of {objName}", fontsize = TWODANIMTITLE)
-    ax.set_xlabel(f"Time In Seconds (s)", fontsize = TWODANIMLABELS)
-    ax.set_ylabel(f"Vertical Velocity In $(\\frac{{m}}{{s}})$", fontsize = TWODPLOTABELS)
-    ax.legend()
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 ##### Two Body 2D Position
