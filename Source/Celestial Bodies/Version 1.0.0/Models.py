@@ -1,7 +1,11 @@
 # Imports
 from RK4 import *
 
-""" ProjectileMotion - Model for simulating motion of body in projectile motion on a mass
+##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
+##### Models
+##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
+
+""" ProjectileMotionModel - Model for simulating motion of body in projectile motion on a mass
     Input:
         t - Time variable, not used directly in this model
         obj - Array of parameters for object where projectile motion is occurring:
@@ -17,7 +21,7 @@ from RK4 import *
         dydt - Velocity of object
         dzdt - Acceleration of object
 """
-def ProjectileMotion(t, obj, y, v):
+def ProjectileMotionModel(t, obj, y, v):
     # Height of object
     height = obj[1] + y
     # Differential equations
@@ -25,7 +29,7 @@ def ProjectileMotion(t, obj, y, v):
     dzdt = - (G * obj[0] / pow(height, 2))
     return dydt, dzdt
 
-""" TwoCoupledBodies - Model for two bodies interacting in space
+""" TwoCoupledBodiesModel - Model for two bodies interacting in space
     Input:
         t - Time variable, not used directly in this model
         massList - Array of masses in system
@@ -61,7 +65,7 @@ def ProjectileMotion(t, obj, y, v):
         m2ay - Acceleration of mass 2 in y
         m2az - Acceleration of mass 2 in z
 """
-def TwoCoupledBodies(t, massList, m1x, m1y, m1z, m2x, m2y, m2z, m1vx, m1vy, m1vz, m2vx, m2vy, m2vz):
+def TwoCoupledBodiesModel(t, massList, m1x, m1y, m1z, m2x, m2y, m2z, m1vx, m1vy, m1vz, m2vx, m2vy, m2vz):
     # Distances from mass 1 to mass 2
     r12x = m1x - m2x
     r12y = m1y - m2y
@@ -82,9 +86,7 @@ def TwoCoupledBodies(t, massList, m1x, m1y, m1z, m2x, m2y, m2z, m1vx, m1vy, m1vz
     m2az = (G * massList[0] * r12z) / R12
     return m1vx, m1vy, m1vz, m2vx, m2vy, m2vz, m1ax, m1ay, m1az, m2ax, m2ay, m2az
 
-# ThreeCoupledBodies - Model for three bodies interacting in space
-
-"""
+""" ThreeCoupledBodiesModel - Model for three bodies interacting in space
     Input:
         t - Time variable, not used directly in this model
         massList - Array of masses in system
@@ -136,7 +138,7 @@ def TwoCoupledBodies(t, massList, m1x, m1y, m1z, m2x, m2y, m2z, m1vx, m1vy, m1vz
         m3ay - Acceleration of mass 3 in y
         m3az - Acceleration of mass 3 in z
 """
-def ThreeCoupledBodies(t, massList, m1x, m1y, m1z, m2x, m2y, m2z, m3x, m3y, m3z, m1vx, m1vy, m1vz, m2vx, m2vy, m2vz, m3vx, m3vy, m3vz):
+def ThreeCoupledBodiesModel(t, massList, m1x, m1y, m1z, m2x, m2y, m2z, m3x, m3y, m3z, m1vx, m1vy, m1vz, m2vx, m2vy, m2vz, m3vx, m3vy, m3vz):
     # Distances from mass 1 to mass 2
     r12x = m2x - m1x
     r12y = m2y - m1y
