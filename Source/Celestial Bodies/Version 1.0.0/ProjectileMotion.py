@@ -80,7 +80,7 @@ class ProjectileMotionCanvas(FigureCanvasQTAgg):
     """
     def Plot(self, plotType, obj, ic, t0, tn, objName, projectileName):
         # Call solver
-        position, velocity, time = ProjectileMotionSolver(obj, ic, t0, tn)
+        position, velocity, time = RK4ProjectileMotion(ProjectileMotionModel, obj, ic, t0, tn)
         # Position Plot
         if (plotType == 0):
             # Clear axes
@@ -251,7 +251,7 @@ class ProjectileMotionPlotWindow(QWidget):
         # Window sizes
         self.resize(800,500)
         self.setMinimumWidth(800)
-        self.setMinimumHeight(400)
+        self.setMinimumHeight(500)
         # Layout
         self.layout = QVBoxLayout()
         # Canvas for plot
