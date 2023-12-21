@@ -4,6 +4,162 @@ from ModelFunctions import *
 ##### Canvas / Plot Window
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
 
+""" TwoBodyCanvas - Class for two body plots
+
+"""
+class TwoBodyCanvas(FigureCanvasQTAgg):
+    """ Constructor - Constructor for canvas with specific input parameters
+        Input:
+            parent - Parent class
+            width - Width of canvas
+            height - Height of canvas
+            dpi - DPI of canvas
+        Algorithm:
+            * Create a figure with the width, height, and dpi from the input parameters
+            * Create an axis and add it to the figure
+            * Call the constructor for FigureCanvasQTAgg with the figure previously created
+        Output:
+            This function does not return a value
+    """
+    def __init__(self, parent=None, width=3, height=2, dpi=100):
+        fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = fig.add_subplot(111)
+        FigureCanvasQTAgg.__init__(self, fig)
+
+    """ Plot - Plots the results from a two body scenario
+    
+    """
+    def Plot(self, plotType, masses, ic, t0, tn, i, j, mass1Name, mass2Name):
+        # Call solver
+        mass1Pos, mass2Pos, mass1Vel, mass2Vel, timeVals = RK4TwoBody(TwoCoupledBodiesModel, masses, ic, t0, tn)
+        # Max pos
+        def MaxPos(self, mass1Pos, mass2Pos):
+            # Max pos
+            maxDistX = max(max([pos[0] for pos in mass1Pos]), max([pos[0] for pos in mass2Pos])) * 1.1
+            maxDistY = max(max([pos[1] for pos in mass1Pos]), max([pos[1] for pos in mass2Pos])) * 1.1
+            maxDistZ = max(max([pos[2] for pos in mass1Pos]), max([pos[2] for pos in mass2Pos])) * 1.1
+            # Direction place holder
+            iDirection = ''
+            jDirection = ''
+            if (i == 0):
+                iDirection = "$x$"
+                self.axes.set_xlim(-maxDistX, maxDistX)
+            elif (i == 1):
+                iDirection = "$y$"
+                self.axes.set_xlim(-maxDistY, maxDistY)
+            elif (i == 2):
+                iDirection = "$z$"
+                self.axes.set_xlim(-maxDistZ, maxDistZ)
+            if (j == 0):
+                jDirection = "$x$"
+                self.axes.set_ylim(-maxDistX, maxDistX)
+            elif (j == 1):
+                jDirection = "$y$"
+                self.axes.set_ylim(-maxDistY, maxDistY)
+            elif (j == 2):
+                jDirection = "$z$"
+                self.axes.set_ylim(-maxDistZ, maxDistZ)
+            return iDirection, jDirection
+        # Figure notes
+        def Notes(self, masses, ic, mass1Name, mass2Name):
+            self.figure.subplots_adjust(bottom=0.30)
+            mass1Mass = f"{mass1Name}: {masses[0]:.2e} $(Kg)$ "
+            mass1InitXPos, mass1InitYPos, mass1InitZPos = f"$x_{0}$ = {ic[0][0]:.2e} $(m)$, ", f"$y_{0}$ = {ic[0][1]:.2e} $(m)$, ", f"$z_{0}$ = {ic[0][2]:.2e} $(m)$, "
+            mass1InitXVel, mass1InitYVel, mass1InitZVel = f"$v_{{x_{0}}}$ = {ic[2][0]:.2e} $(m/s)$, ", f"$v_{{y_{0}}}$ = {ic[2][1]:.2e} $(m/s)$, ", f"$v_{{z_{0}}}$ = {ic[2][2]:.2e} $(m/s)$"
+            mass1Notes = mass1Mass + mass1InitXPos + mass1InitXVel + mass1InitYPos + mass1InitYVel + mass1InitZPos + mass1InitZVel
+            mass2Mass = f"{mass2Name}: {masses[1]:.2e} $(Kg)$ "
+            mass2InitXPos, mass2InitYPos, mass2InitZPos = f"$x_{0}$ = {ic[1][0]:.2e} $(m)$, ", f"$y_{0}$ = {ic[1][1]:.2e} $(m)$, ", f"$z_{0}$ = {ic[1][2]:.2e} $(m)$, "
+            mass2InitXVel, mass2InitYVel, mass2InitZVel = f"$v_{{x_{0}}}$ = {ic[3][0]:.2e} $(m/s)$, ", f"$v_{{y_{0}}}$ = {ic[3][1]:.2e} $(m/s)$, ", f"$v_{{z_{0}}}$ = {ic[3][2]:.2e} $(m/s)$"
+            mass2Notes = mass2Mass + mass2InitXPos + mass2InitXVel + mass2InitYPos + mass2InitYVel + mass2InitZPos + mass2InitZVel
+            timeSpanNotes = f"Time Span: {round(float(tn / (365.25 * DS)), 2)} Earth Years"
+            self.figure.text(0.1, 0.05, mass1Notes + "\n" + mass2Notes + "\n" + timeSpanNotes, ha='left', va='bottom', fontsize=TWODNOTES)
+        # Swap masses if applicable
+        m1 = masses[0]
+        m1Name = mass1Name
+        m1Pos = mass1Pos
+        m1Vel = mass1Vel
+        m2 = masses[1]
+        m2Name = mass2Name
+        m2Pos = mass2Pos
+        m2Vel = mass2Vel
+        icCopy = ic
+        if (m2 > m1):
+            masses[0] = m2
+            mass1Pos = m2Pos
+            mass1Vel = m2Vel
+            mass1Name = m2Name
+            masses[1] = m1
+            mass2Pos = m1Pos
+            mass2Vel = m1Vel
+            mass2Name = m1Name
+            ic = [icCopy[1],icCopy[0],icCopy[3],icCopy[2]]
+        # Position plot
+        if (plotType == 0):
+            # Clear axes
+            self.axes.clear()
+            # Max pos function
+            maxPos = MaxPos(self, mass1Pos, mass2Pos)
+            # Plot
+            self.axes.plot(mass1Pos[i], mass1Pos[j], 'o', color = "green", markersize = '2', label = mass1Name)
+            self.axes.plot(mass2Pos[i], mass2Pos[j], 'o', color = "blue", markersize = '1', label = mass2Name)
+            # Title and labels
+            self.axes.set_title(f"2D Position Plot Of Coupled Bodies: {maxPos[1]} vs. {maxPos[0]}", fontsize = TWODPLOTTITLE)
+            self.axes.set_xlabel(f"{maxPos[0]} Position In $(m)$", fontsize = TWODPLOTABELS)
+            self.axes.set_ylabel(f"{maxPos[1]} Position In $(m)$", fontsize = TWODPLOTABELS)
+            self.axes.legend()
+            # Notes
+            Notes(self, masses, ic, mass1Name, mass2Name)
+            # Draw plot on canvas
+            self.draw()
+
+""" TwoBodyPlotWindow - Class for two body motion plot windows
+
+"""
+class TwoBodyPlotWindow(QWidget):
+    """ Constructor - Creates windows with specific input parameters
+        Input:
+
+        Algorithm:
+
+        Output:
+            
+    """
+    def __init__(self, plotType, masses, ic, t0, tn, i, j, mass1Name, mass2Name, windowTitle):
+        super().__init__()
+        # Window title
+        self.setWindowTitle(windowTitle)
+        # Window sizes
+        self.resize(800,500)
+        self.setMinimumWidth(800)
+        self.setMinimumHeight(500)
+        # Layout
+        self.layout = QVBoxLayout()
+        # Canvas for plot
+        self.plotCanvas = TwoBodyCanvas(self, width=3, height=2, dpi=100)
+        self.plotCanvas.Plot(plotType, masses, ic, t0, tn, i, j, mass1Name, mass2Name)
+        # Tool bar
+        self.toolBar = NavigationToolbar(self.plotCanvas, self)
+        # Widget layout addition
+        self.layout.addWidget(self.plotCanvas)
+        self.layout.addWidget(self.toolBar)
+        # Set layout
+        self.setLayout(self.layout)
+
+    """ closeEvent - Deletes plot canvas when window is closed
+        Input:
+            event - Object for the close event
+        Algorithm:
+            * Check if the window has the attributes "plotCanvas" and "ani"
+            * Stop the animation if the window has an animation in it
+            * Call the close event method
+        Output:
+            This function does not return a value
+    """
+    def closeEvent(self, event):
+        if hasattr(self, 'plotCanvas') and hasattr(self.plotCanvas, 'ani'):
+            self.plotCanvas.ani.event_source.stop()
+        super().closeEvent(event)
+
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
 ##### Simulation Window
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
@@ -93,6 +249,32 @@ class TwoBodyWindow(QWidget):
         super().__init__()
         self.mainWindow = mainWindow
         self.InitUI()
+
+    """ Calculate - Generates the plot(s) for specific conditions
+    
+    """
+    def Calculate(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Values from fields
+        masses = []
+        ic = []
+        # Convert values
+        mass1 = float(children[0][2].text())
+        mass1Name = str(children[0][1].text())
+        mass1InitPos = [float(str(children[0][3].text())), float(str(children[0][4].text())), float(str(children[0][5].text()))]
+        mass1InitVel = [float(str(children[0][6].text())), float(str(children[0][7].text())), float(str(children[0][8].text()))]
+        mass2 = float(children[1][2].text())
+        mass2Name = str(children[1][1].text())
+        mass2InitPos = [float(str(children[1][3].text())), float(str(children[1][4].text())), float(str(children[1][5].text()))]
+        mass2InitVel = [float(str(children[1][6].text())), float(str(children[1][7].text())), float(str(children[1][8].text()))]
+        timeSpan = float(float(children[2][0].text()) * 365.25 * DS)
+        masses = [mass1, mass2]
+        ic = [mass1InitPos, mass2InitPos, mass1InitVel, mass2InitVel]
+        self.posPlot = TwoBodyPlotWindow(0, masses, ic, 0, timeSpan, 0, 1, mass1Name, mass2Name, "2D Two Body Position Plot")
+        self.posPlot.show()
+        self.ClearAll()
+
 
     """ ClearAll - Clears all input fields
         Input:
@@ -853,6 +1035,7 @@ class TwoBodyWindow(QWidget):
         calcBtn.setObjectName(calculateBtnName)
         calcBtn.setMinimumWidth(buttonMinWidth - 50)
         calcBtn.setMinimumHeight(buttonMinHeight)
+        calcBtn.clicked.connect(self.Calculate)
         mainBtnLayout.addWidget(calcBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         ## Clear button
         clearBtn = QPushButton("Clear All")
@@ -896,6 +1079,40 @@ class TwoBodyWindow(QWidget):
         self.DefaultState(5)
         # Connect signals function
         self.ConnectSignals()
+
+    """ IsNum - Checks to see if an input is able to be converted to a number
+        Input:
+            string - String value that is trying to be converted to a float
+        Algorithm:
+            * Try the conversion, if it succeeds, return true
+            * Otherwise, return false
+        Output:
+            This function returns a boolean value for if a value has been successfully converted
+    """
+    def IsNum(self, string):
+        # Attempt conversion
+        try:
+            float(string)
+            return True
+        except ValueError:
+            return False
+
+    """ IsPositive - Checks if a number is positive
+        Input:
+            value - Value that is being checked
+        Algorithm:
+            * If the value is non zero and positive, return True
+            * Otherwise, return False
+        Output:
+            This function returns a boolean value for if a number is positive
+    """
+    def IsPositive(self, value):
+        # Greater than zero
+        if (value):
+            return True
+        # Less than or equal to zero
+        else:
+            return False
 
     """ OnMass1CBChange - Event handler for when mass 1's checkbox is changed
         Input:
