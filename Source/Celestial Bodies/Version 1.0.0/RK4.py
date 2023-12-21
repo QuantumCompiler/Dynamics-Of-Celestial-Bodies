@@ -108,8 +108,8 @@ def RK42nd(ODE, a0, b0, c0, cn, h):
             ic[1] - Initial velocity of projectile in the vertical direction
         t0 - Initial time of solution
         tn - Final time of solution
-        h - Step size of model
     Algorithm:
+        * Calculate the step size for the model
         * Calculate the number of points in solution
         * Create lists for position, velocity, and time
         * Initialize values for position and velocity
@@ -124,7 +124,9 @@ def RK42nd(ODE, a0, b0, c0, cn, h):
         velovals - List of velocity values of projectile
         timevals - List of time values of model
 """
-def RK4ProjectileMotion(ODE, obj, ic, t0, tn, h):
+def RK4ProjectileMotion(ODE, obj, ic, t0, tn):
+    # Step size
+    h = (tn - t0) / 10000
     # Number of points
     n = int((tn - t0) / h)
     # List for position values
@@ -161,8 +163,8 @@ def RK4ProjectileMotion(ODE, obj, ic, t0, tn, h):
         ic - Initial conditions of bodies
         t0 - Initial time in model
         tn - Final time in model
-        h - Step size
     Algorithm:
+        * Calculate the step size for the model
         * Calculate the number of points in solution
         * Create empty lists for the parameters of each mass
         * Create empty list for the time in the model
@@ -181,7 +183,9 @@ def RK4ProjectileMotion(ODE, obj, ic, t0, tn, h):
         mass2Vel - List of mass 2 velocities with respect to time
         timevals - List of times at current steps in model
 """
-def RK4TwoBody(ODE, massList, ic, t0, tn, h):
+def RK4TwoBody(ODE, massList, ic, t0, tn):
+    # Step size
+    h = (tn - t0) / 10000
     # Number of points
     n = int((tn - t0) / h)
     # Mass 1 position lists
@@ -253,8 +257,8 @@ def RK4TwoBody(ODE, massList, ic, t0, tn, h):
         ic - Initial conditions of bodies
         t0 - Initial time in model
         tn - Final time in model
-        h - Step size
     Algorithm:
+        * Calculate the step size for the model
         * Calculate the number of points in solution
         * Create empty lists for the parameters of each mass
         * Create empty list for the time in the model
@@ -275,7 +279,9 @@ def RK4TwoBody(ODE, massList, ic, t0, tn, h):
         mass3Vel - List of mass 3 velocities with respect to time
         timevals - List of times at current steps in model
 """
-def RK4ThreeBody(ODE, massList, ic, t0, tn, h):
+def RK4ThreeBody(ODE, massList, ic, t0, tn):
+    # Step size
+    h = (tn - t0) / 10000
     # Number of points
     n = int((tn - t0) / h)
     # Mass 1 position lists
