@@ -285,8 +285,6 @@ class TwoBodyWindow(QWidget):
         ic = [mass1InitPos, mass2InitPos, mass1InitVel, mass2InitVel]
         self.posPlot = TwoBodyPlotWindow(0, masses, ic, 0, timeSpan, 0, 1, mass1Name, mass2Name, "2D Two Body Position Plot")
         self.posPlot.show()
-        self.ClearAll()
-
 
     """ ClearAll - Clears all input fields
         Input:
@@ -382,12 +380,22 @@ class TwoBodyWindow(QWidget):
     """ DefaultState - Default state for widgets
         Input:
             field - Field that is to be set to default
+                0 - Default mass 1 parameters
+                1 - Default time values
+                2 - Default mass 2 parameters
+                3 - Default plot selection checkbox parameters
+                4 - Default x axis selection checkbox parameters
+                5 - Default y axis selection checkbox parameters
+                6 - Default z axis selection checkbox parameters
+                7 - Default main buttons
+                8 - Default 0-7
         Algorithm:
             * Grab children from window
             * Define disable mass 1 function
             * Define disable time function
             * Define disable mass 2 function
-            * Define disable checkboxes function
+            * Define disable plot selection checkboxes function
+            * Define axis selection checkboxes function
             * Define disable calculate function
             * Define disable all function
             * Set the field(s) to default based upon the input parameter
@@ -395,33 +403,51 @@ class TwoBodyWindow(QWidget):
             This function does not return a value
     """
     def DefaultState(self, field):
-        # Enable children
+        # Grab children
         children = self.GrabChildren()
-        # Disable mass 1 parameters children function
+        # Default mass 1 parameters children function
         def DefaultMass1():
             for widget in children[0][2:10]:
                 widget.setDisabled(True)
-        # Disable time values children function
+        # Default time values children function
         def DefaultTime():
             for widget in children[2]:
                 widget.setDisabled(True)
-        # Disable mass 2 parameters children function
+        # Default mass 2 parameters children function
         def DefaultMass2():
             for widget in children[1][2:10]:
                 widget.setDisabled(True)
-        # Disable checkboxes children function
-        def DefaultCB():
+        # Default plot selection checkboxes children function
+        def DefaultPlotSelCB():
             for widget in children[3]:
                 widget.setDisabled(True)
-        # Disable calculate button function
+        # Default x axis selection checkboxes children function
+        def DefaultXAxisCB():
+            for widget in children[4][0:4]:
+                widget.setChecked(False)
+                widget.setDisabled(True)
+        # Default y axis selection checkboxes children function
+        def DefaultYAxisCB():
+            for widget in children[4][4:8]:
+                widget.setChecked(False)
+                widget.setDisabled(True)
+        # Default z axis selection checkboxes children function
+        def DefaultZAxisCB():
+            for widget in children[4][8:12]:
+                widget.setChecked(False)
+                widget.setDisabled(True)
+        # Default calculate button function
         def DefaultCalcBtn():
-            children[4][0].setDisabled(True)
-        # Disable all function
+            children[5][0].setDisabled(True)
+        # Default all function
         def DefaultAll():
             DefaultMass1()
             DefaultTime()
             DefaultMass2()
-            DefaultCB()
+            DefaultPlotSelCB()
+            DefaultXAxisCB()
+            DefaultYAxisCB()
+            DefaultZAxisCB()
             DefaultCalcBtn()
         # Set fields to default state
         if (field == 0):
@@ -431,10 +457,16 @@ class TwoBodyWindow(QWidget):
         elif (field == 2):
             DefaultMass2()
         elif (field == 3):
-            DefaultCB()
+            DefaultPlotSelCB()
         elif (field == 4):
-            DefaultCalcBtn()
+            DefaultXAxisCB()
         elif (field == 5):
+            DefaultYAxisCB()
+        elif (field == 6):
+            DefaultZAxisCB()
+        elif (field == 7):
+            DefaultCalcBtn()
+        elif (field == 8):
             DefaultAll()
 
     """ DisableFields - Disables fields based upon input parameter
@@ -443,15 +475,19 @@ class TwoBodyWindow(QWidget):
                 0 - Disable mass 1 parameters
                 1 - Disable time values
                 2 - Disable mass 2 parameters
-                3 - Disable checkbox parameters
-                4 - Disable main buttons
-                5 - Disable 0-4
+                3 - Disable plot selection checkbox parameters
+                4 - Disable x axis selection checkbox parameters
+                5 - Disable y axis selection checkbox parameters
+                6 - Disable z axis selection checkbox parameters
+                7 - Disable main buttons
+                8 - Disable 0-7
         Algorithm:
             * Grab the children from the window
             * Define mass 1 parameters function
             * Define time values function
             * Define mass 2 parameters function
-            * Define checkbox parameters function
+            * Define plot selection checkbox parameters function
+            * Define axis selection checkbox parameters function
             * Define main buttons function
             * Define all functions function
             * Disable field based off input parameter value
@@ -461,45 +497,65 @@ class TwoBodyWindow(QWidget):
     def DisableFields(self, field):
         # Grab children
         children = self.GrabChildren()
-        # Disable mass 1 parameters function
-        def DisableMass1Params():
-            for widget in children[0]:
+        # Disable mass 1 parameters children function
+        def DisableMass1():
+            for widget in children[0][2:10]:
                 widget.setDisabled(True)
-        # Disable time values function
-        def DisableTimeVals():
+        # Disable time values children function
+        def DisableTime():
             for widget in children[2]:
                 widget.setDisabled(True)
-        # Disable mass 2 parameters function
-        def DisableMass2Params():
-            for widget in children[1]:
+        # Disable mass 2 parameters children function
+        def DisableMass2():
+            for widget in children[1][2:10]:
                 widget.setDisabled(True)
-        # Disable checkboxes parameters function
-        def DisableCB():
+        # Disable plot selection checkboxes children function
+        def DisablePlotSelCB():
             for widget in children[3]:
                 widget.setDisabled(True)
-        # Disable calculate button function
-        def DisableMainButtons():
-            for widget in children[4]:
+        # Disable x axis selection checkboxes children function
+        def DisableXAxisCB():
+            for widget in children[4][0:4]:
                 widget.setDisabled(True)
+        # Disable y axis selection checkboxes children function
+        def DisableYAxisCB():
+            for widget in children[4][4:8]:
+                widget.setDisabled(True)
+        # Disable z axis selection checkboxes children function
+        def DisableZAxisCB():
+            for widget in children[4][8:12]:
+                widget.setDisabled(True)
+        # Disable calculate button function
+        def DisableCalcBtn():
+            children[5][0].setDisabled(True)
         # Disable all function
         def DisableAll():
-            DisableMass1Params()
-            DisableTimeVals()
-            DisableMass2Params()
-            DisableCB()
-            DisableMainButtons()
-        # Disable field from input
+            DisableMass1()
+            DisableTime()
+            DisableMass2()
+            DisablePlotSelCB()
+            DisableXAxisCB()
+            DisableYAxisCB()
+            DisableZAxisCB()
+            DisableCalcBtn()
+        # Set fields to default state
         if (field == 0):
-            DisableMass1Params()
+            DisableMass1()
         elif (field == 1):
-            DisableTimeVals()
+            DisableTime()
         elif (field == 2):
-            DisableMass2Params()
+            DisableMass2()
         elif (field == 3):
-            DisableCB()
+            DisablePlotSelCB()
         elif (field == 4):
-            DisableMainButtons()
+            DisableXAxisCB()
         elif (field == 5):
+            DisableYAxisCB()
+        elif (field == 6):
+            DisableZAxisCB()
+        elif (field == 7):
+            DisableCalcBtn()
+        elif (field == 8):
             DisableAll()
 
     """ EnableFields - Enables fields based upon input parameter
@@ -508,9 +564,12 @@ class TwoBodyWindow(QWidget):
                 0 - Enable mass 1 parameters
                 1 - Enable time values
                 2 - Enable mass 2 parameters
-                3 - Enable checkbox parameters
-                4 - Enable calculate button
-                5 - Enable 0-4
+                3 - Enable plot selection checkbox parameters
+                4 - Enable x axis selection checkbox parameters
+                5 - Enable y axis selection checkbox parameters
+                6 - Enable z axis selection checkbox parameters
+                7 - Enable main buttons
+                8 - Enable 0-7
         Algorithm:
             * Grab the children from the window
             * Define mass 1 parameters function
@@ -526,45 +585,65 @@ class TwoBodyWindow(QWidget):
     def EnableFields(self, field):
         # Grab children
         children = self.GrabChildren()
-        # Enable mass 1 parameters function
-        def EnableMass1Params():
-            for widget in children[0]:
+        # Enable mass 1 parameters children function
+        def EnableMass1():
+            for widget in children[0][2:10]:
                 widget.setEnabled(True)
-        # Enable time values function
-        def EnableTimeVals():
+        # Enable time values children function
+        def EnableTime():
             for widget in children[2]:
                 widget.setEnabled(True)
-        # Enable mass 1 parameters function
-        def EnableMass2Params():
-            for widget in children[1]:
+        # Enable mass 2 parameters children function
+        def EnableMass2():
+            for widget in children[1][2:10]:
                 widget.setEnabled(True)
-        # Enable checkboxes function
-        def EnableCB():
+        # Enable plot selection checkboxes children function
+        def EnablePlotSelCB():
             for widget in children[3]:
                 widget.setEnabled(True)
-        # Enable main buttons function
-        def EnableMainButtons():
-            for widget in children[4]:
+        # Enable x axis selection checkboxes children function
+        def EnableXAxisCB():
+            for widget in children[4][0:4]:
                 widget.setEnabled(True)
-        # Disable all function
+        # Enable y axis selection checkboxes children function
+        def EnableYAxisCB():
+            for widget in children[4][4:8]:
+                widget.setEnabled(True)
+        # Enable z axis selection checkboxes children function
+        def EnableZAxisCB():
+            for widget in children[4][8:12]:
+                widget.setEnabled(True)
+        # Enable calculate button function
+        def EnableCalcBtn():
+            children[5][0].setEnabled(True)
+        # Enable all function
         def EnableAll():
-            EnableMass1Params()
-            EnableTimeVals()
-            EnableMass2Params()
-            EnableCB()
-            EnableMainButtons()
-        # Enable field from input
+            EnableMass1()
+            EnableTime()
+            EnableMass2()
+            EnablePlotSelCB()
+            EnableXAxisCB()
+            EnableYAxisCB()
+            EnableZAxisCB()
+            EnableCalcBtn()
+        # Set fields to default state
         if (field == 0):
-            EnableMass1Params()
+            EnableMass1()
         elif (field == 1):
-            EnableTimeVals()
+            EnableTime()
         elif (field == 2):
-            EnableMass2Params()
+            EnableMass2()
         elif (field == 3):
-            EnableCB()
+            EnablePlotSelCB()
         elif (field == 4):
-            EnableMainButtons()
+            EnableXAxisCB()
         elif (field == 5):
+            EnableYAxisCB()
+        elif (field == 6):
+            EnableZAxisCB()
+        elif (field == 7):
+            EnableCalcBtn()
+        elif (field == 8):
             EnableAll()
 
     """ GrabChildren - Grabs all the children from the fields
@@ -574,11 +653,12 @@ class TwoBodyWindow(QWidget):
             * Grab the children from the mass 1 parameters field, add them to their own array
             * Grab the children from the mass 2 parameters field, add them to their own array
             * Grab the children from the time values field, add them to their own array
-            * Grab the children from the checkbox parameters field, add them to their own array
+            * Grab the children from the plot selection checkbox parameters field, add them to their own array
+            * Grab the children from the axis selection checkbox parameters field, add them to their own array
             * Grab the children from the main buttons field, add them to their own array
         Output:
             mass1Arr - Array of mass 1 children
-                mass1Arr[0] - Mass 1 checkbox
+                mass1Arr[0] - Mass 1 combo box
                 mass1Arr[1] - Mass 1 name line edit
                 mass1Arr[2] - Mass 1 mass line edit
                 mass1Arr[3] - Mass 1 initial x position line edit
@@ -590,7 +670,7 @@ class TwoBodyWindow(QWidget):
                 mass1Arr[9] - Mass 1 clear parameters button
                 mass1Arr[10] - Mass 1 random parameters button
             mass2Arr - Array of mass 2 children
-                mass2Arr[0] - Mass 2 checkbox
+                mass2Arr[0] - Mass 2 combo box
                 mass2Arr[1] - Mass 2 name line edit
                 mass2Arr[2] - Mass 2 mass line edit
                 mass2Arr[3] - Mass 2 initial x position line edit
@@ -605,6 +685,31 @@ class TwoBodyWindow(QWidget):
                 timeValArr[0] - Time span line edit
                 timeValArr[1] - Time span clear button
                 timeValArr[2] - Time span random button
+            plotSelArr - Array of plot selection value children
+                plotSelArr[0] - 2D position plot check box
+                plotSelArr[1] - 2D position animation check box
+                plotSelArr[2] - 2D velocity plot check box
+                plotSelArr[3] - 2D velocity animation check box
+                plotSelArr[4] - 3D position plot check box
+                plotSelArr[5] - 3D position animation check box
+                plotSelArr[6] - 3D velocity plot check box
+                plotSelArr[7] - 3D velocity animation check box
+                plotSelArr[8] - Select all plots button
+                plotSelArr[9] - Random plots button
+                plotSelArr[10] - Unselect all plots button
+            axisSelArr - Array of axis selection value children
+                axisSelArr[0] - X axis x direction check box
+                axisSelArr[1] - X axis y direction check box
+                axisSelArr[2] - X axis z direction check box
+                axisSelArr[3] - X axis time check box
+                axisSelArr[4] - Y axis x direction check box
+                axisSelArr[5] - Y axis y direction check box
+                axisSelArr[6] - Y axis z direction check box
+                axisSelArr[7] - Y axis time check box
+                axisSelArr[8] - Z axis x direction check box
+                axisSelArr[9] - Z axis y direction check box
+                axisSelArr[10] - Z axis z direction check box
+                axisSelArr[11] - Z axis time check box
             mainBtnsArr - Array of main buttons children
                 mainBtnsArr[0] - Calculate button
                 mainBtnsArr[1] - Clear button
@@ -643,7 +748,7 @@ class TwoBodyWindow(QWidget):
         timeValClearBtn = self.findChild(QPushButton, timeValClearBtnName)
         timeValRandBtn = self.findChild(QPushButton, timeValRandBtnName)
         timeValArr = [timeValLE, timeValClearBtn, timeValRandBtn]
-        # Check boxes parameters
+        # Plot check box parameters
         pos2DPlotCB = self.findChild(QCheckBox, pos2DPlotCBName)
         pos2DAniCB = self.findChild(QCheckBox, pos2DAniCBName)
         vel2DPlotCB = self.findChild(QCheckBox, vel2DPlotCBName)
@@ -656,6 +761,20 @@ class TwoBodyWindow(QWidget):
         plotSelRandBtn = self.findChild(QPushButton, plotSelRandBtnName)
         plotSelUnsBtn = self.findChild(QPushButton, plotSelUnsBtnName)
         plotSelArr = [pos2DPlotCB, pos2DAniCB, vel2DPlotCB, vel2DAniCB, pos3DPlotCB, pos3DAniCB, vel3DPlotCB, vel3DAniCB, plotSelAllBtn, plotSelRandBtn, plotSelUnsBtn]
+        # Axis check box parameters
+        xAxisXCB = self.findChild(QCheckBox, xAxisXCBName)
+        xAxisYCB = self.findChild(QCheckBox, xAxisYCBName)
+        xAxisZCB = self.findChild(QCheckBox, xAxisZCBName)
+        xAxisTCB = self.findChild(QCheckBox, xAxisTCBName)
+        yAxisXCB = self.findChild(QCheckBox, yAxisXCBName)
+        yAxisYCB = self.findChild(QCheckBox, yAxisYCBName)
+        yAxisZCB = self.findChild(QCheckBox, yAxisZCBName)
+        yAxisTCB = self.findChild(QCheckBox, yAxisTCBName)
+        zAxisXCB = self.findChild(QCheckBox, zAxisXCBName)
+        zAxisYCB = self.findChild(QCheckBox, zAxisYCBName)
+        zAxisZCB = self.findChild(QCheckBox, zAxisZCBName)
+        zAxisTCB = self.findChild(QCheckBox, zAxisTCBName)
+        axisSelArr = [xAxisXCB, xAxisYCB, xAxisZCB, xAxisTCB, yAxisXCB, yAxisYCB, yAxisZCB, yAxisTCB, zAxisXCB, zAxisYCB, zAxisZCB, zAxisTCB]
         # Main buttons parameters
         calculateBtn = self.findChild(QPushButton, calculateBtnName)
         clearBtn = self.findChild(QPushButton, clearBtnName)
@@ -663,7 +782,7 @@ class TwoBodyWindow(QWidget):
         homeBtn = self.findChild(QPushButton, homeBtnName)
         mainBtnsArr = [calculateBtn, clearBtn, randomBtn, homeBtn]
         # Return arrays
-        return mass1Arr, mass2Arr, timeValArr, plotSelArr, mainBtnsArr
+        return mass1Arr, mass2Arr, timeValArr, plotSelArr, axisSelArr, mainBtnsArr
 
     """ InitUI - Initializes the user interface for the window
     
@@ -1190,7 +1309,7 @@ class TwoBodyWindow(QWidget):
         # Set layout
         self.setLayout(mainLayout)
         # Default state
-        self.DefaultState(5)
+        self.DefaultState(8)
         # Connect signals function
         self.ConnectSignals()
 
@@ -1432,6 +1551,19 @@ class TwoBodyWindow(QWidget):
         if (allFalse == True):
             randIndex = random.randint(0,8)
             children[3][randIndex].setChecked(True)
+        # Axis selection
+        no3DCB = all(isinstance(widget, QCheckBox) and widget.isChecked() == False for widget in children[3][4:8])
+        possibleIndices = [0,1,2,3]
+        randXIndex = random.choice(possibleIndices)
+        children[4][0 + randXIndex].setChecked(True)
+        possibleIndices.remove(randXIndex)
+        randYIndex = random.choice(possibleIndices)
+        possibleIndices.remove(randYIndex)
+        children[4][4 + randYIndex].setChecked(True)
+        if (no3DCB == False):
+            randZIndex = random.choice(possibleIndices)
+            possibleIndices.remove(randZIndex)
+            children[4][8 + randZIndex].setChecked(True)
 
     """ RandomTime - Randomizes the time span
         Input:
@@ -1470,24 +1602,88 @@ class TwoBodyWindow(QWidget):
         mass1Params = all(isinstance(widget, QLineEdit) and widget.text() != "" for widget in children[0][1:9])
         mass2Params = all(isinstance(widget, QLineEdit) and widget.text() != "" for widget in children[1][1:9])
         timeVals = children[2][0].text() != ""
-        checkBoxes = any(isinstance(widget, QCheckBox) and widget.isChecked() == True for widget in children[3][0:8])
+        plotSelectionCB = any(isinstance(widget, QCheckBox) and widget.isChecked() == True for widget in children[3][0:8])
+        no3DCB = all(isinstance(widget, QCheckBox) and widget.isChecked() == False for widget in children[3][4:8])
+        xAxisCB = any(isinstance(widget, QCheckBox) and widget.isChecked() == True for widget in children[4][0:4])
+        yAxisCB = any(isinstance(widget, QCheckBox) and widget.isChecked() == True for widget in children[4][4:8])
+        zAxisCB = any(isinstance(widget, QCheckBox) and widget.isChecked() == True for widget in children[4][8:12])
         # Enable time values
         if (mass1ComboBox == True or mass2ComboBox == True):
             self.EnableFields(1)
         else:
             self.ClearTime()
             self.DefaultState(1)
-        # Enable checkboxes
+        # Enable plot selection checkboxes
         if (mass1Params == True and mass2Params == True and timeVals == True):
             self.EnableFields(3)
         else:
             self.UnselectAllPlots()
             self.DefaultState(3)
-        # Enable calculate button
-        if (mass1Params == True and mass2Params == True and timeVals == True and checkBoxes == True):
+            self.DefaultState(4)
+            self.DefaultState(5)
+            self.DefaultState(6)
+        # Enable axis selection
+        if (plotSelectionCB == True):
             self.EnableFields(4)
+            if (xAxisCB == True):
+                self.EnableFields(5)
+                xAxisIndex = None
+                for index, widget in enumerate(children[4][0:4]):
+                    if (widget.isChecked() == True):
+                        xAxisIndex = index
+                        break
+                for index, widget in enumerate(children[4][0:4]):
+                    widget.setEnabled(index == xAxisIndex)
+                    widget.setDisabled(index != xAxisIndex)
+                for index, widget in enumerate(children[4][4:8]):
+                    widget.setDisabled(index == xAxisIndex)
+                if (yAxisCB == True):
+                    yAxisIndex = None
+                    for index, widget in enumerate(children[4][4:8]):
+                        if (widget.isChecked() == True):
+                            yAxisIndex = index
+                            break
+                    for index, widget in enumerate(children[4][4:8]):
+                        widget.setEnabled(index == yAxisIndex)
+                        widget.setDisabled(index != yAxisIndex)
+                    if (no3DCB == False):
+                        for index, widget in enumerate(children[4][8:12]):
+                            widget.setEnabled(index != xAxisIndex or index != yAxisIndex)
+                            widget.setDisabled(index == xAxisIndex or index == yAxisIndex)
+                        if (zAxisCB == True):
+                            zAxisIndex = None
+                            for index, widget in enumerate(children[4][8:12]):
+                                if (widget.isChecked() == True):
+                                    zAxisIndex = index
+                                    break
+                            for index, widget in enumerate(children[4][8:12]):
+                                widget.setEnabled(index == zAxisIndex)
+                                widget.setDisabled(index != zAxisIndex)
+                    else:
+                        self.DefaultState(6)
+                else:
+                    self.DefaultState(6)
+            else:
+                self.DefaultState(5)
+                self.DefaultState(6)
         else:
             self.DefaultState(4)
+            self.DefaultState(5)
+            self.DefaultState(6)
+        # Enable calculate button
+        if (mass1Params == True and mass2Params == True and timeVals == True and plotSelectionCB == True):
+            if (no3DCB == True):
+                if (xAxisCB == True and yAxisCB == True):
+                    self.EnableFields(7)
+                else:
+                    self.DefaultState(7)
+            else:
+                if (xAxisCB == True and yAxisCB == True and zAxisCB == True):
+                    self.EnableFields(7)
+                else:
+                    self.DefaultState(7)
+        else:
+            self.DefaultState(7)
 
     """ ReturnHome - Returns home and closes the current window
         Input:
@@ -1533,4 +1729,6 @@ class TwoBodyWindow(QWidget):
         # Unselect all plots
         for widget in children[3][0:8]:
             widget.setChecked(False)
-
+        # Unselect all axis
+        for widget in children[4]:
+            widget.setChecked(False)
