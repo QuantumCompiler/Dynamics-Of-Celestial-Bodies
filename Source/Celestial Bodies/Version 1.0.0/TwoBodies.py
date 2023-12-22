@@ -203,6 +203,18 @@ pos3DPlotCBName = "3D Position Plot Check Box"
 pos3DAniCBName = "3D Position Animation Check Box"
 vel3DPlotCBName = "3D Velocity Plot Check Box"
 vel3DAniCBName = "3D Velocity Animation Check Box"
+xAxisXCBName = "X Axis X Direction CB"
+xAxisYCBName = "X Axis Y Direction CB"
+xAxisZCBName = "X Axis Z Direction CB"
+xAxisTCBName = "X Axis Time CB"
+yAxisXCBName = "Y Axis X Direction CB"
+yAxisYCBName = "Y Axis Y Direction CB"
+yAxisZCBName = "Y Axis Z Direction CB"
+yAxisTCBName = "Y Axis Time CB"
+zAxisXCBName = "Z Axis X Direction CB"
+zAxisYCBName = "Z Axis Y Direction CB"
+zAxisZCBName = "Z Axis Z Direction CB"
+zAxisTCBName = "Z Axis Time CB"
 plotSelAllBtnName = "Select All Check Boxes Button"
 plotSelRandBtnName = "Randomize Check Boxes Button"
 plotSelUnsBtnName = "Unselect All Check Boxes Button"
@@ -668,7 +680,7 @@ class TwoBodyWindow(QWidget):
         ###################################
         # Main layout
         mainLayout = QVBoxLayout()
-        mainLayout.setContentsMargins(25,25,25,25)
+        mainLayout.setContentsMargins(10,10,10,10)
         mainLayout.setSpacing(5)
         # Parameters layout
         paramLayout = QHBoxLayout()
@@ -722,6 +734,34 @@ class TwoBodyWindow(QWidget):
         plotSel3DCBLayout = QHBoxLayout()
         plotSel3DCBLayout.setContentsMargins(0,0,0,0)
         plotSel3DCBLayout.setSpacing(5)
+        ## Plot selection axis layout
+        plotSelAxiiCBLayout = QHBoxLayout()
+        plotSelAxiiCBLayout.setContentsMargins(0,0,0,0)
+        plotSelAxiiCBLayout.setSpacing(5)
+        ## Plot selection x axis layout
+        plotSelXAxisLayout = QVBoxLayout()
+        plotSelXAxisLayout.setContentsMargins(0,0,0,0)
+        plotSelXAxisLayout.setSpacing(5)
+        ## Plot selection x axis CB layout
+        plotSelXAxisCBLayout = QHBoxLayout()
+        plotSelXAxisCBLayout.setContentsMargins(0,0,0,0)
+        plotSelXAxisCBLayout.setSpacing(5)
+        ## Plot selection y axis layout
+        plotSelYAxisLayout = QVBoxLayout()
+        plotSelYAxisLayout.setContentsMargins(0,0,0,0)
+        plotSelYAxisLayout.setSpacing(5)
+        ## Plot selection y axis CB layout
+        plotSelYAxisCBLayout = QHBoxLayout()
+        plotSelYAxisCBLayout.setContentsMargins(0,0,0,0)
+        plotSelYAxisCBLayout.setSpacing(5)
+        ## Plot selection z axis layout
+        plotSelZAxisLayout = QVBoxLayout()
+        plotSelZAxisLayout.setContentsMargins(0,0,0,0)
+        plotSelZAxisLayout.setSpacing(5)
+        ## Plot selection z axis CB layout
+        plotSelZAxisCBLayout = QHBoxLayout()
+        plotSelZAxisCBLayout.setContentsMargins(0,0,0,0)
+        plotSelZAxisCBLayout.setSpacing(5)
         ## Plot selection buttons layout
         plotSelBtnLayout = QHBoxLayout()
         plotSelBtnLayout.setContentsMargins(0,0,0,0)
@@ -996,6 +1036,79 @@ class TwoBodyWindow(QWidget):
         plotSelVelAni3DCB = QCheckBox("3D Velocity Animation")
         plotSelVelAni3DCB.setObjectName(vel3DAniCBName)
         plotSel3DCBLayout.addWidget(plotSelVelAni3DCB, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ###################################
+        ##### Plot selection axis
+        ###################################
+        # X axis header
+        plotSelXAxisHeader = QLabel("X Axis Direction")
+        plotSelXAxisLayout.addWidget(plotSelXAxisHeader, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## X axis x direction
+        plotSelXAxisXCB = QCheckBox("X")
+        plotSelXAxisXCB.setObjectName(xAxisXCBName)
+        plotSelXAxisCBLayout.addWidget(plotSelXAxisXCB, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## X axis y direction
+        plotSelXAxisYCB = QCheckBox("Y")
+        plotSelXAxisYCB.setObjectName(xAxisYCBName)
+        plotSelXAxisCBLayout.addWidget(plotSelXAxisYCB, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## X axis z direction
+        plotSelXAxisZCB = QCheckBox("Z")
+        plotSelXAxisZCB.setObjectName(xAxisZCBName)
+        plotSelXAxisCBLayout.addWidget(plotSelXAxisZCB, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## X axis time
+        plotSelXAxisTCB = QCheckBox("Time")
+        plotSelXAxisTCB.setObjectName(xAxisTCBName)
+        plotSelXAxisCBLayout.addWidget(plotSelXAxisTCB, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Add x axis children to parent
+        plotSelXAxisLayout.addLayout(plotSelXAxisCBLayout)
+        # Y axis header
+        plotSelYAxisHeader = QLabel("Y Axis Direction")
+        plotSelYAxisLayout.addWidget(plotSelYAxisHeader, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Y axis x direction
+        plotSelYAxisXCB = QCheckBox("X")
+        plotSelYAxisXCB.setObjectName(yAxisXCBName)
+        plotSelYAxisCBLayout.addWidget(plotSelYAxisXCB, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Y axis y direction
+        plotSelYAxisYCB = QCheckBox("Y")
+        plotSelYAxisYCB.setObjectName(yAxisYCBName)
+        plotSelYAxisCBLayout.addWidget(plotSelYAxisYCB, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Y axis z direction
+        plotSelYAxisZCB = QCheckBox("Z")
+        plotSelYAxisZCB.setObjectName(yAxisZCBName)
+        plotSelYAxisCBLayout.addWidget(plotSelYAxisZCB, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Y axis time
+        plotSelYAxisTCB = QCheckBox("Time")
+        plotSelYAxisTCB.setObjectName(yAxisTCBName)
+        plotSelYAxisCBLayout.addWidget(plotSelYAxisTCB, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Add y axis children to parent
+        plotSelYAxisLayout.addLayout(plotSelYAxisCBLayout)
+        # Z axis header
+        plotSelZAxisHeader = QLabel("Z Axis Direction")
+        plotSelZAxisLayout.addWidget(plotSelZAxisHeader, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Z axis x direction
+        plotSelZAxisXCB = QCheckBox("X")
+        plotSelZAxisXCB.setObjectName(zAxisXCBName)
+        plotSelZAxisCBLayout.addWidget(plotSelZAxisXCB, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Z axis y direction
+        plotSelZAxisYCB = QCheckBox("Y")
+        plotSelZAxisYCB.setObjectName(zAxisYCBName)
+        plotSelZAxisCBLayout.addWidget(plotSelZAxisYCB, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Z axis z direction
+        plotSelZAxisZCB = QCheckBox("Z")
+        plotSelZAxisZCB.setObjectName(zAxisZCBName)
+        plotSelZAxisCBLayout.addWidget(plotSelZAxisZCB, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Z axis time
+        plotSelZAxisTCB = QCheckBox("Time")
+        plotSelZAxisTCB.setObjectName(zAxisTCBName)
+        plotSelZAxisCBLayout.addWidget(plotSelZAxisTCB, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Add z axis children to parent
+        plotSelZAxisLayout.addLayout(plotSelZAxisCBLayout)
+        ## Add plot selection children to parent
+        plotSelAxiiCBLayout.addLayout(plotSelXAxisLayout)
+        plotSelAxiiCBLayout.addLayout(plotSelYAxisLayout)
+        plotSelAxiiCBLayout.addLayout(plotSelZAxisLayout)
+        ###################################
+        ##### Plot selection buttons
+        ###################################
         ## Select all checkboxes button
         plotSelAllBtn = QPushButton("Select All Plots")
         plotSelAllBtn.setObjectName(plotSelAllBtnName)
@@ -1020,6 +1133,7 @@ class TwoBodyWindow(QWidget):
         # Add layouts to parent
         plotSelLayout.addLayout(plotSel2DCBLayout)
         plotSelLayout.addLayout(plotSel3DCBLayout)
+        plotSelLayout.addLayout(plotSelAxiiCBLayout)
         plotSelLayout.addLayout(plotSelBtnLayout)
         # Plot selection spacer
         plotSelectionSpacer = QSpacerItem(0, 10, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
