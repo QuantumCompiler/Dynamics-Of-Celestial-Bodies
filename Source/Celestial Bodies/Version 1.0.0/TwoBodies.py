@@ -5,7 +5,8 @@ from ModelFunctions import *
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
 
 """ TwoBodyCanvas - Class for two body plots
-
+    Member Functions:
+        Constructor - Constructor for canvas with specific input parameters
 """
 class TwoBodyCanvas(FigureCanvasQTAgg):
     """ Constructor - Constructor for canvas with specific input parameters
@@ -27,18 +28,47 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
         FigureCanvasQTAgg.__init__(self, fig)
 
     """ Plot - Plots the results from a two body scenario
-    
+        Input:
+            plotType - Type of plot that is to be generated
+            masses - Array of masses in system
+            ic - Matrix of initial conditions for each mass
+                ic[0][0] - Mass 1 initial x position
+                ic[0][1] - Mass 1 initial y position
+                ic[0][2] - Mass 1 initial z position
+                ic[1][0] - Mass 2 initial x position
+                ic[1][1] - Mass 2 initial y position
+                ic[1][2] - Mass 2 initial z position
+                ic[2][0] - Mass 1 initial velocity in x
+                ic[2][1] - Mass 1 initial velocity in y
+                ic[2][2] - Mass 1 initial velocity in z
+                ic[3][0] - Mass 2 initial velocity in x
+                ic[3][1] - Mass 2 initial velocity in y
+                ic[3][2] - Mass 2 initial velocity in z
+            t0 - Initial time in seconds of model
+            tn - Final time in seconds of model
+            i, j, k - Data types that are to be plotted for each axis
+                i - X axis
+                j - Y axis
+                k - Z axis
+                    0 - X value
+                    1 - Y value
+                    2 - Z value
+                    3 - Time
+            mass1Name - Name of mass 1
+            mass2Name - Name of mass 2
+        Algorithm:
+            * Call the RK4 two body solver
+            
+        Output:
+            This function does not return a value
     """
     def Plot(self, plotType, masses, ic, t0, tn, i, j, mass1Name, mass2Name):
         # Call solver
         mass1Pos, mass2Pos, mass1Vel, mass2Vel, timeVals = RK4TwoBody(TwoCoupledBodiesModel, masses, ic, t0, tn)
-        # Axis pos
-        def AxisPos(self, mass1Pos, mass2Pos, timeVals, i, j):
+        # 2D Axis pos
+        def Axis2DPos(self, mass1Pos, mass2Pos, timeVals, i, j):
             # Max pos
-            maxDistX = max(max([pos[0] for pos in mass1Pos]), max([pos[0] for pos in mass2Pos])) * 1.1
-            maxDistY = max(max([pos[1] for pos in mass1Pos]), max([pos[1] for pos in mass2Pos])) * 1.1
-            maxDistZ = max(max([pos[2] for pos in mass1Pos]), max([pos[2] for pos in mass2Pos])) * 1.1
-            maxTime = max(timeVals)
+            maxDistX, maxDistY, maxDistZ, maxTime = MaxVals(mass1Pos, mass2Pos, timeVals)
             # Direction place holder
             iDirection = ''
             jDirection = ''
@@ -69,6 +99,13 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
             mass1Vals = mass1Pos[0], mass1Pos[1], mass1Pos[2], timeVals
             mass2Vals = mass2Pos[0], mass2Pos[1], mass2Pos[2], timeVals
             return iDirection, jDirection, mass1Vals, mass2Vals
+        # Max value
+        def MaxVals(param1, param2, param3):
+            maxParamX = max(max([val[0] for val in param1]), max([val[0] for val in param2])) * 1.1
+            maxParamY = max(max([val[1] for val in param1]), max([val[1] for val in param2])) * 1.1
+            maxParamZ = max(max([val[2] for val in param1]), max([val[2] for val in param2])) * 1.1
+            max3 = max(param3)
+            return maxParamX, maxParamY, maxParamZ, max3
         # Figure notes
         def Notes(self, masses, ic, mass1Name, mass2Name):
             self.figure.subplots_adjust(bottom=0.30)
@@ -82,10 +119,10 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
             mass2Notes = mass2Mass + mass2InitXPos + mass2InitXVel + mass2InitYPos + mass2InitYVel + mass2InitZPos + mass2InitZVel
             timeSpanNotes = f"Time Span: {round(float(tn / (365.25 * DS)), 2)} Earth Years"
             self.figure.text(0.1, 0.05, mass1Notes + "\n" + mass2Notes + "\n" + timeSpanNotes, ha='left', va='bottom', fontsize=TWODNOTES)
-        # Position labels
-        def PosLabels(self, axisParam, i, j, k):
+        # 2D Position labels
+        def Pos2DLabels(self, axisParam, i, j, q):
             plotType = ""
-            if (k == 0):
+            if (q == 0):
                 plotType = "Plot"
             else:
                 plotType = "Animation"
@@ -119,33 +156,74 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
             mass2Vel = m1Vel
             mass2Name = m1Name
             ic = [icCopy[1],icCopy[0],icCopy[3],icCopy[2]]
-        # Position plot
+        # 2D Position plot
         if (plotType == 0):
             # Clear axes
             self.axes.clear()
             # Max pos function
-            axisPos = AxisPos(self, mass1Pos, mass2Pos, timeVals, i, j)
+            axisPos = Axis2DPos(self, mass1Pos, mass2Pos, timeVals, i, j)
             # Plot
             self.axes.plot(axisPos[2][i], axisPos[2][j], 'o', color = "green", markersize = '2', label = mass1Name)
             self.axes.plot(axisPos[3][i], axisPos[3][j], 'o', color = "blue", markersize = '1', label = mass2Name)
             # Title and labels
-            PosLabels(self, axisPos, i, j, 0)
+            Pos2DLabels(self, axisPos, i, j, 0)
             # Notes
             Notes(self, masses, ic, mass1Name, mass2Name)
             # Draw plot on canvas
             self.draw()
+        # 2D Position animation
+        elif (plotType == 1):
+            # Clear axes
+            self.axes.clear()
+            # Max pos function
+            axisPos = Axis2DPos(self, mass1Pos, mass2Pos, timeVals, i, j)
+            # Animation parameters
+            mass1, = self.axes.plot([], [], 'o', color = 'green', markersize = 2, label = mass1Name)
+            mass2, = self.axes.plot([], [], 'o', color = 'blue', markersize = 1, label = mass2Name)
+            mass1Trail, = self.axes.plot([], [], '-', color = 'green', linewidth = 1, alpha = 0.5)
+            mass2Trail, = self.axes.plot([], [], '-', color = 'blue', linewidth = 1, alpha = 0.5)
+            # Init function
+            def init():
+                mass1.set_data([], [])
+                mass2.set_data([], [])
+                mass1Trail.set_data([], [])
+                mass2Trail.set_data([], [])
+                return mass1, mass2, mass1Trail, mass2Trail
+            # Animate function
+            def animate(q):
+                mass1.set_data([axisPos[2][i][q]], [axisPos[2][j][q]])
+                mass2.set_data([axisPos[3][i][q]], [axisPos[3][j][q]])
+                mass1Trail.set_data(axisPos[2][i][:q+1], axisPos[2][j][:q+1])
+                mass2Trail.set_data(axisPos[3][i][:q+1], axisPos[3][j][:q+1])
+                return mass1, mass2, mass1Trail, mass2Trail
+            # Animation
+            self.ani = FuncAnimation(self.figure, animate, init_func = init, frames = len(axisPos[2][3]), interval = 1e-5, blit = True, repeat = True)
+            # Title and labels
+            Pos2DLabels(self, axisPos, i, j, 1)
+            # Notes
+            Notes(self, masses, ic, mass1Name, mass2Name)
+            # Draw
+            self.draw()
 
 """ TwoBodyPlotWindow - Class for two body motion plot windows
-
+    Member Functions:
+        Constructor - Creates windows with specific input parameters
+        CloseEvent - Deletes plot canvas when window is closed
 """
 class TwoBodyPlotWindow(QWidget):
     """ Constructor - Creates windows with specific input parameters
         Input:
-
+            This function does not have any unique input parameters
         Algorithm:
-
+            * Set the window title
+            * Set the size of the window
+            * Create the layout
+            * Create the canvas for the plot
+            * Create the tool bar for the canvas
+            * Add the widgets to the layouts
+            * Set the layout
         Output:
-            
+            This function does not return any values
     """
     def __init__(self, plotType, masses, ic, t0, tn, i, j, mass1Name, mass2Name, windowTitle):
         super().__init__()
@@ -168,7 +246,7 @@ class TwoBodyPlotWindow(QWidget):
         # Set layout
         self.setLayout(self.layout)
 
-    """ closeEvent - Deletes plot canvas when window is closed
+    """ CloseEvent - Deletes plot canvas when window is closed
         Input:
             event - Object for the close event
         Algorithm:
@@ -178,10 +256,10 @@ class TwoBodyPlotWindow(QWidget):
         Output:
             This function does not return a value
     """
-    def closeEvent(self, event):
+    def CloseEvent(self, event):
         if hasattr(self, 'plotCanvas') and hasattr(self.plotCanvas, 'ani'):
             self.plotCanvas.ani.event_source.stop()
-        super().closeEvent(event)
+        super().CloseEvent(event)
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
 ##### Simulation Window
@@ -355,13 +433,17 @@ class TwoBodyWindow(QWidget):
                 if (children[3][0].isChecked() == True):
                     self.TwoDPosPlot = TwoBodyPlotWindow(0, values[0], values[1], 0, values[2], axis[0], axis[1], values[3], values[4], "2D Two Body Position Plot")
                     self.TwoDPosPlot.show()
+                # 2D Position animation
+                if (children[3][1].isChecked() == True):
+                    self.TwoDPosAni = TwoBodyPlotWindow(1, values[0], values[1], 0, values[2], axis[0], axis[1], values[3], values[4], "2D Two Body Position Animation")
+                    self.TwoDPosAni.show()
             else:
                 if (mass1IsPos != True):
-                    print("Fuck")
-                if (mass2IsPos != True):
-                    print("Shit")
+                    Dialog(self, "Please enter a positive value for Mass 1.")
                 if (timeIsPos != True):
-                    print("Shit Fuck")
+                    Dialog(self, "Please enter a positive value for the time span.")
+                if (mass2IsPos != True):
+                    Dialog(self, "Please enter a positive value for Mass 2.")
         else:
             if (mass1IsNum != True):
                 Dialog(self, "Please enter numerical values for the parameters of Mass 1.")
