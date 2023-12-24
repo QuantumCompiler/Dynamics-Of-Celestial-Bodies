@@ -32,12 +32,13 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
     def Plot(self, plotType, masses, ic, t0, tn, i, j, mass1Name, mass2Name):
         # Call solver
         mass1Pos, mass2Pos, mass1Vel, mass2Vel, timeVals = RK4TwoBody(TwoCoupledBodiesModel, masses, ic, t0, tn)
-        # Max pos
-        def MaxPos(self, mass1Pos, mass2Pos):
+        # Axis pos
+        def AxisPos(self, mass1Pos, mass2Pos, timeVals, i, j):
             # Max pos
             maxDistX = max(max([pos[0] for pos in mass1Pos]), max([pos[0] for pos in mass2Pos])) * 1.1
             maxDistY = max(max([pos[1] for pos in mass1Pos]), max([pos[1] for pos in mass2Pos])) * 1.1
             maxDistZ = max(max([pos[2] for pos in mass1Pos]), max([pos[2] for pos in mass2Pos])) * 1.1
+            maxTime = max(timeVals)
             # Direction place holder
             iDirection = ''
             jDirection = ''
@@ -50,6 +51,9 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
             elif (i == 2):
                 iDirection = "$z$"
                 self.axes.set_xlim(-maxDistZ, maxDistZ)
+            elif (i == 3):
+                iDirection = "Time"
+                self.axes.set_xlim(0, maxTime)
             if (j == 0):
                 jDirection = "$x$"
                 self.axes.set_ylim(-maxDistX, maxDistX)
@@ -59,7 +63,12 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
             elif (j == 2):
                 jDirection = "$z$"
                 self.axes.set_ylim(-maxDistZ, maxDistZ)
-            return iDirection, jDirection
+            elif (j == 3):
+                jDirection = "Time"
+                self.axes.set_ylim(0, maxTime)
+            mass1Vals = mass1Pos[0], mass1Pos[1], mass1Pos[2], timeVals
+            mass2Vals = mass2Pos[0], mass2Pos[1], mass2Pos[2], timeVals
+            return iDirection, jDirection, mass1Vals, mass2Vals
         # Figure notes
         def Notes(self, masses, ic, mass1Name, mass2Name):
             self.figure.subplots_adjust(bottom=0.30)
@@ -73,6 +82,23 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
             mass2Notes = mass2Mass + mass2InitXPos + mass2InitXVel + mass2InitYPos + mass2InitYVel + mass2InitZPos + mass2InitZVel
             timeSpanNotes = f"Time Span: {round(float(tn / (365.25 * DS)), 2)} Earth Years"
             self.figure.text(0.1, 0.05, mass1Notes + "\n" + mass2Notes + "\n" + timeSpanNotes, ha='left', va='bottom', fontsize=TWODNOTES)
+        # Position labels
+        def PosLabels(self, axisParam, i, j, k):
+            plotType = ""
+            if (k == 0):
+                plotType = "Plot"
+            else:
+                plotType = "Animation"
+            self.axes.set_title(f"2D Position {plotType} Of Coupled Bodies: {axisParam[1]} vs. {axisParam[0]}", fontsize = TWODPLOTTITLE)
+            if (i == 3):
+                self.axes.set_xlabel(f"{axisParam[0]} Time In Seconds", fontsize = TWODPLOTABELS)
+            else:
+                self.axes.set_xlabel(f"{axisParam[0]} Position In $(m)$", fontsize = TWODPLOTABELS)
+            if (j == 3):
+                self.axes.set_ylabel(f"{axisParam[1]} Time In Seconds", fontsize = TWODPLOTABELS)
+            else:
+                self.axes.set_ylabel(f"{axisParam[1]} Position In $(m)$", fontsize = TWODPLOTABELS)
+            self.axes.legend()
         # Swap masses if applicable
         m1 = masses[0]
         m1Name = mass1Name
@@ -98,15 +124,12 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
             # Clear axes
             self.axes.clear()
             # Max pos function
-            maxPos = MaxPos(self, mass1Pos, mass2Pos)
+            axisPos = AxisPos(self, mass1Pos, mass2Pos, timeVals, i, j)
             # Plot
-            self.axes.plot(mass1Pos[i], mass1Pos[j], 'o', color = "green", markersize = '2', label = mass1Name)
-            self.axes.plot(mass2Pos[i], mass2Pos[j], 'o', color = "blue", markersize = '1', label = mass2Name)
+            self.axes.plot(axisPos[2][i], axisPos[2][j], 'o', color = "green", markersize = '2', label = mass1Name)
+            self.axes.plot(axisPos[3][i], axisPos[3][j], 'o', color = "blue", markersize = '1', label = mass2Name)
             # Title and labels
-            self.axes.set_title(f"2D Position Plot Of Coupled Bodies: {maxPos[1]} vs. {maxPos[0]}", fontsize = TWODPLOTTITLE)
-            self.axes.set_xlabel(f"{maxPos[0]} Position In $(m)$", fontsize = TWODPLOTABELS)
-            self.axes.set_ylabel(f"{maxPos[1]} Position In $(m)$", fontsize = TWODPLOTABELS)
-            self.axes.legend()
+            PosLabels(self, axisPos, i, j, 0)
             # Notes
             Notes(self, masses, ic, mass1Name, mass2Name)
             # Draw plot on canvas
@@ -271,20 +294,81 @@ class TwoBodyWindow(QWidget):
         # Values from fields
         masses = []
         ic = []
-        # Convert values
-        mass1 = float(children[0][2].text())
-        mass1Name = str(children[0][1].text())
-        mass1InitPos = [float(str(children[0][3].text())), float(str(children[0][4].text())), float(str(children[0][5].text()))]
-        mass1InitVel = [float(str(children[0][6].text())), float(str(children[0][7].text())), float(str(children[0][8].text()))]
-        mass2 = float(children[1][2].text())
-        mass2Name = str(children[1][1].text())
-        mass2InitPos = [float(str(children[1][3].text())), float(str(children[1][4].text())), float(str(children[1][5].text()))]
-        mass2InitVel = [float(str(children[1][6].text())), float(str(children[1][7].text())), float(str(children[1][8].text()))]
-        timeSpan = float(float(children[2][0].text()) * 365.25 * DS)
-        masses = [mass1, mass2]
-        ic = [mass1InitPos, mass2InitPos, mass1InitVel, mass2InitVel]
-        self.posPlot = TwoBodyPlotWindow(0, masses, ic, 0, timeSpan, 0, 1, mass1Name, mass2Name, "2D Two Body Position Plot")
-        self.posPlot.show()
+        # Axis indices
+        def AxisIndices(children):
+            xAxisIndex = None
+            yAxisIndex = None
+            zAxisIndex = None
+            for index, widget in enumerate(children[4][0:4]):
+                if (widget.isChecked() == True):
+                    xAxisIndex = index
+                    break
+            for index, widget in enumerate(children[4][4:8]):
+                if (widget.isChecked() == True):
+                    yAxisIndex = index
+                    break
+            for index, widget in enumerate(children[4][8:12]):
+                if (widget.isChecked() == True):
+                    zAxisIndex = index
+                    break
+            return xAxisIndex, yAxisIndex, zAxisIndex
+        # Dialog box
+        def Dialog(self, message):
+            dialogBox = QDialog(self)
+            dialogBox.setWindowTitle("Invalid Input")
+            dialogBox.setFixedSize(400, 75)
+            warningLabel = QLabel(message, dialogBox)
+            warningFont = warningLabel.font()
+            warningFont.setPointSize(13)
+            warningLabel.setFont(warningFont)
+            warningLabel.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+            layout = QVBoxLayout()
+            layout.addWidget(warningLabel)
+            dialogBox.setLayout(layout)
+            dialogBox.exec()
+        # Grab values
+        def GrabValues(children):
+            mass1 = float(children[0][2].text())
+            mass1Name = str(children[0][1].text())
+            mass1InitPos = [float(str(children[0][3].text())), float(str(children[0][4].text())), float(str(children[0][5].text()))]
+            mass1InitVel = [float(str(children[0][6].text())), float(str(children[0][7].text())), float(str(children[0][8].text()))]
+            mass2 = float(children[1][2].text())
+            mass2Name = str(children[1][1].text())
+            mass2InitPos = [float(str(children[1][3].text())), float(str(children[1][4].text())), float(str(children[1][5].text()))]
+            mass2InitVel = [float(str(children[1][6].text())), float(str(children[1][7].text())), float(str(children[1][8].text()))]
+            timeSpan = float(float(children[2][0].text()) * 365.25 * DS)
+            masses = [mass1, mass2]
+            ic = [mass1InitPos, mass2InitPos, mass1InitVel, mass2InitVel]
+            return masses, ic, timeSpan, mass1Name, mass2Name
+        # Input fields entered check
+        mass1IsNum = all(isinstance(widget, QLineEdit) and self.IsNum(str(widget.text())) == True for widget in children[0][2:9])
+        mass1IsPos = self.IsPositive(float(str(children[0][2].text()))) == True
+        mass2IsNum = all(isinstance(widget, QLineEdit) and self.IsNum(str(widget.text())) == True for widget in children[1][2:9])
+        mass2IsPos = self.IsPositive(float(str(children[1][2].text()))) == True
+        timeIsNum = self.IsNum(str(children[2][0].text())) == True
+        timeIsPos = self.IsPositive(float(str(children[2][0].text()))) == True
+        if (mass1IsNum == True and mass2IsNum == True and timeIsNum):
+            if (mass1IsPos == True and mass2IsPos == True and timeIsPos == True):
+                values = GrabValues(children)
+                axis = AxisIndices(children)
+                # 2D Position Plot
+                if (children[3][0].isChecked() == True):
+                    self.TwoDPosPlot = TwoBodyPlotWindow(0, values[0], values[1], 0, values[2], axis[0], axis[1], values[3], values[4], "2D Two Body Position Plot")
+                    self.TwoDPosPlot.show()
+            else:
+                if (mass1IsPos != True):
+                    print("Fuck")
+                if (mass2IsPos != True):
+                    print("Shit")
+                if (timeIsPos != True):
+                    print("Shit Fuck")
+        else:
+            if (mass1IsNum != True):
+                Dialog(self, "Please enter numerical values for the parameters of Mass 1.")
+            if (timeIsNum != True):
+                Dialog(self, "Please enter numerical values for the time span.")
+            if (mass2IsNum != True):
+                Dialog(self, "Please enter numerical values for the parameters of Mass 2.")
 
     """ ClearAll - Clears all input fields
         Input:
@@ -1341,7 +1425,7 @@ class TwoBodyWindow(QWidget):
     """
     def IsPositive(self, value):
         # Greater than zero
-        if (value):
+        if (value > 0):
             return True
         # Less than or equal to zero
         else:
