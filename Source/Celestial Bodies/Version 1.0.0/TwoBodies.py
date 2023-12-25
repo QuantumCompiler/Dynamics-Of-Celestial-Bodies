@@ -100,6 +100,54 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
             mass1Vals = [mass1Pos[0], mass1Pos[1], mass1Pos[2], timeVals]
             mass2Vals = [mass2Pos[0], mass2Pos[1], mass2Pos[2], timeVals]
             return iDirection, jDirection, mass1Vals, mass2Vals
+        # 3D Axis pos
+        def Axis3DPos(self, mass1Pos, mass2Pos, timeVals, i, j, k):
+            # Max pos
+            maxDistX, maxDistY, maxDistZ, maxTime = MaxVals(mass1Pos, mass2Pos, timeVals)
+            # Direction place holder
+            iDirection = ''
+            jDirection = ''
+            kDirection = ''
+            if (i == 0):
+                iDirection = "$x$"
+                self.axes.set_xlim(-maxDistX, maxDistX)
+            elif (i == 1):
+                iDirection = "$y$"
+                self.axes.set_xlim(-maxDistY, maxDistY)
+            elif (i == 2):
+                iDirection = "$z$"
+                self.axes.set_xlim(-maxDistZ, maxDistZ)
+            elif (i == 3):
+                iDirection = "Time"
+                self.axes.set_xlim(0, maxTime)
+            if (j == 0):
+                jDirection = "$x$"
+                self.axes.set_ylim(-maxDistX, maxDistX)
+            elif (j == 1):
+                jDirection = "$y$"
+                self.axes.set_ylim(-maxDistY, maxDistY)
+            elif (j == 2):
+                jDirection = "$z$"
+                self.axes.set_ylim(-maxDistZ, maxDistZ)
+            elif (j == 3):
+                jDirection = "Time"
+                self.axes.set_ylim(0, maxTime)
+            if (k == 0):
+                kDirection = "$x$"
+                self.axes.set_zlim(-maxDistX, maxDistX)
+            elif (k == 1):
+                kDirection = "$y$"
+                self.axes.set_zlim(-maxDistY, maxDistY)
+            elif (k == 2):
+                kDirection = "$z$"
+                self.axes.set_zlim(-maxDistZ, maxDistZ)
+            elif (k == 3):
+                kDirection = "Time"
+                self.axes.set_zlim(0, maxTime)
+            # Mass values
+            mass1Vals = [mass1Pos[0], mass1Pos[1], mass1Pos[2], timeVals]
+            mass2Vals = [mass1Pos[0], mass2Pos[1], mass2Pos[2], timeVals]
+            return iDirection, jDirection, kDirection, mass1Vals, mass2Vals
         # 2D Axis vel
         def Axis2DVel(self, mass1Vel, mass2Vel, timeVals, i, j):
             # Max vel 
@@ -172,6 +220,27 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
             else:
                 self.axes.set_ylabel(f"{axisParam[1]} Position In $(m)$", fontsize = TWODPLOTABELS)
             self.axes.legend()
+        # 3D Position labels
+        def Pos3DLabels(self, axisParam, i, j, k, q):
+            plotType = ""
+            if (q == 0):
+                plotType = "Plot"
+            else:
+                plotType = "Animation"
+            self.axes.set_tile(f"3D Position {plotType} Of Two Coupled Bodies: {axisParam[2]} vs. {axisParam[1]} vs. {axisParam[0]}", fontsize = THREEDPLOTTILE)
+            if (i == 3):
+                self.axes.set_xlabel(f"{axisParam[0]} In Seconds", fontsize = THREEDPLOTLABELS)
+            else:
+                self.axes.set_xlabel(f"{axisParam[0]} Position In $(m)$", fontsize = THREEDPLOTLABELS)
+            if (j == 3):
+                self.axes.set_ylabel(f"{axisParam[1]} In Seconds", fontsize = THREEDPLOTLABELS)
+            else:
+                self.axes.set_ylabel(f"{axisParam[1]} Position In $(m)$", fontsize = THREEDPLOTLABELS)
+            self.axes.legend()
+            if (k == 3):
+                self.axes.set_zlabel(f"{axisParam[2]} In Seconds", fontsize = THREEDPLOTLABELS)
+            else:
+                self.axes.set_zlabel(f"{axisParam[2]} Position In $(m)$", fontsize = THREEDPLOTLABELS)
         # 2D Velocity labels
         def Vel2DLabels(self, axisParam, i, j, q):
             plotType = ""
@@ -216,8 +285,8 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
             # Max pos function
             axisPos = Axis2DPos(self, mass1Pos, mass2Pos, timeVals, i, j)
             # Plot
-            self.axes.plot(axisPos[2][i], axisPos[2][j], 'o', color = "green", markersize = '2', label = mass1Name)
-            self.axes.plot(axisPos[3][i], axisPos[3][j], 'o', color = "blue", markersize = '1', label = mass2Name)
+            self.axes.plot(axisPos[2][i], axisPos[2][j], 'o', color = "green", markersize = 2, label = mass1Name)
+            self.axes.plot(axisPos[3][i], axisPos[3][j], 'o', color = "blue", markersize = 1, label = mass2Name)
             # Title and labels
             Pos2DLabels(self, axisPos, i, j, 0)
             # Notes
@@ -264,8 +333,8 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
             # Max vel function
             axisVel = Axis2DVel(self, mass1Vel, mass2Vel, timeVals, i, j)
             # Plot
-            self.axes.plot(axisVel[2][i], axisVel[2][j], 'o', color = "green", markersize = '2', label = mass1Name)
-            self.axes.plot(axisVel[3][i], axisVel[3][j], 'o', color = "blue", markersize = '1', label = mass2Name)
+            self.axes.plot(axisVel[2][i], axisVel[2][j], 'o', color = "green", markersize = 2, label = mass1Name)
+            self.axes.plot(axisVel[3][i], axisVel[3][j], 'o', color = "blue", markersize = 1, label = mass2Name)
             # Title and labels
             Vel2DLabels(self, axisVel, i, j, 0)
             # Notes
@@ -306,6 +375,18 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
             # Draw
             self.draw()
         # 3D position plot
+        elif (plotType == 4):
+            # Clear axes
+            self.axes.clear()
+            # Max pos function
+            axisPos = Axis3DPos(self, mass1Pos, mass2Pos, timeVals, i, j, k)
+            # Plot
+            self.axes.plot(axisPos[3][i], axisPos[3][j], axisPos[3][k], 'o', color = "green", markersize = 2, label = mass1Name)
+            self.axes.plot(axisPos[4][i], axisPos[4][j], axisPos[4][k], 'o', color = "blue", markersize = 1, label = mass2Name)
+            # Title and labels
+            Pos3DLabels(self, axisPos, i, j, k, 0)
+            # Draw
+            self.draw()
 
 """ TwoBodyPlotWindow - Class for two body motion plot windows
     Member Functions:
@@ -547,6 +628,10 @@ class TwoBodyWindow(QWidget):
                 if (children[3][3].isChecked() == True):
                     self.TwoDVelAni = TwoBodyPlotWindow(3, values[0], values[1], 0, values[2], axis[0], axis[1], axis[2], values[3], values[4], "2D Two Body Velocity Animation")
                     self.TwoDVelAni.show()
+                # 3D Position Plot
+                if (children[3][4].isChecked() == True):
+                    self.ThreeDPosPlot = TwoBodyPlotWindow(4, values[0], values[1], 0, values[2], axis[0], axis[1], axis[2], values[3], values[4], "3D Two Body Position Plot")
+                    self.ThreeDPosPlot.show()
             else:
                 if (mass1IsPos != True):
                     Dialog(self, "Please enter a positive value for Mass 1.")
