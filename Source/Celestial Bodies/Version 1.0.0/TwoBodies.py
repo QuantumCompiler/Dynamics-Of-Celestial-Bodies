@@ -663,7 +663,31 @@ class TwoBodyPlotWindow(QWidget):
 
 """ TwoBodyWindow - Class for two body simulation windows
     Member Functions:
-        
+        Constructor - Constructs window with widgets and layouts of widgets
+        Calculate - Generates the plot(s) for specific conditions
+        ClearAll - Clears all input fields
+        ClearMass1Params - Clears the mass 1 parameters children
+        ClearMass2Params - Clears the mass 2 parameters children
+        ClearTime - Clears the time value line edit
+        ConnectSignals - Connects the signals member functions to applicable widgets
+        DefaultState - Default state for widgets
+        DisableFields - Disables fields based upon input parameter
+        EnableFields - Enables fields based upon input parameter
+        GrabChildren - Grabs all the children from the fields
+        InitUI - Initializes the user interface for the window
+        IsNum - Checks to see if an input is able to be converted to a number
+        IsPositive - Checks if a number is positive
+        OnMass1CBChange - Event handler for when mass 1's checkbox is changed
+        OnMass2CBChange - Event handler for when mass 2's checkbox is changed
+        RandomAll - Randomizes all input fields
+        RandomMass1 - Randomizes the mass 1 parameters
+        RandomMass2 - Randomizes the mass 2 parameters
+        RandomPlots - Randomizes the checkboxes that get selected
+        RandomTime - Randomizes the time span
+        Signals - Checks for specific conditions of line edits and combo boxes
+        ReturnHome - Returns home and closes the current window
+        SelectAllPlots - Selects all plot checkboxes
+        UnselectAllPlots - Unselects all plot checkboxes
 """
 
 # Object names
@@ -1519,7 +1543,6 @@ class TwoBodyWindow(QWidget):
         mass1NameLE.setMinimumWidth(lineEditMinWidth)
         mass1NameLE.setMinimumHeight(lineEditMinHeight)
         mass1NameLE.setPlaceholderText("Mass 1 Name")
-        # mass1NameLE.textChanged.connect(self.OnMass1Change)
         mass1ParamLayout.addWidget(mass1NameLE)
         # Mass 1 mass line edit
         mass1MassLE = QLineEdit()
@@ -1527,7 +1550,6 @@ class TwoBodyWindow(QWidget):
         mass1MassLE.setMinimumWidth(lineEditMinWidth)
         mass1MassLE.setMinimumHeight(lineEditMinHeight)
         mass1MassLE.setPlaceholderText("Mass 1 In (Kg)")
-        # mass1MassLE.textChanged.connect(self.OnMass1Change)
         mass1ParamLayout.addWidget(mass1MassLE)
         ## Mass 1 initial x position line edit
         mass1XPosLE = QLineEdit()
@@ -1535,7 +1557,6 @@ class TwoBodyWindow(QWidget):
         mass1XPosLE.setMinimumWidth(int(lineEditMinWidth / 2))
         mass1XPosLE.setMinimumHeight(int(lineEditMinHeight / 2))
         mass1XPosLE.setPlaceholderText("Initial X Position In (m)")
-        # mass1XPosLE.textChanged.connect(self.OnMass1Change)
         mass1XValsLayout.addWidget(mass1XPosLE)
         ## Mass 1 initial x velocity line edit
         mass1XVelLE = QLineEdit()
@@ -1543,7 +1564,6 @@ class TwoBodyWindow(QWidget):
         mass1XVelLE.setMinimumWidth(int(lineEditMinWidth / 2))
         mass1XVelLE.setMinimumHeight(int(lineEditMinHeight / 2))
         mass1XVelLE.setPlaceholderText("Initial X Velocity In (m/s)")
-        # mass1XVelLE.textChanged.connect(self.OnMass1Change)
         mass1XValsLayout.addWidget(mass1XVelLE)
         ## Mass 1 initial y position line edit
         mass1YPosLE = QLineEdit()
@@ -1551,7 +1571,6 @@ class TwoBodyWindow(QWidget):
         mass1YPosLE.setMinimumWidth(int(lineEditMinWidth / 2))
         mass1YPosLE.setMinimumHeight(int(lineEditMinHeight / 2))
         mass1YPosLE.setPlaceholderText("Initial Y Position In (m)")
-        # mass1YPosLE.textChanged.connect(self.OnMass1Change)
         mass1YValsLayout.addWidget(mass1YPosLE)
         ## Mass 1 initial y velocity line edit
         mass1YVelLE = QLineEdit()
@@ -1559,7 +1578,6 @@ class TwoBodyWindow(QWidget):
         mass1YVelLE.setMinimumWidth(int(lineEditMinWidth / 2))
         mass1YVelLE.setMinimumHeight(int(lineEditMinHeight / 2))
         mass1YVelLE.setPlaceholderText("Initial Y Velocity In (m/s)")
-        # mass1YVelLE.textChanged.connect(self.OnMass1Change)
         mass1YValsLayout.addWidget(mass1YVelLE)
         ## Mass 1 initial z position line edit
         mass1ZPosLE = QLineEdit()
@@ -1567,7 +1585,6 @@ class TwoBodyWindow(QWidget):
         mass1ZPosLE.setMinimumWidth(int(lineEditMinWidth / 2))
         mass1ZPosLE.setMinimumHeight(int(lineEditMinHeight / 2))
         mass1ZPosLE.setPlaceholderText("Initial Z Position In (m)")
-        # mass1ZPosLE.textChanged.connect(self.OnMass1Change)
         mass1ZValsLayout.addWidget(mass1ZPosLE)
         ## Mass 1 initial z velocity line edit
         mass1ZVelLE = QLineEdit()
@@ -1575,7 +1592,6 @@ class TwoBodyWindow(QWidget):
         mass1ZVelLE.setMinimumWidth(int(lineEditMinWidth / 2))
         mass1ZVelLE.setMinimumHeight(int(lineEditMinHeight / 2))
         mass1ZVelLE.setPlaceholderText("Initial Z Velocity In (m/s)")
-        # mass1ZVelLE.textChanged.connect(self.OnMass1Change)
         mass1ZValsLayout.addWidget(mass1ZVelLE)
         ## Add layouts to parent
         mass1ParamLayout.addLayout(mass1XValsLayout)
