@@ -62,7 +62,7 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
         Output:
             This function does not return a value
     """
-    def Plot(self, plotType, masses, ic, t0, tn, i, j, mass1Name, mass2Name):
+    def Plot(self, plotType, masses, ic, t0, tn, i, j, k, mass1Name, mass2Name):
         # Call solver
         mass1Pos, mass2Pos, mass1Vel, mass2Vel, timeVals = RK4TwoBody(TwoCoupledBodiesModel, masses, ic, t0, tn)
         # 2D Axis pos
@@ -96,8 +96,44 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
             elif (j == 3):
                 jDirection = "Time"
                 self.axes.set_ylim(0, maxTime)
-            mass1Vals = mass1Pos[0], mass1Pos[1], mass1Pos[2], timeVals
-            mass2Vals = mass2Pos[0], mass2Pos[1], mass2Pos[2], timeVals
+            # Mass values
+            mass1Vals = [mass1Pos[0], mass1Pos[1], mass1Pos[2], timeVals]
+            mass2Vals = [mass2Pos[0], mass2Pos[1], mass2Pos[2], timeVals]
+            return iDirection, jDirection, mass1Vals, mass2Vals
+        # 2D Axis vel
+        def Axis2DVel(self, mass1Vel, mass2Vel, timeVals, i, j):
+            # Max vel 
+            maxVelX, maxVelY, maxVelZ, maxTime = MaxVals(mass1Vel, mass2Vel, timeVals)
+            # Direction place holder
+            iDirection = ''
+            jDirection = ''
+            if (i == 0):
+                iDirection = "$v_{x}$"
+                self.axes.set_xlim(-maxVelX, maxVelX)
+            elif (i == 1):
+                iDirection = "$v_{y}$"
+                self.axes.set_xlim(-maxVelY, maxVelY)
+            elif (i == 2):
+                iDirection = "$v_{z}$"
+                self.axes.set_xlim(-maxVelZ, maxVelZ)
+            elif (i == 3):
+                iDirection = "Time"
+                self.axes.set_xlim(0, maxTime)
+            if (j == 0):
+                jDirection = "$v_{x}$"
+                self.axes.set_ylim(-maxVelX, maxVelX)
+            elif (j == 1):
+                jDirection = "$v_{y}$"
+                self.axes.set_ylim(-maxVelY, maxVelY)
+            elif (j == 2):
+                jDirection = "$v_{z}$"
+                self.axes.set_ylim(-maxVelZ, maxVelZ)
+            elif (j == 3):
+                jDirection = "Time"
+                self.axes.set_ylim(0, maxTime)
+            # Mass values
+            mass1Vals = [mass1Vel[0], mass1Vel[1], mass1Vel[2], timeVals]
+            mass2Vals = [mass2Vel[0], mass2Vel[1], mass2Vel[2], timeVals]
             return iDirection, jDirection, mass1Vals, mass2Vals
         # Max value
         def MaxVals(param1, param2, param3):
@@ -126,15 +162,32 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
                 plotType = "Plot"
             else:
                 plotType = "Animation"
-            self.axes.set_title(f"2D Position {plotType} Of Coupled Bodies: {axisParam[1]} vs. {axisParam[0]}", fontsize = TWODPLOTTITLE)
+            self.axes.set_title(f"2D Position {plotType} Of Two Coupled Bodies: {axisParam[1]} vs. {axisParam[0]}", fontsize = TWODPLOTTITLE)
             if (i == 3):
-                self.axes.set_xlabel(f"{axisParam[0]} Time In Seconds", fontsize = TWODPLOTABELS)
+                self.axes.set_xlabel(f"{axisParam[0]} In Seconds", fontsize = TWODPLOTABELS)
             else:
                 self.axes.set_xlabel(f"{axisParam[0]} Position In $(m)$", fontsize = TWODPLOTABELS)
             if (j == 3):
-                self.axes.set_ylabel(f"{axisParam[1]} Time In Seconds", fontsize = TWODPLOTABELS)
+                self.axes.set_ylabel(f"{axisParam[1]} In Seconds", fontsize = TWODPLOTABELS)
             else:
                 self.axes.set_ylabel(f"{axisParam[1]} Position In $(m)$", fontsize = TWODPLOTABELS)
+            self.axes.legend()
+        # 2D Velocity labels
+        def Vel2DLabels(self, axisParam, i, j, q):
+            plotType = ""
+            if (q == 0):
+                plotType = "Plot"
+            else:
+                plotType = "Animation"
+            self.axes.set_title(f"2D Velocity {plotType} Of Two Coupled Bodies: {axisParam[1]} vs. {axisParam[0]}", fontsize = TWODPLOTTITLE)
+            if (i == 3):
+                self.axes.set_xlabel(f"{axisParam[0]} In Seconds", fontsize = TWODPLOTABELS)
+            else:
+                self.axes.set_xlabel(f"{axisParam[0]} Velocity In $(m/s)$", fontsize = TWODPLOTABELS)
+            if (j == 3):
+                self.axes.set_ylabel(f"{axisParam[1]} In Seconds", fontsize = TWODPLOTABELS)
+            else:
+                self.axes.set_ylabel(f"{axisParam[1]} Velocity In $(m/s)$", fontsize = TWODPLOTABELS)
             self.axes.legend()
         # Swap masses if applicable
         m1 = masses[0]
@@ -204,16 +257,65 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
             Notes(self, masses, ic, mass1Name, mass2Name)
             # Draw
             self.draw()
+        # 2D Velocity plot
+        elif (plotType == 2):
+            # Clear axes
+            self.axes.clear()
+            # Max vel function
+            axisVel = Axis2DVel(self, mass1Vel, mass2Vel, timeVals, i, j)
+            # Plot
+            self.axes.plot(axisVel[2][i], axisVel[2][j], 'o', color = "green", markersize = '2', label = mass1Name)
+            self.axes.plot(axisVel[3][i], axisVel[3][j], 'o', color = "blue", markersize = '1', label = mass2Name)
+            # Title and labels
+            Vel2DLabels(self, axisVel, i, j, 0)
+            # Notes
+            Notes(self, masses, ic, mass1Name, mass2Name)
+            # Draw
+            self.draw()
+        # 2D Velocity animation
+        elif (plotType == 3):
+            # Clear axes
+            self.axes.clear()
+            # Max vel function
+            axisVel = Axis2DVel(self, mass1Vel, mass2Vel, timeVals, i, j)
+            # Animation parameters
+            mass1, = self.axes.plot([], [], 'o', color = 'green', markersize = 2, label = mass1Name)
+            mass2, = self.axes.plot([], [], 'o', color = 'blue', markersize = 1, label = mass2Name)
+            mass1Trail, = self.axes.plot([], [], '-', color = 'green', linewidth = 1, alpha = 0.5)
+            mass2Trail, = self.axes.plot([], [], '-', color = 'blue', linewidth = 1, alpha = 0.5)
+            # Init function
+            def init():
+                mass1.set_data([], [])
+                mass2.set_data([], [])
+                mass1Trail.set_data([], [])
+                mass2Trail.set_data([], [])
+                return mass1, mass2, mass1Trail, mass2Trail
+            # Animate function
+            def animate(q):
+                mass1.set_data([axisVel[2][i][q]], [axisVel[2][j][q]])
+                mass2.set_data([axisVel[3][i][q]], [axisVel[3][j][q]])
+                mass1Trail.set_data(axisVel[2][i][:q+1], axisVel[2][j][:q+1])
+                mass2Trail.set_data(axisVel[3][i][:q+1], axisVel[3][j][:q+1])
+                return mass1, mass2, mass1Trail, mass2Trail
+            # Animation
+            self.ani = FuncAnimation(self.figure, animate, init_func = init, frames = len(axisVel[2][3]), interval = 1e-5, blit = True, repeat = True)
+            # Title and labels
+            Vel2DLabels(self, axisVel, i, j, 1)
+            # Notes
+            Notes(self, masses, ic, mass1Name, mass2Name)
+            # Draw
+            self.draw()
+        # 3D position plot
 
 """ TwoBodyPlotWindow - Class for two body motion plot windows
     Member Functions:
         Constructor - Creates windows with specific input parameters
-        CloseEvent - Deletes plot canvas when window is closed
+        closeEvent - Deletes plot canvas when window is closed
 """
 class TwoBodyPlotWindow(QWidget):
     """ Constructor - Creates windows with specific input parameters
         Input:
-            This function does not have any unique input parameters
+            
         Algorithm:
             * Set the window title
             * Set the size of the window
@@ -225,7 +327,7 @@ class TwoBodyPlotWindow(QWidget):
         Output:
             This function does not return any values
     """
-    def __init__(self, plotType, masses, ic, t0, tn, i, j, mass1Name, mass2Name, windowTitle):
+    def __init__(self, plotType, masses, ic, t0, tn, i, j, k, mass1Name, mass2Name, windowTitle):
         super().__init__()
         # Window title
         self.setWindowTitle(windowTitle)
@@ -237,7 +339,7 @@ class TwoBodyPlotWindow(QWidget):
         self.layout = QVBoxLayout()
         # Canvas for plot
         self.plotCanvas = TwoBodyCanvas(self, width=3, height=2, dpi=100)
-        self.plotCanvas.Plot(plotType, masses, ic, t0, tn, i, j, mass1Name, mass2Name)
+        self.plotCanvas.Plot(plotType, masses, ic, t0, tn, i, j, k, mass1Name, mass2Name)
         # Tool bar
         self.toolBar = NavigationToolbar(self.plotCanvas, self)
         # Widget layout addition
@@ -246,7 +348,7 @@ class TwoBodyPlotWindow(QWidget):
         # Set layout
         self.setLayout(self.layout)
 
-    """ CloseEvent - Deletes plot canvas when window is closed
+    """ closeEvent - Deletes plot canvas when window is closed
         Input:
             event - Object for the close event
         Algorithm:
@@ -256,10 +358,10 @@ class TwoBodyPlotWindow(QWidget):
         Output:
             This function does not return a value
     """
-    def CloseEvent(self, event):
+    def closeEvent(self, event):
         if hasattr(self, 'plotCanvas') and hasattr(self.plotCanvas, 'ani'):
             self.plotCanvas.ani.event_source.stop()
-        super().CloseEvent(event)
+        super().closeEvent(event)
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
 ##### Simulation Window
@@ -431,12 +533,20 @@ class TwoBodyWindow(QWidget):
                 axis = AxisIndices(children)
                 # 2D Position Plot
                 if (children[3][0].isChecked() == True):
-                    self.TwoDPosPlot = TwoBodyPlotWindow(0, values[0], values[1], 0, values[2], axis[0], axis[1], values[3], values[4], "2D Two Body Position Plot")
+                    self.TwoDPosPlot = TwoBodyPlotWindow(0, values[0], values[1], 0, values[2], axis[0], axis[1], axis[2], values[3], values[4], "2D Two Body Position Plot")
                     self.TwoDPosPlot.show()
-                # 2D Position animation
+                # 2D Position Animation
                 if (children[3][1].isChecked() == True):
-                    self.TwoDPosAni = TwoBodyPlotWindow(1, values[0], values[1], 0, values[2], axis[0], axis[1], values[3], values[4], "2D Two Body Position Animation")
+                    self.TwoDPosAni = TwoBodyPlotWindow(1, values[0], values[1], 0, values[2], axis[0], axis[1], axis[2], values[3], values[4], "2D Two Body Position Animation")
                     self.TwoDPosAni.show()
+                # 2D Velocity Plot
+                if (children[3][2].isChecked() == True):
+                    self.TwoDVelPlot = TwoBodyPlotWindow(2, values[0], values[1], 0, values[2], axis[0], axis[1], axis[2], values[3], values[4], "2D Two Body Velocity Plot")
+                    self.TwoDVelPlot.show()
+                # 2D Velocity Animation
+                if (children[3][3].isChecked() == True):
+                    self.TwoDVelAni = TwoBodyPlotWindow(3, values[0], values[1], 0, values[2], axis[0], axis[1], axis[2], values[3], values[4], "2D Two Body Velocity Animation")
+                    self.TwoDVelAni.show()
             else:
                 if (mass1IsPos != True):
                     Dialog(self, "Please enter a positive value for Mass 1.")
