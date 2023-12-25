@@ -1,5 +1,6 @@
 from ProjectileMotion import *
 from TwoBodies import *
+from ThreeBodies import *
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
 ##### Main Window
@@ -21,6 +22,7 @@ class MainWindow(QMainWindow):
         # Object Names
         pmButtonName = "Projectile Motion Button"
         twoButtonName = "Two Body Button"
+        threeButtonName = "Three Body Button"
         # Height / Width Of Widgets
         minBtnWidth = 400
         minBtnHeight = 50
@@ -32,6 +34,7 @@ class MainWindow(QMainWindow):
         self.setMinimumHeight(500)
         self.projWindow = None
         self.twoBWindow = None
+        self.threeBWindow = None
         centralWidget = QWidget()
         self.setCentralWidget(centralWidget)
         # Layouts
@@ -57,6 +60,13 @@ class MainWindow(QMainWindow):
         twoBtn.setMinimumHeight(minBtnHeight)
         twoBtn.clicked.connect(self.OpenTwoBodyWindow)
         mainLayout.addWidget(twoBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
+        ## Three body button
+        threeBtn = QPushButton("Three Body")
+        threeBtn.setObjectName(threeButtonName)
+        threeBtn.setMinimumWidth(minBtnWidth)
+        threeBtn.setMinimumHeight(minBtnHeight)
+        threeBtn.clicked.connect(self.OpenThreeBodyWindow)
+        mainLayout.addWidget(threeBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         # Spacer after the button
         spacer = QSpacerItem(0, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
         mainLayout.addSpacerItem(spacer)
@@ -91,6 +101,21 @@ class MainWindow(QMainWindow):
     def OpenTwoBodyWindow(self):
         self.twoBWindow = TwoBodyWindow(self)
         self.twoBWindow.show()
+        self.hide()
+
+    """ OpenThreeBodyWindow - Opens the two body window
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Assign the three body window
+            * Show the three body window
+            * Hide the main window
+        Output:
+            This function does not return a value
+    """
+    def OpenThreeBodyWindow(self):
+        self.threeBWindow = ThreeBodyWindow(self)
+        self.threeBWindow.show()
         self.hide()
 
 """ RunProgram - Runs the program from the main window
