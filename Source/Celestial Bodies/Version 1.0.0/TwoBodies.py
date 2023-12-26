@@ -2203,6 +2203,35 @@ class TwoBodyWindow(QWidget):
         # Set random time
         children[2][0].setText(str(randTime))
 
+    """ ReturnHome - Returns home and closes the current window
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Open the main window
+            * Close the window
+        Output:
+            This function does not return a values
+    """
+    def ReturnHome(self):
+        self.mainWindow.show()
+        self.close()
+
+    """ SelectAllPlots - Selects all plot checkboxes
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab children from window
+            * Set all checkboxes to checked
+        Output:
+            This function does not return a value
+    """
+    def SelectAllPlots(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Select all plots
+        for widget in children[3][0:8]:
+            widget.setChecked(True)
+
     """ Signals - Checks for specific conditions of line edits and combo boxes
         Input:
             This function does not have any unique input parameters
@@ -2306,35 +2335,6 @@ class TwoBodyWindow(QWidget):
                     self.DefaultState(7)
         else:
             self.DefaultState(7)
-
-    """ ReturnHome - Returns home and closes the current window
-        Input:
-            This function does not have any unique input parameters
-        Algorithm:
-            * Open the main window
-            * Close the window
-        Output:
-            This function does not return a values
-    """
-    def ReturnHome(self):
-        self.mainWindow.show()
-        self.close()
-
-    """ SelectAllPlots - Selects all plot checkboxes
-        Input:
-            This function does not have any unique input parameters
-        Algorithm:
-            * Grab children from window
-            * Set all checkboxes to checked
-        Output:
-            This function does not return a value
-    """
-    def SelectAllPlots(self):
-        # Grab children
-        children = self.GrabChildren()
-        # Select all plots
-        for widget in children[3][0:8]:
-            widget.setChecked(True)
 
     """ UnselectAllPlots - Unselects all plot checkboxes
         Input:
