@@ -1,6 +1,663 @@
 from ModelFunctions import *
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
+##### Canvas / Plot Window
+##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
+
+""" ThreeBodyCanvas - Class for three body plots
+    Member Functions:
+        Constructor - Constructor for canvas with specific input parameters
+        Plot - Plots the results from a three body scenario
+"""
+class ThreeBodyCanvas(FigureCanvasQTAgg):
+    """ Constructor - Constructor for canvas with specific input parameters
+        Input:
+            parent - Parent class
+            width - Width of canvas
+            height - Height of canvas
+            dpi - DPI of canvas
+            plotType - Type of canvas that is to be created
+        Algorithm:
+            * Create a figure with the width, height, and dpi from the input parameters
+            * Create an axis and add it to the figure
+            * Call the constructor for FigureCanvasQTAgg with the figure previously created
+        Output:
+            This function does not return a value
+    """
+    def __init__(self, parent=None, width=3, height=2, dpi=100, plotType = '2d'):
+        fig = Figure(figsize=(width, height), dpi=dpi)
+        if (plotType == '3d'):
+            self.axes = fig.add_subplot(111, projection = '3d')
+        else:
+            self.axes = fig.add_subplot(111)
+        FigureCanvasQTAgg.__init__(self, fig)
+
+    """ Plot - Plots the results from a two body scenario
+        Input:
+            plotType - Type of plot that is to be generated
+            masses - Array of masses in system
+            ic - Matrix of initial conditions for each mass
+                ic[0][0] - Mass 1 initial x position
+                ic[0][1] - Mass 1 initial y position
+                ic[0][2] - Mass 1 initial z position
+                ic[1][0] - Mass 2 initial x position
+                ic[1][1] - Mass 2 initial y position
+                ic[1][2] - Mass 2 initial z position
+                ic[2][0] - Mass 3 initial x position
+                ic[2][1] - Mass 3 initial y position
+                ic[2][2] - Mass 3 initial z position
+                ic[3][0] - Mass 1 initial velocity in x
+                ic[3][1] - Mass 1 initial velocity in y
+                ic[3][2] - Mass 1 initial velocity in z
+                ic[4][0] - Mass 2 initial velocity in x
+                ic[4][1] - Mass 2 initial velocity in y
+                ic[4][2] - Mass 2 initial velocity in z
+                ic[5][0] - Mass 3 initial velocity in x
+                ic[5][1] - Mass 3 initial velocity in y
+                ic[5][2] - Mass 3 initial velocity in z
+            t0 - Initial time in seconds of model
+            tn - Final time in seconds of model
+            i, j, k - Data types that are to be plotted for each axis
+                i - X axis
+                j - Y axis
+                k - Z axis
+                    0 - X value
+                    1 - Y value
+                    2 - Z value
+                    3 - Time
+            mass1Name - Name of mass 1
+            mass2Name - Name of mass 2
+            mass3Name - Name of mass 3
+        Algorithm:
+            * Call the RK4 two body solver
+            * Define the inner functions that perform repeat operations for each plot type
+            * Swap the masses if necessary
+            * For the input parameter, plotType, produce the type of plot that is requested
+        Output:
+            This function does not return a value
+    """
+    def Plot(self, plotType, masses, ic, t0, tn, i, j, k, mass1Name, mass2Name, mass3Name):
+        # Call solver
+        mass1Pos, mass2Pos, mass3Pos, mass1Vel, mass2Vel, mass3Vel, timeVals = RK4ThreeBody(ThreeCoupledBodiesModel, masses, ic, t0, tn)
+        # 2D Axis pos
+        def Axis2DPos(self, mass1Pos, mass2Pos, mass3Pos, timeVals, i, j):
+            # Max pos
+            maxDistX, maxDistY, maxDistZ, maxTime = MaxVals(mass1Pos, mass2Pos, mass3Pos, timeVals)
+            # Direction place holder
+            iDirection = ''
+            jDirection = ''
+            if (i == 0):
+                iDirection = "$x$"
+                self.axes.set_xlim(-maxDistX, maxDistX)
+            elif (i == 1):
+                iDirection = "$y$"
+                self.axes.set_xlim(-maxDistY, maxDistY)
+            elif (i == 2):
+                iDirection = "$z$"
+                self.axes.set_xlim(-maxDistZ, maxDistZ)
+            elif (i == 3):
+                iDirection = "Time"
+                self.axes.set_xlim(0, maxTime)
+            if (j == 0):
+                jDirection = "$x$"
+                self.axes.set_ylim(-maxDistX, maxDistX)
+            elif (j == 1):
+                jDirection = "$y$"
+                self.axes.set_ylim(-maxDistY, maxDistY)
+            elif (j == 2):
+                jDirection = "$z$"
+                self.axes.set_ylim(-maxDistZ, maxDistZ)
+            elif (j == 3):
+                jDirection = "Time"
+                self.axes.set_ylim(0, maxTime)
+            # Mass values
+            mass1Vals = [mass1Pos[0], mass1Pos[1], mass1Pos[2], timeVals]
+            mass2Vals = [mass2Pos[0], mass2Pos[1], mass2Pos[2], timeVals]
+            mass3Vals = [mass3Pos[0], mass3Pos[1], mass3Pos[2], timeVals]
+            return iDirection, jDirection, mass1Vals, mass2Vals, mass3Vals
+        # 3D Axis pos
+        def Axis3DPos(self, mass1Pos, mass2Pos, mass3Pos, timeVals, i, j, k):
+            # Max pos
+            maxDistX, maxDistY, maxDistZ, maxTime = MaxVals(mass1Pos, mass2Pos, mass3Pos, timeVals)
+            # Direction place holder
+            iDirection = ''
+            jDirection = ''
+            kDirection = ''
+            if (i == 0):
+                iDirection = "$x$"
+                self.axes.set_xlim(-maxDistX, maxDistX)
+            elif (i == 1):
+                iDirection = "$y$"
+                self.axes.set_xlim(-maxDistY, maxDistY)
+            elif (i == 2):
+                iDirection = "$z$"
+                self.axes.set_xlim(-maxDistZ, maxDistZ)
+            elif (i == 3):
+                iDirection = "Time"
+                self.axes.set_xlim(0, maxTime)
+            if (j == 0):
+                jDirection = "$x$"
+                self.axes.set_ylim(-maxDistX, maxDistX)
+            elif (j == 1):
+                jDirection = "$y$"
+                self.axes.set_ylim(-maxDistY, maxDistY)
+            elif (j == 2):
+                jDirection = "$z$"
+                self.axes.set_ylim(-maxDistZ, maxDistZ)
+            elif (j == 3):
+                jDirection = "Time"
+                self.axes.set_ylim(0, maxTime)
+            if (k == 0):
+                kDirection = "$x$"
+                self.axes.set_zlim(-maxDistX, maxDistX)
+            elif (k == 1):
+                kDirection = "$y$"
+                self.axes.set_zlim(-maxDistY, maxDistY)
+            elif (k == 2):
+                kDirection = "$z$"
+                self.axes.set_zlim(-maxDistZ, maxDistZ)
+            elif (k == 3):
+                kDirection = "Time"
+                self.axes.set_zlim(0, maxTime)
+            # Mass values
+            mass1Vals = [mass1Pos[0], mass1Pos[1], mass1Pos[2], timeVals]
+            mass2Vals = [mass2Pos[0], mass2Pos[1], mass2Pos[2], timeVals]
+            mass3Vals = [mass3Pos[0], mass3Pos[1], mass3Pos[2], timeVals]
+            return iDirection, jDirection, kDirection, mass1Vals, mass2Vals, mass3Vals
+        # 2D Axis vel
+        def Axis2DVel(self, mass1Vel, mass2Vel, mass3Vel, timeVals, i, j):
+            # Max vel 
+            maxVelX, maxVelY, maxVelZ, maxTime = MaxVals(mass1Vel, mass2Vel, mass3Vel, timeVals)
+            # Direction place holder
+            iDirection = ''
+            jDirection = ''
+            if (i == 0):
+                iDirection = "$v_{x}$"
+                self.axes.set_xlim(-maxVelX, maxVelX)
+            elif (i == 1):
+                iDirection = "$v_{y}$"
+                self.axes.set_xlim(-maxVelY, maxVelY)
+            elif (i == 2):
+                iDirection = "$v_{z}$"
+                self.axes.set_xlim(-maxVelZ, maxVelZ)
+            elif (i == 3):
+                iDirection = "Time"
+                self.axes.set_xlim(0, maxTime)
+            if (j == 0):
+                jDirection = "$v_{x}$"
+                self.axes.set_ylim(-maxVelX, maxVelX)
+            elif (j == 1):
+                jDirection = "$v_{y}$"
+                self.axes.set_ylim(-maxVelY, maxVelY)
+            elif (j == 2):
+                jDirection = "$v_{z}$"
+                self.axes.set_ylim(-maxVelZ, maxVelZ)
+            elif (j == 3):
+                jDirection = "Time"
+                self.axes.set_ylim(0, maxTime)
+            # Mass values
+            mass1Vals = [mass1Vel[0], mass1Vel[1], mass1Vel[2], timeVals]
+            mass2Vals = [mass2Vel[0], mass2Vel[1], mass2Vel[2], timeVals]
+            mass3Vals = [mass3Vel[0], mass3Vel[1], mass3Vel[2], timeVals]
+            return iDirection, jDirection, mass1Vals, mass2Vals, mass3Vals
+        # 3D Axis vel
+        def Axis3DVel(self, mass1Vel, mass2Vel, mass3Vel, timeVals, i, j, k):
+            # Max vel 
+            maxVelX, maxVelY, maxVelZ, maxTime = MaxVals(mass1Vel, mass2Vel, mass3Vel, timeVals)
+            # Direction place holder
+            iDirection = ''
+            jDirection = ''
+            kDirection = ''
+            if (i == 0):
+                iDirection = "$v_{x}$"
+                self.axes.set_xlim(-maxVelX, maxVelX)
+            elif (i == 1):
+                iDirection = "$v_{y}$"
+                self.axes.set_xlim(-maxVelY, maxVelY)
+            elif (i == 2):
+                iDirection = "$v_{z}$"
+                self.axes.set_xlim(-maxVelZ, maxVelZ)
+            elif (i == 3):
+                iDirection = "Time"
+                self.axes.set_xlim(0, maxTime)
+            if (j == 0):
+                jDirection = "$v_{x}$"
+                self.axes.set_ylim(-maxVelX, maxVelX)
+            elif (j == 1):
+                jDirection = "$v_{y}$"
+                self.axes.set_ylim(-maxVelY, maxVelY)
+            elif (j == 2):
+                jDirection = "$v_{z}$"
+                self.axes.set_ylim(-maxVelZ, maxVelZ)
+            elif (j == 3):
+                jDirection = "Time"
+                self.axes.set_ylim(0, maxTime)
+            if (k == 0):
+                kDirection = "$v_{x}$"
+                self.axes.set_zlim(-maxVelX, maxVelX)
+            elif (k == 1):
+                kDirection = "$v_{y}$"
+                self.axes.set_zlim(-maxVelY, maxVelY)
+            elif (k == 2):
+                kDirection = "$v_{z}$"
+                self.axes.set_zlim(-maxVelZ, maxVelZ)
+            elif (k == 3):
+                kDirection = "Time"
+                self.axes.set_zlim(0, maxTime)
+            # Mass values
+            mass1Vals = [mass1Vel[0], mass1Vel[1], mass1Vel[2], timeVals]
+            mass2Vals = [mass2Vel[0], mass2Vel[1], mass2Vel[2], timeVals]
+            mass3Vals = [mass3Vel[0], mass3Vel[1], mass3Vel[2], timeVals]
+            return iDirection, jDirection, kDirection, mass1Vals, mass2Vals, mass3Vals
+        # Max value
+        def MaxVals(param1, param2, param3, param4):
+            maxParamX = max(max([val[0] for val in param1]), max([val[0] for val in param2]), max([val[0] for val in param3])) * 1.1
+            maxParamY = max(max([val[1] for val in param1]), max([val[1] for val in param2]), max([val[1] for val in param3])) * 1.1
+            maxParamZ = max(max([val[2] for val in param1]), max([val[2] for val in param2]), max([val[2] for val in param3])) * 1.1
+            max4 = max(param4)
+            return maxParamX, maxParamY, maxParamZ, max4
+        # Figure 2D notes
+        def Notes2D(self, masses, ic, mass1Name, mass2Name, mass3Name):
+            self.figure.subplots_adjust(bottom=0.30)
+            mass1Mass = f"{mass1Name}: {masses[0]:.2e} $(Kg)$ "
+            mass1InitXPos, mass1InitYPos, mass1InitZPos = f"$x_{0}$ = {ic[0][0]:.2e} $(m)$, ", f"$y_{0}$ = {ic[0][1]:.2e} $(m)$, ", f"$z_{0}$ = {ic[0][2]:.2e} $(m)$, "
+            mass1InitXVel, mass1InitYVel, mass1InitZVel = f"$v_{{x_{0}}}$ = {ic[3][0]:.2e} $(m/s)$, ", f"$v_{{y_{0}}}$ = {ic[3][1]:.2e} $(m/s)$, ", f"$v_{{z_{0}}}$ = {ic[3][2]:.2e} $(m/s)$"
+            mass1Notes = mass1Mass + mass1InitXPos + mass1InitXVel + mass1InitYPos + mass1InitYVel + mass1InitZPos + mass1InitZVel
+            mass2Mass = f"{mass2Name}: {masses[1]:.2e} $(Kg)$ "
+            mass2InitXPos, mass2InitYPos, mass2InitZPos = f"$x_{0}$ = {ic[1][0]:.2e} $(m)$, ", f"$y_{0}$ = {ic[1][1]:.2e} $(m)$, ", f"$z_{0}$ = {ic[1][2]:.2e} $(m)$, "
+            mass2InitXVel, mass2InitYVel, mass2InitZVel = f"$v_{{x_{0}}}$ = {ic[4][0]:.2e} $(m/s)$, ", f"$v_{{y_{0}}}$ = {ic[4][1]:.2e} $(m/s)$, ", f"$v_{{z_{0}}}$ = {ic[4][2]:.2e} $(m/s)$"
+            mass2Notes = mass2Mass + mass2InitXPos + mass2InitXVel + mass2InitYPos + mass2InitYVel + mass2InitZPos + mass2InitZVel
+            mass3Mass = f"{mass3Name}: {masses[1]:.2e} $(Kg)$ "
+            mass3InitXPos, mass3InitYPos, mass3InitZPos = f"$x_{0}$ = {ic[2][0]:.2e} $(m)$, ", f"$y_{0}$ = {ic[2][1]:.2e} $(m)$, ", f"$z_{0}$ = {ic[2][2]:.2e} $(m)$, "
+            mass3InitXVel, mass3InitYVel, mass3InitZVel = f"$v_{{x_{0}}}$ = {ic[5][0]:.2e} $(m/s)$, ", f"$v_{{y_{0}}}$ = {ic[5][1]:.2e} $(m/s)$, ", f"$v_{{z_{0}}}$ = {ic[5][2]:.2e} $(m/s)$"
+            mass3Notes = mass3Mass + mass3InitXPos + mass3InitXVel + mass3InitYPos + mass3InitYVel + mass3InitZPos + mass3InitZVel
+            timeSpanNotes = f"Time Span: {round(float(tn / (365.25 * DS)), 2)} Earth Years"
+            self.figure.text(0.1, 0.05, mass1Notes + "\n" + mass2Notes + "\n" + mass3Notes + "\n" + timeSpanNotes, ha='left', va='bottom', fontsize=TWODNOTES)
+        # Figure 3D notes
+        def Notes3D(self, masses, ic, mass1Name, mass2Name, mass3Name):
+            self.figure.subplots_adjust(bottom=0.30)
+            mass1Mass = f"{mass1Name}: {masses[0]:.2e} $(Kg)$ "
+            mass1InitXPos, mass1InitYPos, mass1InitZPos = f"$x_{0}$ = {ic[0][0]:.2e} $(m)$, ", f"$y_{0}$ = {ic[0][1]:.2e} $(m)$, ", f"$z_{0}$ = {ic[0][2]:.2e} $(m)$, "
+            mass1InitXVel, mass1InitYVel, mass1InitZVel = f"$v_{{x_{0}}}$ = {ic[3][0]:.2e} $(m/s)$, ", f"$v_{{y_{0}}}$ = {ic[3][1]:.2e} $(m/s)$, ", f"$v_{{z_{0}}}$ = {ic[3][2]:.2e} $(m/s)$"
+            mass1Notes = mass1Mass + mass1InitXPos + mass1InitXVel + mass1InitYPos + mass1InitYVel + mass1InitZPos + mass1InitZVel
+            mass2Mass = f"{mass2Name}: {masses[1]:.2e} $(Kg)$ "
+            mass2InitXPos, mass2InitYPos, mass2InitZPos = f"$x_{0}$ = {ic[1][0]:.2e} $(m)$, ", f"$y_{0}$ = {ic[1][1]:.2e} $(m)$, ", f"$z_{0}$ = {ic[1][2]:.2e} $(m)$, "
+            mass2InitXVel, mass2InitYVel, mass2InitZVel = f"$v_{{x_{0}}}$ = {ic[4][0]:.2e} $(m/s)$, ", f"$v_{{y_{0}}}$ = {ic[4][1]:.2e} $(m/s)$, ", f"$v_{{z_{0}}}$ = {ic[4][2]:.2e} $(m/s)$"
+            mass2Notes = mass2Mass + mass2InitXPos + mass2InitXVel + mass2InitYPos + mass2InitYVel + mass2InitZPos + mass2InitZVel
+            mass3Mass = f"{mass3Name}: {masses[1]:.2e} $(Kg)$ "
+            mass3InitXPos, mass3InitYPos, mass3InitZPos = f"$x_{0}$ = {ic[2][0]:.2e} $(m)$, ", f"$y_{0}$ = {ic[2][1]:.2e} $(m)$, ", f"$z_{0}$ = {ic[2][2]:.2e} $(m)$, "
+            mass3InitXVel, mass3InitYVel, mass3InitZVel = f"$v_{{x_{0}}}$ = {ic[5][0]:.2e} $(m/s)$, ", f"$v_{{y_{0}}}$ = {ic[5][1]:.2e} $(m/s)$, ", f"$v_{{z_{0}}}$ = {ic[5][2]:.2e} $(m/s)$"
+            mass3Notes = mass3Mass + mass3InitXPos + mass3InitXVel + mass3InitYPos + mass3InitYVel + mass3InitZPos + mass3InitZVel
+            timeSpanNotes = f"Time Span: {round(float(tn / (365.25 * DS)), 2)} Earth Years"
+            self.figure.text(0.5, 0.05, mass1Notes + "\n" + mass2Notes + "\n" + mass3Notes + "\n" + timeSpanNotes, ha='center', va='bottom', fontsize=TWODNOTES)
+        # 2D Position labels
+        def Pos2DLabels(self, axisParam, i, j, q):
+            plotType = ""
+            if (q == 0):
+                plotType = "Plot"
+            else:
+                plotType = "Animation"
+            self.axes.set_title(f"2D Position {plotType} Of Three Coupled Bodies: {axisParam[1]} vs. {axisParam[0]}", fontsize = TWODPLOTTITLE)
+            if (i == 3):
+                self.axes.set_xlabel(f"{axisParam[0]} In Seconds", fontsize = TWODPLOTABELS)
+            else:
+                self.axes.set_xlabel(f"{axisParam[0]} Position In $(m)$", fontsize = TWODPLOTABELS)
+            if (j == 3):
+                self.axes.set_ylabel(f"{axisParam[1]} In Seconds", fontsize = TWODPLOTABELS)
+            else:
+                self.axes.set_ylabel(f"{axisParam[1]} Position In $(m)$", fontsize = TWODPLOTABELS)
+            self.axes.legend()
+        # 3D Position labels
+        def Pos3DLabels(self, axisParam, i, j, k, q):
+            plotType = ""
+            if (q == 0):
+                plotType = "Plot"
+            else:
+                plotType = "Animation"
+            self.axes.set_title(f"3D Position {plotType} Of Three Coupled Bodies: {axisParam[2]} vs. {axisParam[1]} vs. {axisParam[0]}", fontsize = THREEDPLOTTILE)
+            if (i == 3):
+                self.axes.set_xlabel(f"{axisParam[0]} In Seconds", fontsize = THREEDPLOTLABELS)
+            else:
+                self.axes.set_xlabel(f"{axisParam[0]} Position In $(m)$", fontsize = THREEDPLOTLABELS)
+            if (j == 3):
+                self.axes.set_ylabel(f"{axisParam[1]} In Seconds", fontsize = THREEDPLOTLABELS)
+            else:
+                self.axes.set_ylabel(f"{axisParam[1]} Position In $(m)$", fontsize = THREEDPLOTLABELS)
+            self.axes.legend()
+            if (k == 3):
+                self.axes.set_zlabel(f"{axisParam[2]} In Seconds", fontsize = THREEDPLOTLABELS)
+            else:
+                self.axes.set_zlabel(f"{axisParam[2]} Position In $(m)$", fontsize = THREEDPLOTLABELS)
+        # 2D Velocity labels
+        def Vel2DLabels(self, axisParam, i, j, q):
+            plotType = ""
+            if (q == 0):
+                plotType = "Plot"
+            else:
+                plotType = "Animation"
+            self.axes.set_title(f"2D Velocity {plotType} Of Three Coupled Bodies: {axisParam[1]} vs. {axisParam[0]}", fontsize = TWODPLOTTITLE)
+            if (i == 3):
+                self.axes.set_xlabel(f"{axisParam[0]} In Seconds", fontsize = TWODPLOTABELS)
+            else:
+                self.axes.set_xlabel(f"{axisParam[0]} Velocity In $(m/s)$", fontsize = TWODPLOTABELS)
+            if (j == 3):
+                self.axes.set_ylabel(f"{axisParam[1]} In Seconds", fontsize = TWODPLOTABELS)
+            else:
+                self.axes.set_ylabel(f"{axisParam[1]} Velocity In $(m/s)$", fontsize = TWODPLOTABELS)
+            self.axes.legend()
+        # 3D Velocity labels
+        def Vel3DLabels(self, axisParam, i, j, k, q):
+            plotType = ""
+            if (q == 0):
+                plotType = "Plot"
+            else:
+                plotType = "Animation"
+            self.axes.set_title(f"3D Velocity {plotType} Of Three Coupled Bodies: {axisParam[2]} vs. {axisParam[1]} vs. {axisParam[0]}", fontsize = THREEDPLOTTILE)
+            if (i == 3):
+                self.axes.set_xlabel(f"{axisParam[0]} In Seconds", fontsize = THREEDPLOTLABELS)
+            else:
+                self.axes.set_xlabel(f"{axisParam[0]} Velocity In $(m/s)$", fontsize = THREEDPLOTLABELS)
+            if (j == 3):
+                self.axes.set_ylabel(f"{axisParam[1]} In Seconds", fontsize = THREEDPLOTLABELS)
+            else:
+                self.axes.set_ylabel(f"{axisParam[1]} Velocity In $(m/s)$", fontsize = THREEDPLOTLABELS)
+            self.axes.legend()
+            if (k == 3):
+                self.axes.set_zlabel(f"{axisParam[2]} In Seconds", fontsize = THREEDPLOTLABELS)
+            else:
+                self.axes.set_zlabel(f"{axisParam[2]} Velocity In $(m/s)$", fontsize = THREEDPLOTLABELS)
+        # Animation functions
+        def Init(mass1, mass2, mass3, mass1Trail, mass2Trail, mass3Trail):
+            def init():
+                mass1.set_data([], [])
+                mass2.set_data([], [])
+                mass3.set_data([], [])
+                mass1Trail.set_data([], [])
+                mass2Trail.set_data([], [])
+                mass3Trail.set_data([], [])
+                return mass1, mass2, mass3, mass1Trail, mass2Trail, mass3Trail
+            return init
+        def Animate2D(mass1, mass2, mass3, mass1Trail, mass2Trail, mass3Trail, param):
+            def animate(q):
+                mass1.set_data([param[2][i][q]], [param[2][j][q]])
+                mass2.set_data([param[3][i][q]], [param[3][j][q]])
+                mass3.set_data([param[4][i][q]], [param[4][j][q]])
+                mass1Trail.set_data(param[2][i][:q+1], param[2][j][:q+1])
+                mass2Trail.set_data(param[3][i][:q+1], param[3][j][:q+1])
+                mass3Trail.set_data(param[4][i][:q+1], param[4][j][:q+1])
+                return mass1, mass2, mass3, mass1Trail, mass2Trail, mass3Trail
+            return animate
+        def Animate3D(mass1, mass2, mass3, mass1Trail, mass2Trail, mass3Trail, param):
+            def animate(q):
+                mass1.set_data([param[3][i][q]], [param[3][j][q]])
+                mass1.set_3d_properties([param[3][k][q]])
+                mass2.set_data([param[4][i][q]], [param[4][j][q]])
+                mass2.set_3d_properties([param[4][k][q]])
+                mass3.set_data([param[5][i][q]], [param[5][j][q]])
+                mass3.set_3d_properties([param[5][k][q]])
+                mass1Trail.set_data(param[3][i][:q+1], param[3][j][:q+1])
+                mass1Trail.set_3d_properties(param[3][k][:q+1])
+                mass2Trail.set_data(param[4][i][:q+1], param[4][j][:q+1])
+                mass2Trail.set_3d_properties(param[4][k][:q+1])
+                mass3Trail.set_data(param[5][i][:q+1], param[5][j][:q+1])
+                mass3Trail.set_3d_properties(param[5][k][:q+1])
+                return mass1, mass2, mass3, mass1Trail, mass2Trail, mass3Trail
+            return animate
+        # 2D Position plot
+        if (plotType == 0):
+            # Clear axes
+            self.axes.clear()
+            # Max pos function
+            axis = Axis2DPos(self, mass1Pos, mass2Pos, mass3Pos, timeVals, i, j)
+            # Plot
+            self.axes.plot(axis[2][i], axis[2][j], 'o', color = "green", markersize = 3, label = mass1Name)
+            self.axes.plot(axis[3][i], axis[3][j], 'o', color = "blue", markersize = 2, label = mass2Name)
+            self.axes.plot(axis[4][i], axis[4][j], 'o', color = "orange", markersize = 1, label = mass3Name)
+            # Title and labels
+            Pos2DLabels(self, axis, i, j, 0)
+            # Notes
+            Notes2D(self, masses, ic, mass1Name, mass2Name, mass3Name)
+            # Draw plot on canvas
+            self.draw()
+        # 2D Position animation
+        elif (plotType == 1):
+            # Clear axes
+            self.axes.clear()
+            # Max pos function
+            axis = Axis2DPos(self, mass1Pos, mass2Pos, mass3Pos, timeVals, i, j)
+            # Animation parameters
+            mass1, = self.axes.plot([], [], 'o', color = 'green', markersize = 3, label = mass1Name)
+            mass2, = self.axes.plot([], [], 'o', color = 'blue', markersize = 2, label = mass2Name)
+            mass3, = self.axes.plot([], [], 'o', color = 'orange', markersize = 1, label = mass3Name)
+            mass1Trail, = self.axes.plot([], [], '-', color = 'green', linewidth = 1, alpha = 0.5)
+            mass2Trail, = self.axes.plot([], [], '-', color = 'blue', linewidth = 1, alpha = 0.5)
+            mass3Trail, = self.axes.plot([], [], '-', color = 'orange', linewidth = 1, alpha = 0.5)
+            # Animation functions
+            init = Init(mass1, mass2, mass3, mass1Trail, mass2Trail, mass3Trail)
+            animate = Animate2D(mass1, mass2, mass3, mass1Trail, mass2Trail, mass3Trail, axis)
+            # Animation
+            self.ani = FuncAnimation(self.figure, animate, init_func = init, frames = len(axis[2][3]), interval = 1e-5, blit = True, repeat = True)
+            # Title and labels
+            Pos2DLabels(self, axis, i, j, 1)
+            # Notes
+            Notes2D(self, masses, ic, mass1Name, mass2Name, mass3Name)
+            # Draw
+            self.draw()
+        # 2D Velocity plot
+        elif (plotType == 2):
+            # Clear axes
+            self.axes.clear()
+            # Max pos function
+            axis = Axis2DVel(self, mass1Vel, mass2Vel, mass3Vel, timeVals, i, j)
+            # Plot
+            self.axes.plot(axis[2][i], axis[2][j], 'o', color = "green", markersize = 3, label = mass1Name)
+            self.axes.plot(axis[3][i], axis[3][j], 'o', color = "blue", markersize = 2, label = mass2Name)
+            self.axes.plot(axis[4][i], axis[4][j], 'o', color = "orange", markersize = 1, label = mass3Name)
+            # Title and labels
+            Vel2DLabels(self, axis, i, j, 0)
+            # Notes
+            Notes2D(self, masses, ic, mass1Name, mass2Name, mass3Name)
+            # Draw plot on canvas
+            self.draw()
+        # 2D Velocity animation
+        elif (plotType == 3):
+            # Clear axes
+            self.axes.clear()
+            # Max pos function
+            axis = Axis2DVel(self, mass1Vel, mass2Vel, mass3Vel, timeVals, i, j)
+            # Animation parameters
+            mass1, = self.axes.plot([], [], 'o', color = 'green', markersize = 3, label = mass1Name)
+            mass2, = self.axes.plot([], [], 'o', color = 'blue', markersize = 2, label = mass2Name)
+            mass3, = self.axes.plot([], [], 'o', color = 'orange', markersize = 1, label = mass3Name)
+            mass1Trail, = self.axes.plot([], [], '-', color = 'green', linewidth = 1, alpha = 0.5)
+            mass2Trail, = self.axes.plot([], [], '-', color = 'blue', linewidth = 1, alpha = 0.5)
+            mass3Trail, = self.axes.plot([], [], '-', color = 'orange', linewidth = 1, alpha = 0.5)
+            # Animation functions
+            init = Init(mass1, mass2, mass3, mass1Trail, mass2Trail, mass3Trail)
+            animate = Animate2D(mass1, mass2, mass3, mass1Trail, mass2Trail, mass3Trail, axis)
+            # Animation
+            self.ani = FuncAnimation(self.figure, animate, init_func = init, frames = len(axis[2][3]), interval = 1e-5, blit = True, repeat = True)
+            # Title and labels
+            Vel2DLabels(self, axis, i, j, 1)
+            # Notes
+            Notes2D(self, masses, ic, mass1Name, mass2Name, mass3Name)
+            # Draw
+            self.draw()
+        # 3D Position plot
+        elif (plotType == 4):
+            # Clear axes
+            self.axes.clear()
+            # Max pos function
+            axis = Axis3DPos(self, mass1Pos, mass2Pos, mass3Pos, timeVals, i, j, k)
+            # Plot
+            self.axes.plot(axis[3][i], axis[3][j], axis[3][k], 'o', color = "green", markersize = 3, label = mass1Name)
+            self.axes.plot(axis[4][i], axis[4][j], axis[4][k], 'o', color = "blue", markersize = 2, label = mass2Name)
+            self.axes.plot(axis[5][i], axis[5][j], axis[5][k], 'o', color = "orange", markersize = 1, label = mass3Name)
+            # Title and labels
+            Pos3DLabels(self, axis, i, j, k, 0)
+            # Notes
+            Notes3D(self, masses, ic, mass1Name, mass2Name, mass3Name)
+            # Draw plot on canvas
+            self.draw()
+        # 3D Position animation
+        elif (plotType == 5):
+            # Clear axes
+            self.axes.clear()
+            # Max pos function
+            axis = Axis3DPos(self, mass1Pos, mass2Pos, mass3Pos, timeVals, i, j, k)
+            # Animation parameters
+            mass1, = self.axes.plot([], [], 'o', color = 'green', markersize = 3, label = mass1Name)
+            mass2, = self.axes.plot([], [], 'o', color = 'blue', markersize = 2, label = mass2Name)
+            mass3, = self.axes.plot([], [], 'o', color = 'orange', markersize = 1, label = mass3Name)
+            mass1Trail, = self.axes.plot([], [], '-', color = 'green', linewidth = 1, alpha = 0.5)
+            mass2Trail, = self.axes.plot([], [], '-', color = 'blue', linewidth = 1, alpha = 0.5)
+            mass3Trail, = self.axes.plot([], [], '-', color = 'orange', linewidth = 1, alpha = 0.5)
+            # Animation functions
+            init = Init(mass1, mass2, mass3, mass1Trail, mass2Trail, mass3Trail)
+            animate = Animate3D(mass1, mass2, mass3, mass1Trail, mass2Trail, mass3Trail, axis)
+            # Animation
+            self.ani = FuncAnimation(self.figure, animate, init_func = init, frames = len(axis[3][3]), interval = 1e-5, blit = True, repeat = True)
+            # Title and labels
+            Pos3DLabels(self, axis, i, j, k, 1)
+            # Notes
+            Notes3D(self, masses, ic, mass1Name, mass2Name, mass3Name)
+            # Draw
+            self.draw()
+        # 3D Velocity Plot
+        elif (plotType == 6):
+            # Clear axes
+            self.axes.clear()
+            # Max pos function
+            axis = Axis3DVel(self, mass1Pos, mass2Pos, mass3Pos, timeVals, i, j, k)
+            # Plot
+            self.axes.plot(axis[3][i], axis[3][j], axis[3][k], 'o', color = "green", markersize = 3, label = mass1Name)
+            self.axes.plot(axis[4][i], axis[4][j], axis[4][k], 'o', color = "blue", markersize = 2, label = mass2Name)
+            self.axes.plot(axis[5][i], axis[5][j], axis[5][k], 'o', color = "orange", markersize = 1, label = mass3Name)
+            # Title and labels
+            Vel3DLabels(self, axis, i, j, k, 0)
+            # Notes
+            Notes3D(self, masses, ic, mass1Name, mass2Name, mass3Name)
+            # Draw plot on canvas
+            self.draw()
+        # 3D Velocity Animation
+        elif (plotType == 7):
+            # Clear axes
+            self.axes.clear()
+            # Max pos function
+            axis = Axis3DVel(self, mass1Pos, mass2Pos, mass3Pos, timeVals, i, j, k)
+            # Animation parameters
+            mass1, = self.axes.plot([], [], 'o', color = 'green', markersize = 3, label = mass1Name)
+            mass2, = self.axes.plot([], [], 'o', color = 'blue', markersize = 2, label = mass2Name)
+            mass3, = self.axes.plot([], [], 'o', color = 'orange', markersize = 1, label = mass3Name)
+            mass1Trail, = self.axes.plot([], [], '-', color = 'green', linewidth = 1, alpha = 0.5)
+            mass2Trail, = self.axes.plot([], [], '-', color = 'blue', linewidth = 1, alpha = 0.5)
+            mass3Trail, = self.axes.plot([], [], '-', color = 'orange', linewidth = 1, alpha = 0.5)
+            # Animation functions
+            init = Init(mass1, mass2, mass3, mass1Trail, mass2Trail, mass3Trail)
+            animate = Animate3D(mass1, mass2, mass3, mass1Trail, mass2Trail, mass3Trail, axis)
+            # Animation
+            self.ani = FuncAnimation(self.figure, animate, init_func = init, frames = len(axis[3][3]), interval = 1e-5, blit = True, repeat = True)
+            # Title and labels
+            Vel3DLabels(self, axis, i, j, k, 1)
+            # Notes
+            Notes3D(self, masses, ic, mass1Name, mass2Name, mass3Name)
+            # Draw
+            self.draw()
+
+""" ThreeBodyPlotWindow - Class for three body motion plot windows
+    Member Functions:
+        Constructor - Creates windows with specific input parameters
+        closeEvent - Deletes plot canvas when window is closed
+"""
+class ThreeBodyPlotWindow(QWidget):
+    """ Constructor - Creates windows with specific input parameters
+        Input:
+            plotType - Type of plot that is to be generated
+            masses - Array of masses in system
+            ic - Matrix of initial conditions for each mass
+                ic[0][0] - Mass 1 initial x position
+                ic[0][1] - Mass 1 initial y position
+                ic[0][2] - Mass 1 initial z position
+                ic[1][0] - Mass 2 initial x position
+                ic[1][1] - Mass 2 initial y position
+                ic[1][2] - Mass 2 initial z position
+                ic[2][0] - Mass 3 initial x position
+                ic[2][1] - Mass 3 initial y position
+                ic[2][2] - Mass 3 initial z position
+                ic[3][0] - Mass 1 initial velocity in x
+                ic[3][1] - Mass 1 initial velocity in y
+                ic[3][2] - Mass 1 initial velocity in z
+                ic[4][0] - Mass 2 initial velocity in x
+                ic[4][1] - Mass 2 initial velocity in y
+                ic[4][2] - Mass 2 initial velocity in z
+                ic[5][0] - Mass 3 initial velocity in x
+                ic[5][1] - Mass 3 initial velocity in y
+                ic[5][2] - Mass 3 initial velocity in z
+            t0 - Initial time in seconds of model
+            tn - Final time in seconds of model
+            i, j, k - Data types that are to be plotted for each axis
+                i - X axis
+                j - Y axis
+                k - Z axis
+                    0 - X value
+                    1 - Y value
+                    2 - Z value
+                    3 - Time
+            mass1Name - Name of mass 1
+            mass2Name - Name of mass 2
+            mass3Name - Name of mass 3
+            windowTitle - Title of window that is being created
+        Algorithm:
+            * Set the window title
+            * Set the size of the window
+            * Create the layout
+            * Create the canvas for the plot
+            * Create the tool bar for the canvas
+            * Add the widgets to the layouts
+            * Set the layout
+        Output:
+            This function does not return any values
+    """
+    def __init__(self, plotType, masses, ic, t0, tn, i, j, k, mass1Name, mass2Name, mass3Name, windowTitle):
+        super().__init__()
+        # Window title
+        self.setWindowTitle(windowTitle)
+        # Window sizes
+        self.resize(800,500)
+        self.setMinimumWidth(800)
+        self.setMinimumHeight(500)
+        # Layout
+        self.layout = QVBoxLayout()
+        # Canvas for plot
+        if (k == None):
+            self.plotCanvas = ThreeBodyCanvas(self, width=3, height=2, dpi=100, plotType='2d')
+        else:
+            self.plotCanvas = ThreeBodyCanvas(self, width=3, height=2, dpi=100, plotType='3d')
+        self.plotCanvas.Plot(plotType, masses, ic, t0, tn, i, j, k, mass1Name, mass2Name, mass3Name)
+        # Tool bar
+        self.toolBar = NavigationToolbar(self.plotCanvas, self)
+        # Widget layout addition
+        self.layout.addWidget(self.plotCanvas)
+        self.layout.addWidget(self.toolBar)
+        # Set layout
+        self.setLayout(self.layout)
+
+    """ closeEvent - Deletes plot canvas when window is closed
+        Input:
+            event - Object for the close event
+        Algorithm:
+            * Check if the window has the attributes "plotCanvas" and "ani"
+            * Stop the animation if the window has an animation in it
+            * Call the close event method
+        Output:
+            This function does not return a value
+    """
+    def closeEvent(self, event):
+        if hasattr(self, 'plotCanvas') and hasattr(self.plotCanvas, 'ani'):
+            self.plotCanvas.ani.event_source.stop()
+        super().closeEvent(event)
+
+##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
 ##### Simulation Window
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
 
@@ -113,6 +770,176 @@ class ThreeBodyWindow(QWidget):
         super().__init__()
         self.mainWindow = mainWindow
         self.InitUI()
+
+    """ Calculate - Generates the plot(s) for specific conditions
+        Input:
+            This function does not have any unique input parameters
+        Algorithm
+            * Grab the children from the window
+            * Create empty arrays for the values in the window
+            * Define the inner functions that will perform repeat operations in the function
+            * Check to make sure that the inputs are valid
+                * If they are not, create a dialog box for the type of error
+                * If they are, continue the next chain of reasoning
+                * If they pass all checks, produce the window for the desired plot
+        Output:
+            This function does not return a value
+    """
+    def Calculate(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Values from fields
+        masses = []
+        ic = []
+        # Axis indices
+        def AxisIndices(children):
+            xAxisIndex = None
+            yAxisIndex = None
+            zAxisIndex = None
+            for index, widget in enumerate(children[5][0:4]):
+                if (widget.isChecked() == True):
+                    xAxisIndex = index
+                    break
+            for index, widget in enumerate(children[5][4:8]):
+                if (widget.isChecked() == True):
+                    yAxisIndex = index
+                    break
+            for index, widget in enumerate(children[5][8:12]):
+                if (widget.isChecked() == True):
+                    zAxisIndex = index
+                    break
+            return xAxisIndex, yAxisIndex, zAxisIndex
+        # Dialog box
+        def Dialog(self, message):
+            dialogBox = QDialog(self)
+            dialogBox.setWindowTitle("Invalid Input")
+            dialogBox.setFixedSize(400, 75)
+            warningLabel = QLabel(message, dialogBox)
+            warningFont = warningLabel.font()
+            warningFont.setPointSize(13)
+            warningLabel.setFont(warningFont)
+            warningLabel.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+            layout = QVBoxLayout()
+            layout.addWidget(warningLabel)
+            dialogBox.setLayout(layout)
+            dialogBox.exec()
+        # Grab values
+        def GrabValues(children):
+            mass1 = float(children[0][2].text())
+            mass1Name = str(children[0][1].text())
+            mass1InitPos = [float(str(children[0][3].text())), float(str(children[0][4].text())), float(str(children[0][5].text()))]
+            mass1InitVel = [float(str(children[0][6].text())), float(str(children[0][7].text())), float(str(children[0][8].text()))]
+            mass2 = float(children[1][2].text())
+            mass2Name = str(children[1][1].text())
+            mass2InitPos = [float(str(children[1][3].text())), float(str(children[1][4].text())), float(str(children[1][5].text()))]
+            mass2InitVel = [float(str(children[1][6].text())), float(str(children[1][7].text())), float(str(children[1][8].text()))]
+            mass3 = float(children[2][2].text())
+            mass3Name = str(children[2][1].text())
+            mass3InitPos = [float(str(children[2][3].text())), float(str(children[2][4].text())), float(str(children[2][5].text()))]
+            mass3InitVel = [float(str(children[2][6].text())), float(str(children[2][7].text())), float(str(children[2][8].text()))]
+            timeSpan = float(float(children[3][0].text()) * 365.25 * DS)
+            masses = [mass1, mass2, mass3]
+            ic = [mass1InitPos, mass2InitPos, mass3InitPos, mass1InitVel, mass2InitVel, mass3InitVel]
+            return masses, ic, timeSpan, mass1Name, mass2Name, mass3Name
+        # Input fields entered check
+        mass1IsNum = all(isinstance(widget, QLineEdit) and self.IsNum(str(widget.text())) == True for widget in children[0][2:9])
+        if (mass1IsNum == True):
+            mass1IsPos = self.IsPositive(float(str(children[0][2].text()))) == True
+        else:
+            mass1IsPos = False
+        mass2IsNum = all(isinstance(widget, QLineEdit) and self.IsNum(str(widget.text())) == True for widget in children[1][2:9])
+        if (mass2IsNum == True):
+            mass2IsPos = self.IsPositive(float(str(children[1][2].text()))) == True
+        else:
+            mass2IsPos = False
+        mass3IsNum = all(isinstance(widget, QLineEdit) and self.IsNum(str(widget.text())) == True for widget in children[2][2:9])
+        if (mass3IsNum == True):
+            mass3IsPos = self.IsPositive(float(str(children[2][2].text()))) == True
+        else:
+            mass3IsPos = False
+        timeIsNum = self.IsNum(str(children[3][0].text())) == True
+        if (timeIsNum == True):
+            timeIsPos = self.IsPositive(float(str(children[3][0].text()))) == True
+        else:
+            timeIsPos = False
+        if (mass1IsNum == True and mass2IsNum == True and mass3IsNum == True and timeIsNum == True):
+            if (mass1IsPos == True and mass2IsPos == True and mass3IsPos == True and timeIsPos == True):
+                values = GrabValues(children)
+                axis = AxisIndices(children)
+                # 2D Position Plot
+                if (children[4][0].isChecked() == True):
+                    self.TwoDPosPlot = ThreeBodyPlotWindow(0, values[0], values[1], 0, values[2], axis[0], axis[1], axis[2], values[3], values[4], values[5], "2D Three Body Position Plot")
+                    self.TwoDPosPlot.show()
+                # 2D Position Animation
+                if (children[4][1].isChecked() == True):
+                    self.TwoDPosAni = ThreeBodyPlotWindow(1, values[0], values[1], 0, values[2], axis[0], axis[1], axis[2], values[3], values[4], values[5], "2D Three Body Position Animation")
+                    self.TwoDPosAni.show()
+                # 2D Velocity Plot
+                if (children[4][2].isChecked() == True):
+                    self.TwoDVelPlot = ThreeBodyPlotWindow(2, values[0], values[1], 0, values[2], axis[0], axis[1], axis[2], values[3], values[4], values[5], "2D Three Body Velocity Plot")
+                    self.TwoDVelPlot.show()
+                # 2D Velocity Animation
+                if (children[4][3].isChecked() == True):
+                    self.TwoDVelAni = ThreeBodyPlotWindow(3, values[0], values[1], 0, values[2], axis[0], axis[1], axis[2], values[3], values[4], values[5], "2D Three Body Velocity Animation")
+                    self.TwoDVelAni.show()
+                # 3D Position Plot
+                if (children[4][4].isChecked() == True):
+                    self.ThreeDPosPlot = ThreeBodyPlotWindow(4, values[0], values[1], 0, values[2], axis[0], axis[1], axis[2], values[3], values[4], values[5], "3D Three Body Position Plot")
+                    self.ThreeDPosPlot.show()
+                # 3D Position Animation
+                if (children[4][5].isChecked() == True):
+                    self.ThreeDPosAni = ThreeBodyPlotWindow(5, values[0], values[1], 0, values[2], axis[0], axis[1], axis[2], values[3], values[4], values[5], "3D Three Body Position Animation")
+                    self.ThreeDPosAni.show()
+                # 3D Velocity Plot
+                if (children[4][6].isChecked() == True):
+                    self.ThreeDVelPlot = ThreeBodyPlotWindow(6, values[0], values[1], 0, values[2], axis[0], axis[1], axis[2], values[3], values[4], values[5], "3D Three Body Velocity Plot")
+                    self.ThreeDVelPlot.show()
+                # 3D Velocity Animation
+                if (children[4][7].isChecked() == True):
+                    self.ThreeDVelAni = ThreeBodyPlotWindow(7, values[0], values[1], 0, values[2], axis[0], axis[1], axis[2], values[3], values[4], values[5], "3D Three Body Velocity Animation")
+                    self.ThreeDVelAni.show()
+            else:
+                if (mass1IsPos != True):
+                    Dialog(self, "Please enter a positive value for Mass 1.")
+                if (mass2IsPos != True):
+                    Dialog(self, "Please enter a positive value for Mass 2.")
+                if (mass3IsPos != True):
+                    Dialog(self, "Please enter a positive value for Mass 3.")
+                if (timeIsPos != True):
+                    Dialog(self, "Please enter a positive value for the time span.")
+        else:
+            if (mass1IsNum != True):
+                Dialog(self, "Please enter numerical values for the parameters of Mass 1.")
+            if (mass2IsNum != True):
+                Dialog(self, "Please enter numerical values for the parameters of Mass 2.")
+            if (mass3IsNum != True):
+                Dialog(self, "Please enter numerical values for the parameters of Mass 3.")
+            if (timeIsNum != True):
+                Dialog(self, "Please enter numerical values for the time span.")
+
+    """ ClearAll - Clears all input fields
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab children
+            * Call member functions
+            * Set checkboxes to default value
+        Output:
+            This function does not return a value
+    """
+    def ClearAll(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Member functions
+        self.UnselectAllPlots()
+        self.ClearTime()
+        self.ClearMass3Params()
+        self.ClearMass2Params()
+        self.ClearMass1Params()
+        # Reset checkboxes
+        children[0][0].setCurrentIndex(0)
+        children[1][0].setCurrentIndex(0)
+        children[2][0].setCurrentIndex(0)
 
     """ ClearMass1Params - Clears the mass 1 parameters children
         Input:
@@ -1223,6 +2050,7 @@ class ThreeBodyWindow(QWidget):
         plotSelRandBtn.setObjectName(plotSelRandBtnName)
         plotSelRandBtn.setMinimumWidth(buttonMinWidth)
         plotSelRandBtn.setMinimumHeight(buttonMinHeight)
+        plotSelRandBtn.clicked.connect(self.RandomPlots)
         plotSelBtnLayout.addWidget(plotSelRandBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         ## Unselect all checkboxes button
         plotSelUnsBtn = QPushButton("Unselect All Plots")
@@ -1250,18 +2078,21 @@ class ThreeBodyWindow(QWidget):
         calcBtn.setObjectName(calculateBtnName)
         calcBtn.setMinimumWidth(buttonMinWidth - 50)
         calcBtn.setMinimumHeight(buttonMinHeight)
+        calcBtn.clicked.connect(self.Calculate)
         mainBtnLayout.addWidget(calcBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         ## Clear button
         clearBtn = QPushButton("Clear All")
         clearBtn.setObjectName(clearBtnName)
         clearBtn.setMinimumWidth(buttonMinWidth - 50)
         clearBtn.setMinimumHeight(buttonMinHeight)
+        clearBtn.clicked.connect(self.ClearAll)
         mainBtnLayout.addWidget(clearBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         ## Random button
         randomBtn = QPushButton("Random All")
         randomBtn.setObjectName(randomBtnName)
         randomBtn.setMinimumWidth(buttonMinWidth - 50)
         randomBtn.setMinimumHeight(buttonMinHeight)
+        randomBtn.clicked.connect(self.RandomAll)
         mainBtnLayout.addWidget(randomBtn, alignment = Qt.AlignmentFlag.AlignHCenter)
         ## Home button
         homeBtn = QPushButton("Return Home")
@@ -1292,6 +2123,40 @@ class ThreeBodyWindow(QWidget):
         self.DefaultState(9)
         # Connect to signals
         self.ConnectSignals()
+
+    """ IsNum - Checks to see if an input is able to be converted to a number
+        Input:
+            string - String value that is trying to be converted to a float
+        Algorithm:
+            * Try the conversion, if it succeeds, return true
+            * Otherwise, return false
+        Output:
+            This function returns a boolean value for if a value has been successfully converted
+    """
+    def IsNum(self, string):
+        # Attempt conversion
+        try:
+            float(string)
+            return True
+        except ValueError:
+            return False
+
+    """ IsPositive - Checks if a number is positive
+        Input:
+            value - Value that is being checked
+        Algorithm:
+            * If the value is non zero and positive, return True
+            * Otherwise, return False
+        Output:
+            This function returns a boolean value for if a number is positive
+    """
+    def IsPositive(self, value):
+        # Greater than zero
+        if (value > 0):
+            return True
+        # Less than or equal to zero
+        else:
+            return False
 
     """ OnMass1CBChange - Event handler for when mass 1's checkbox is changed
         Input:
@@ -1419,6 +2284,22 @@ class ThreeBodyWindow(QWidget):
                 for widget in children[2][2:9]:
                     widget.setText("")
 
+    """ RandomAll - Randomizes all input fields
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Call member functions
+        Output:
+            This function does not return a value
+    """
+    def RandomAll(self):
+        # Member functions
+        self.RandomMass1()
+        self.RandomMass2()
+        self.RandomMass3()
+        self.RandomTime()
+        self.RandomPlots()
+
     """ RandomMass1 - Randomizes the mass 1 parameters
         Input:
             This function does not have any unique input parameters
@@ -1524,6 +2405,55 @@ class ThreeBodyWindow(QWidget):
             for i in range(len(randomArr)):
                 children[2][i + 2].setText(str(randomArr[i]))
 
+    """ RandomPlots - Randomizes the checkboxes that get selected
+        Input:
+            This function does not have any unique input parameters
+        Algorithm:
+            * Grab children from window
+            * Generate random integers and append them to an array
+            * Check boxes based upon the modulo of a given random integer being zero
+            * Check if no boxes where checked
+                * If no boxes were checked, set a random checkbox to be checked
+        Output:
+            This function does not return a value
+    """
+    def RandomPlots(self):
+        # Grab children
+        children = self.GrabChildren()
+        # Random integers
+        randInts = []
+        for i in range(2,10):
+            randInts.append(random.randint(1,1000))
+        # Check boxes
+        self.UnselectAllPlots()
+        index = 0
+        boolArr = []
+        for widget in children[4][0:8]:
+            if (randInts[index] % (index + 2) == 0):
+                widget.setChecked(True)
+                boolArr.append(True)
+            else:
+                boolArr.append(False)
+            index += 1
+        # Check if all are false
+        allFalse = all(vals == False for vals in boolArr)
+        if (allFalse == True):
+            randIndex = random.randint(0,8)
+            children[4][randIndex].setChecked(True)
+        # Axis selection
+        no3DCB = all(isinstance(widget, QCheckBox) and widget.isChecked() == False for widget in children[4][4:8])
+        possibleIndices = [0,1,2,3]
+        randXIndex = random.choice(possibleIndices)
+        children[5][0 + randXIndex].setChecked(True)
+        possibleIndices.remove(randXIndex)
+        randYIndex = random.choice(possibleIndices)
+        possibleIndices.remove(randYIndex)
+        children[5][4 + randYIndex].setChecked(True)
+        if (no3DCB == False):
+            randZIndex = random.choice(possibleIndices)
+            possibleIndices.remove(randZIndex)
+            children[5][8 + randZIndex].setChecked(True)
+
     """ RandomTime - Randomizes the time span
         Input:
             This function does not have any unique input parameters
@@ -1597,6 +2527,83 @@ class ThreeBodyWindow(QWidget):
         xAxisCB = any(isinstance(widget, QCheckBox) and widget.isChecked() == True for widget in children[5][0:4])
         yAxisCB = any(isinstance(widget, QCheckBox) and widget.isChecked() == True for widget in children[5][4:8])
         zAxisCB = any(isinstance(widget, QCheckBox) and widget.isChecked() == True for widget in children[5][8:12])
+        # Enable time values
+        if (mass1ComboBox == True or mass2ComboBox == True or mass3ComboBox == True):
+            self.EnableFields(3)
+        else:
+            self.ClearTime()
+            self.DefaultState(3)
+        # Enable plot selection checkboxes
+        if (mass1Params == True and mass2Params == True and mass3Params == True and timeVals == True):
+            self.EnableFields(4)
+        else:
+            self.UnselectAllPlots()
+            self.DefaultState(4)
+            self.DefaultState(5)
+            self.DefaultState(6)
+            self.DefaultState(7)
+        # Enable axis selection
+        if (plotSelectionCB == True):
+            self.EnableFields(5)
+            if (xAxisCB == True):
+                self.EnableFields(6)
+                xAxisIndex = None
+                for index, widget in enumerate(children[5][0:4]):
+                    if (widget.isChecked() == True):
+                        xAxisIndex = index
+                        break
+                for index, widget in enumerate(children[5][0:4]):
+                    widget.setEnabled(index == xAxisIndex)
+                    widget.setDisabled(index != xAxisIndex)
+                for index, widget in enumerate(children[5][4:8]):
+                    widget.setDisabled(index == xAxisIndex)
+                if (yAxisCB == True):
+                    yAxisIndex = None
+                    for index, widget in enumerate(children[5][4:8]):
+                        if (widget.isChecked() == True):
+                            yAxisIndex = index
+                            break
+                    for index, widget in enumerate(children[5][4:8]):
+                        widget.setEnabled(index == yAxisIndex)
+                        widget.setDisabled(index != yAxisIndex)
+                    if (no3DCB == False):
+                        for index, widget in enumerate(children[5][8:12]):
+                            widget.setEnabled(index != xAxisIndex or index != yAxisIndex)
+                            widget.setDisabled(index == xAxisIndex or index == yAxisIndex)
+                        if (zAxisCB == True):
+                            zAxisIndex = None
+                            for index, widget in enumerate(children[5][8:12]):
+                                if (widget.isChecked() == True):
+                                    zAxisIndex = index
+                                    break
+                            for index, widget in enumerate(children[5][8:12]):
+                                widget.setEnabled(index == zAxisIndex)
+                                widget.setDisabled(index != zAxisIndex)
+                    else:
+                        self.DefaultState(7)
+                else:
+                    self.DefaultState(7)
+            else:
+                self.DefaultState(6)
+                self.DefaultState(7)
+        else:
+            self.DefaultState(5)
+            self.DefaultState(6)
+            self.DefaultState(7)
+        # Enable calculate button
+        if (mass1Params == True and mass2Params == True and mass3Params == True and timeVals == True and plotSelectionCB == True):
+            if (no3DCB == True):
+                if (xAxisCB == True and yAxisCB == True):
+                    self.EnableFields(8)
+                else:
+                    self.DefaultState(8)
+            else:
+                if (xAxisCB == True and yAxisCB == True and zAxisCB == True):
+                    self.EnableFields(8)
+                else:
+                    self.DefaultState(8)
+        else:
+            self.DefaultState(8)
 
     """ UnselectAllPlots - Unselects all plot checkboxes
         Input:
