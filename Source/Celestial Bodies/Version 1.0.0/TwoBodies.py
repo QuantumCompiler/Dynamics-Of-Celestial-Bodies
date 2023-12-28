@@ -7,6 +7,7 @@ from ModelFunctions import *
 """ TwoBodyCanvas - Class for two body plots
     Member Functions:
         Constructor - Constructor for canvas with specific input parameters
+        Plot - Plots the results from a two body scenario
 """
 class TwoBodyCanvas(FigureCanvasQTAgg):
     """ Constructor - Constructor for canvas with specific input parameters
@@ -852,12 +853,21 @@ class TwoBodyWindow(QWidget):
             return masses, ic, timeSpan, mass1Name, mass2Name
         # Input fields entered check
         mass1IsNum = all(isinstance(widget, QLineEdit) and self.IsNum(str(widget.text())) == True for widget in children[0][2:9])
-        mass1IsPos = self.IsPositive(float(str(children[0][2].text()))) == True
+        if (mass1IsNum == True):
+            mass1IsPos = self.IsPositive(float(str(children[0][2].text()))) == True
+        else:
+            mass1IsPos = False
         mass2IsNum = all(isinstance(widget, QLineEdit) and self.IsNum(str(widget.text())) == True for widget in children[1][2:9])
-        mass2IsPos = self.IsPositive(float(str(children[1][2].text()))) == True
-        timeIsNum = self.IsNum(str(children[2][0].text())) == True
-        timeIsPos = self.IsPositive(float(str(children[2][0].text()))) == True
-        if (mass1IsNum == True and mass2IsNum == True and timeIsNum):
+        if (mass2IsNum == True):
+            mass2IsPos = self.IsPositive(float(str(children[1][2].text()))) == True
+        else:
+            mass2IsPos = False
+        timeIsNum = self.IsNum(str(children[3][0].text())) == True
+        if (timeIsNum == True):
+            timeIsPos = self.IsPositive(float(str(children[3][0].text()))) == True
+        else:
+            timeIsPos = False
+        if (mass1IsNum == True and mass2IsNum == True and timeIsNum == True):
             if (mass1IsPos == True and mass2IsPos == True and timeIsPos == True):
                 values = GrabValues(children)
                 axis = AxisIndices(children)
