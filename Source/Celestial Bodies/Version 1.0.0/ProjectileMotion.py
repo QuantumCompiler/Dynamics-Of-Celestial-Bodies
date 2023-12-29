@@ -1,4 +1,4 @@
-from ModelFunctions import *
+from Models import *
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
 ##### Canvas / Plot Window
