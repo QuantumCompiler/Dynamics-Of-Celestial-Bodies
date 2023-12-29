@@ -1,4 +1,4 @@
-from ModelFunctions import *
+from Models import *
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
 ##### Canvas / Plot Window
@@ -64,7 +64,6 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
         Algorithm:
             * Call the RK4 two body solver
             * Define the inner functions that perform repeat operations for each plot type
-            * Swap the masses if necessary
             * For the input parameter, plotType, produce the type of plot that is requested
         Output:
             This function does not return a value
@@ -347,26 +346,6 @@ class TwoBodyCanvas(FigureCanvasQTAgg):
                 self.axes.set_zlabel(f"{axisParam[2]} In Seconds", fontsize = THREEDPLOTLABELS)
             else:
                 self.axes.set_zlabel(f"{axisParam[2]} Velocity In $(m/s)$", fontsize = THREEDPLOTLABELS)
-        # Swap masses if applicable
-        m1 = masses[0]
-        m1Name = mass1Name
-        m1Pos = mass1Pos
-        m1Vel = mass1Vel
-        m2 = masses[1]
-        m2Name = mass2Name
-        m2Pos = mass2Pos
-        m2Vel = mass2Vel
-        icCopy = ic
-        if (m2 > m1):
-            masses[0] = m2
-            mass1Pos = m2Pos
-            mass1Vel = m2Vel
-            mass1Name = m2Name
-            masses[1] = m1
-            mass2Pos = m1Pos
-            mass2Vel = m1Vel
-            mass2Name = m1Name
-            ic = [icCopy[1],icCopy[0],icCopy[3],icCopy[2]]
         # 2D Position plot
         if (plotType == 0):
             # Clear axes
@@ -630,7 +609,7 @@ class TwoBodyPlotWindow(QWidget):
         # Layout
         self.layout = QVBoxLayout()
         # Canvas for plot
-        if (k == None):
+        if (plotType >= 0 and plotType <=3):
             self.plotCanvas = TwoBodyCanvas(self, width=3, height=2, dpi=100, plotType='2d')
         else:
             self.plotCanvas = TwoBodyCanvas(self, width=3, height=2, dpi=100, plotType='3d')
@@ -862,9 +841,9 @@ class TwoBodyWindow(QWidget):
             mass2IsPos = self.IsPositive(float(str(children[1][2].text()))) == True
         else:
             mass2IsPos = False
-        timeIsNum = self.IsNum(str(children[3][0].text())) == True
+        timeIsNum = self.IsNum(str(children[2][0].text())) == True
         if (timeIsNum == True):
-            timeIsPos = self.IsPositive(float(str(children[3][0].text()))) == True
+            timeIsPos = self.IsPositive(float(str(children[2][0].text()))) == True
         else:
             timeIsPos = False
         if (mass1IsNum == True and mass2IsNum == True and timeIsNum == True):
