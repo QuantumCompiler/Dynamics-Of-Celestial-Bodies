@@ -1,4 +1,4 @@
-from ModelFunctions import *
+from Models import *
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### 
 ##### Canvas / Plot Window
@@ -71,7 +71,6 @@ class ThreeBodyCanvas(FigureCanvasQTAgg):
         Algorithm:
             * Call the RK4 two body solver
             * Define the inner functions that perform repeat operations for each plot type
-            * Swap the masses if necessary
             * For the input parameter, plotType, produce the type of plot that is requested
         Output:
             This function does not return a value
@@ -629,7 +628,7 @@ class ThreeBodyPlotWindow(QWidget):
         # Layout
         self.layout = QVBoxLayout()
         # Canvas for plot
-        if (k == None):
+        if (plotType >= 0 and plotType <=3):
             self.plotCanvas = ThreeBodyCanvas(self, width=3, height=2, dpi=100, plotType='2d')
         else:
             self.plotCanvas = ThreeBodyCanvas(self, width=3, height=2, dpi=100, plotType='3d')
@@ -663,7 +662,34 @@ class ThreeBodyPlotWindow(QWidget):
 
 """ ThreeBodyWindow - Class for two body simulation windows
     Member Functions:
-        
+        Constructor - Constructs window with widgets and layouts of widgets
+        Calculate - Generates the plot(s) for specific conditions
+        ClearAll - Clears all input fields
+        ClearMass1Params - Clears the mass 1 parameters children
+        ClearMass2Params - Clears the mass 2 parameters children
+        ClearMass3Params - Clears the mass 3 parameters children
+        ClearTime - Clears the time value line edit
+        ConnectSignals - Connects the signals member functions to applicable widgets
+        DefaultState - Default state for widgets
+        DisableFields - Disables fields based upon input parameter
+        EnableFields - Enables fields based upon input parameter
+        GrabChildren - Grabs all the children from the fields
+        InitUI - Initializes the user interface for the window
+        IsNum - Checks to see if an input is able to be converted to a number
+        IsPositive - Checks if a number is positive
+        OnMass1CBChange - Event handler for when mass 1's checkbox is changed
+        OnMass2CBChange - Event handler for when mass 2's checkbox is changed
+        OnMass3CBChange - Event handler for when mass 3's checkbox is changed
+        RandomAll - Randomizes all input fields
+        RandomMass1 - Randomizes the mass 1 parameters
+        RandomMass2 - Randomizes the mass 2 parameters
+        RandomMass3 - Randomizes the mass 3 parameters
+        RandomPlots - Randomizes the checkboxes that get selected
+        RandomTime - Randomizes the time span
+        ReturnHome - Returns home and closes the current window
+        SelectAllPlots - Selects all plot checkboxes
+        Signals - Checks for specific conditions of line edits and combo boxes
+        UnselectAllPlots - Unselects all plot checkboxes
 """
 
 # Object names
