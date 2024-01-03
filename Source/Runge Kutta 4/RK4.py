@@ -150,6 +150,28 @@ def RK4TwoBody(ODE, massList, ic, t0, tn, h):
     mass2Vel = [m2_vx_vals, m2_vy_vals, m2_vz_vals]
     return mass1Pos, mass2Pos, mass1Vel, mass2Vel, time_vals
 
+# RK4ThreeBody - ODE That Solves The Force Attraction Between Two Bodies In Space
+# Input:
+#   ODE - This is the ODE that is fed into the method to be solved
+#   ic - Matrix of initial conditions
+#   t0 - Initial time
+#   tn - Final time
+#   h - Step size
+# Algorithm:
+#   * Calculate the number of points
+#   * Initialize lists for the positions, velocities, and time
+#   * Set the initial values for all the lists
+#   * Iterate over the total number of points
+#       * Calculate the updated values for positions and velocities respectively
+#   * Return the lists
+# Output:
+#   mass1Pos - List of positions for mass 1
+#   mass2Pos - List of positions for mass 2
+#   mass3Pos - List of positions for mass 3
+#   mass1Vel - List of velocities for mass 1
+#   mass2Vel - List of velocities for mass 2
+#   mass3Vel - List of velocities for mass 3
+#   time_vals - List of time points in model
 def RK4ThreeBody(ODE, massList, ic, t0, tn, h):
     n = int((tn - t0) / h)
     m1_x_vals = np.zeros(n + 1)
@@ -214,4 +236,4 @@ def RK4ThreeBody(ODE, massList, ic, t0, tn, h):
     mass2Vel = [m2_vx_vals, m2_vy_vals, m2_vz_vals]
     mass3Pos = [m3_x_vals, m3_y_vals, m3_z_vals]
     mass3Vel = [m3_vx_vals, m3_vy_vals, m3_vz_vals]
-    return mass1Pos, mass2Pos, mass3Pos, mass1Vel, mass2Vel, mass3Vel
+    return mass1Pos, mass2Pos, mass3Pos, mass1Vel, mass2Vel, mass3Vel, time_vals
