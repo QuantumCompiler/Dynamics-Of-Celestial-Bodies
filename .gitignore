@@ -3,3 +3,9 @@
 
 # PyCache
 **/__pycache__/
+
+# Build
+**/build/
+
+# Dist
+**/dist/
