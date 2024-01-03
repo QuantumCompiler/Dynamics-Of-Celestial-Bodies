@@ -1,8 +1,7 @@
 # Modules
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
-from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
-from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 from matplotlib.ticker import ScalarFormatter
 from mpl_toolkits.mplot3d import Axes3D
@@ -14,7 +13,6 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 import random
 import sys
-import matplotlib
 
 # Plot Constants
 TWODPLOTTITLE = 10
