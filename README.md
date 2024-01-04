@@ -4,6 +4,7 @@
 
 This repository contains source code and a report done on the dynamics of celestial bodies in space. This repository consists of two main folders.
 
+- Demo: Contains demonstration images from the GUI program that was built for this project
 - Report: Contains the documents found to generate the report for this project. As of this document creation, the report only covered the Forward Euler Difference Scheme (F.E.D.S) in the report.
     - Dynamics of a Triple Star System.pdf: PDF of the report generated for this project.
     - Source.zip: LaTeX files that are used to generate the report.
@@ -36,3 +37,12 @@ This repository contains source code and a report done on the dynamics of celest
 ### Version 1.0.0
 
 Version 1.0.0 of Celestial Bodies was built with Python and the PyQt framework. This application is available for download as both a Windows .exe file and MacOS .app file. The releases of this program can be found [here](https://github.com/QuantumCompiler/Dynamics-Of-Celestial-Bodies/releases/tag/v1.0.0).
+
+#### Version 1.0.0 Graphics
+<p align = "center">
+    <img src = "Demo/Main Window Demo.png" width = "800">
+    <img src = "Demo/Parameters Input Demo.png" width = "800">
+    <img src = "Demo/2D Projectile Motion Position Demo.png" width = "800">
+    <img src = "Demo/2D Two Body Position Demo.png" width = "800">
+    <img src = "Demo/3D Three Body Position Demo.png" width = "800">
+</p>
