@@ -16,8 +16,9 @@ This repository contains source code and a report done on the dynamics of celest
                     - Celestial Bodies.png: Image for the application.
                     - Icon.png: Icon for a MacOS application.
                     - Icon.ico: Icon for a Windows application.
+                - Apple.spec: PyInstaller spec file for Apple platforms.
                 - main.py: Main file where all previous custom / Python modules were used to run this program.
-                - main.spec: Main spec file for the PyInstaller builder.
+                - Microsoft: PyInstaller spec file for Microsoft platforms.
                 - Models.py: Differential equations of the models that were made for this program.
                 - Modules.py: Python modules and global constants used in this program.
                 - ProjectileMotion.py: Projectile motion classes and functions used for the projectile motion simulation.
