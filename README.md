@@ -11,16 +11,19 @@ This repository contains source code and a report done on the dynamics of celest
 - Source: Contains the source code used to solve this problem.
     - Celestial Bodies: Source code in Python used to create a program for this problem.
         - Version 1.0.0: Source code for version 1.0.0 of the Celestial Bodies program.
-            - Images: Directory that contains the images used the program.
-                - Icon.ico: Icon file for this version of the program.
-            - main.py: Main file where all previous custom / Python modules were used to run this program.
-            - Models.py: Differential equations of the models that were made for this program.
-            - Modules.py: Python modules and global constants used in this program.
-            - ProjectileMotion.py: Projectile motion classes and functions used for the projectile motion simulation.
-            - RK4.py: Runge Kutta 4 differential equation solver functions used to solve models in this program.
-            - ThreeBodies.py: Three body classes and functions used for the three body simulation.
-            - TwoBodies.py: Two body classes and functions used for the two body simulation.
-            - Windows.py: Main window and sub-window classes for the program.
+            - src: Directory that contains the source code for this specific version
+                - Images: Directory that contains the images used the program.
+                    - Celestial Bodies.png: Image for the application.
+                    - Icon.png: Icon for the application.
+                - main.py: Main file where all previous custom / Python modules were used to run this program.
+                - main.spec: Main spec file for the PyInstaller builder.
+                - Models.py: Differential equations of the models that were made for this program.
+                - Modules.py: Python modules and global constants used in this program.
+                - ProjectileMotion.py: Projectile motion classes and functions used for the projectile motion simulation.
+                - RK4.py: Runge Kutta 4 differential equation solver functions used to solve models in this program.
+                - ThreeBodies.py: Three body classes and functions used for the three body simulation.
+                - TwoBodies.py: Two body classes and functions used for the two body simulation.
+                - Windows.py: Main window and sub-window classes for the program.
     - Forward Euler: Source code in Python that was originally used to solve this problem.
         - Three Body Force Attraction (Forward Euler).py: Three body F.E.D.S solution.
         - Two Body Force Attraction (Forward Euler).py: Two body F.E.D.S solution.
