@@ -14,7 +14,8 @@ This repository contains source code and a report done on the dynamics of celest
             - src: Directory that contains the source code for this specific version
                 - Images: Directory that contains the images used the program.
                     - Celestial Bodies.png: Image for the application.
-                    - Icon.png: Icon for the application.
+                    - Icon.png: Icon for a MacOS application.
+                    - Icon.ico: Icon for a Windows application.
                 - main.py: Main file where all previous custom / Python modules were used to run this program.
                 - main.spec: Main spec file for the PyInstaller builder.
                 - Models.py: Differential equations of the models that were made for this program.
