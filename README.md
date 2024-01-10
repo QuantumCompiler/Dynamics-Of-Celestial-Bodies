@@ -1,5 +1,20 @@
 # Celestial Bodies
 
+The Three-Body Problem in physics refers to the challenge of predicting the motion of three celestial bodies moving under the influence of their mutual gravitational attraction. This problem is significant in the study of dynamics and celestial mechanics. It's a classic example of a complex system that's surprisingly difficult to solve.
+
+To understand the Three-Body Problem, let's first consider the simpler Two-Body Problem. If you have two celestial bodies, like Earth and the Moon, the problem of predicting their motion around their common center of mass is relatively straightforward and can be solved with precise equations (like Kepler's laws of planetary motion).
+
+However, things get much more complicated when you add a third body, like the Sun. The gravitational forces between each pair of objects interact in such a complex way that there's no general solution that works for all sets of initial conditions. This is what makes the Three-Body Problem so challenging.
+
+Solutions to the Three-Body Problem:
+
+1. **Numerical Methods**: For most practical purposes, scientists use numerical methods to approximate solutions. These involve using computers to simulate the system and calculate the positions of the bodies at successive time intervals. The accuracy of the results depends on the time intervals used and the computational power available.
+1. **Restricted Three-Body Problem**: This is a simplified version where one of the bodies is assumed to have a negligible mass compared to the other two. This allows for some analytical solutions and is useful for understanding scenarios like a satellite orbiting a planet that orbits the Sun.
+1. **Special Cases and Approximations**: There are a few specific scenarios where solutions have been found. For example, the Lagrange points are positions in space where a small body, under certain conditions, can be in a stable orbit relative to two larger bodies (like a satellite relative to Earth and the Sun).
+1. **Chaos Theory**: The Three-Body Problem is also an example of a chaotic system. Small changes in the initial conditions can lead to vastly different outcomes, making long-term prediction practically impossible. This aspect of the problem has contributed to the development of chaos theory.
+
+In summary, the Three-Body Problem in physics is a complex problem without a general solution. It's typically approached with numerical simulations, special case scenarios, and plays a crucial role in the study of dynamical systems and chaos theory.
+
 ## Overview
 
 This repository contains source code and a report done on the dynamics of celestial bodies in space. This repository consists of two main folders.
