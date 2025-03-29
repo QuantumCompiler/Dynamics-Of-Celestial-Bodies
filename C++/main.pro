@@ -6,4 +6,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = CelestialBodies
 TEMPLATE = app
 
-SOURCES += lib/main.cpp
+HEADERS += lib/headers/main_window.h
+SOURCES += lib/main.cpp \
+            lib/cpp/main_window.cpp

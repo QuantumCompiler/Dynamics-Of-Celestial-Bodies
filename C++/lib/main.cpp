@@ -1,12 +1,11 @@
 #include <QApplication>
 #include <QWidget>
+#include "headers/main_window.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    QWidget window;
-    window.resize(320, 240);
-    window.setWindowTitle("Celestial Bodies");
-    window.show();
+    MainWindow main;
+    main.show();
     return app.exec();
 }
