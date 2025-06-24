@@ -1,3 +1,4 @@
 *.stash
 *.o
 *main.app/
+Makefile
