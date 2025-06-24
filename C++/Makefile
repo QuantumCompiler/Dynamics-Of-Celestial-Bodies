@@ -53,12 +53,12 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = src/C/main.cpp \
-		src/C/SimulationController.cpp qrc_QML.cpp \
-		moc_SimulationController.cpp
+		src/C/CPPSimulationController.cpp qrc_QML.cpp \
+		moc_CPPSimulationController.cpp
 OBJECTS       = main.o \
-		SimulationController.o \
+		CPPSimulationController.o \
 		qrc_QML.o \
-		moc_SimulationController.o
+		moc_CPPSimulationController.o
 DIST          = /opt/homebrew/share/qt/mkspecs/features/spec_pre.prf \
 		/opt/homebrew/share/qt/mkspecs/features/device_config.prf \
 		/opt/homebrew/Cellar/qt/6.9.0/share/qt/mkspecs/common/unix.conf \
@@ -428,8 +428,8 @@ DIST          = /opt/homebrew/share/qt/mkspecs/features/spec_pre.prf \
 		/opt/homebrew/share/qt/mkspecs/features/exceptions.prf \
 		/opt/homebrew/share/qt/mkspecs/features/yacc.prf \
 		/opt/homebrew/share/qt/mkspecs/features/lex.prf \
-		App.pro src/C/SimulationController.h src/C/main.cpp \
-		src/C/SimulationController.cpp
+		App.pro src/C/CPPSimulationController.h src/C/main.cpp \
+		src/C/CPPSimulationController.cpp
 QMAKE_TARGET  = main
 DESTDIR       = 
 TARGET        = main.app/Contents/MacOS/main
@@ -1241,8 +1241,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents QML.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /opt/homebrew/share/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/C/SimulationController.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/C/main.cpp src/C/SimulationController.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/C/CPPSimulationController.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/C/main.cpp src/C/CPPSimulationController.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -1284,10 +1284,10 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /opt/homebrew/share/qt/mkspecs/features/data/dummy.cpp
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -pipe -stdlib=libc++ -O2 -std=gnu++1z $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -mmacosx-version-min=14.0 -Wall -Wextra -dM -E -o moc_predefs.h /opt/homebrew/share/qt/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_SimulationController.cpp
+compiler_moc_header_make_all: moc_CPPSimulationController.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_SimulationController.cpp
-moc_SimulationController.cpp: src/C/SimulationController.h \
+	-$(DEL_FILE) moc_CPPSimulationController.cpp
+moc_CPPSimulationController.cpp: src/C/CPPSimulationController.h \
 		/opt/homebrew/lib/QtCore.framework/Headers/QObject \
 		/opt/homebrew/lib/QtCore.framework/Headers/qobject.h \
 		/opt/homebrew/include/QtCore/qobjectdefs.h \
@@ -1401,7 +1401,7 @@ moc_SimulationController.cpp: src/C/SimulationController.h \
 		/opt/homebrew/include/QtCore/qelapsedtimer.h \
 		moc_predefs.h \
 		/opt/homebrew/share/qt/libexec/moc
-	/opt/homebrew/share/qt/libexec/moc $(DEFINES) --include /Users/taylor/Documents/Development/Projects/Dynamics-Of-Celestial-Bodies/C++/moc_predefs.h -I/opt/homebrew/share/qt/mkspecs/macx-clang -I/Users/taylor/Documents/Development/Projects/Dynamics-Of-Celestial-Bodies/C++ -I/opt/homebrew/lib/QtQuick.framework/Headers -I/opt/homebrew/lib/QtOpenGL.framework/Headers -I/opt/homebrew/lib/QtGui.framework/Headers -I/opt/homebrew/lib/QtQmlMeta.framework/Headers -I/opt/homebrew/lib/QtQmlModels.framework/Headers -I/opt/homebrew/lib/QtQmlWorkerScript.framework/Headers -I/opt/homebrew/lib/QtQml.framework/Headers -I/opt/homebrew/include -I/opt/homebrew/include/QtQmlIntegration -I/opt/homebrew/lib/QtNetwork.framework/Headers -I/opt/homebrew/lib/QtCore.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/17/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/opt/homebrew/lib src/C/SimulationController.h -o moc_SimulationController.cpp
+	/opt/homebrew/share/qt/libexec/moc $(DEFINES) --include /Users/taylor/Documents/Development/Projects/Dynamics-Of-Celestial-Bodies/C++/moc_predefs.h -I/opt/homebrew/share/qt/mkspecs/macx-clang -I/Users/taylor/Documents/Development/Projects/Dynamics-Of-Celestial-Bodies/C++ -I/opt/homebrew/lib/QtQuick.framework/Headers -I/opt/homebrew/lib/QtOpenGL.framework/Headers -I/opt/homebrew/lib/QtGui.framework/Headers -I/opt/homebrew/lib/QtQmlMeta.framework/Headers -I/opt/homebrew/lib/QtQmlModels.framework/Headers -I/opt/homebrew/lib/QtQmlWorkerScript.framework/Headers -I/opt/homebrew/lib/QtQml.framework/Headers -I/opt/homebrew/include -I/opt/homebrew/include/QtQmlIntegration -I/opt/homebrew/lib/QtNetwork.framework/Headers -I/opt/homebrew/lib/QtCore.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/17/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/opt/homebrew/lib src/C/CPPSimulationController.h -o moc_CPPSimulationController.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -1605,12 +1605,12 @@ main.o: src/C/main.cpp /opt/homebrew/lib/QtGui.framework/Headers/QGuiApplication
 		/opt/homebrew/include/QtQml/qqmlabstracturlinterceptor.h \
 		/opt/homebrew/lib/QtQml.framework/Headers/QQmlContext \
 		/opt/homebrew/lib/QtQml.framework/Headers/qqmlcontext.h \
-		src/C/SimulationController.h \
+		src/C/CPPSimulationController.h \
 		/opt/homebrew/lib/QtCore.framework/Headers/QObject \
 		/opt/homebrew/lib/QtCore.framework/Headers/qobject.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o src/C/main.cpp
 
-SimulationController.o: src/C/SimulationController.cpp src/C/SimulationController.h \
+CPPSimulationController.o: src/C/CPPSimulationController.cpp src/C/CPPSimulationController.h \
 		/opt/homebrew/lib/QtCore.framework/Headers/QObject \
 		/opt/homebrew/lib/QtCore.framework/Headers/qobject.h \
 		/opt/homebrew/include/QtCore/qobjectdefs.h \
@@ -1734,13 +1734,13 @@ SimulationController.o: src/C/SimulationController.cpp src/C/SimulationControlle
 		/opt/homebrew/include/QtCore/qset.h \
 		/opt/homebrew/include/QtCore/qhash.h \
 		/opt/homebrew/include/QtCore/qvarlengtharray.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SimulationController.o src/C/SimulationController.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CPPSimulationController.o src/C/CPPSimulationController.cpp
 
 qrc_QML.o: qrc_QML.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_QML.o qrc_QML.cpp
 
-moc_SimulationController.o: moc_SimulationController.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_SimulationController.o moc_SimulationController.cpp
+moc_CPPSimulationController.o: moc_CPPSimulationController.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_CPPSimulationController.o moc_CPPSimulationController.cpp
 
 ####### Install
 

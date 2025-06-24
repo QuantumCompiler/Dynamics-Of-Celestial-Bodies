@@ -2,14 +2,14 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
-#include "SimulationController.h"
+#include "CPPSimulationController.h"
 
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
-    SimulationController simController;
-    engine.rootContext()->setContextProperty("simController", &simController);
+    CPPSimulationController cppSimController;
+    engine.rootContext()->setContextProperty("simController", &cppSimController);
 
     engine.load(QUrl(QStringLiteral("qrc:src/QML/main.qml")));
     if (engine.rootObjects().isEmpty())

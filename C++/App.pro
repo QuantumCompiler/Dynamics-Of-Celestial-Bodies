@@ -3,6 +3,6 @@ CONFIG   += c++17
 TEMPLATE  = app
 TARGET    = main                       
 
-SOURCES += src/C/main.cpp src/C/SimulationController.cpp
-HEADERS += src/C/SimulationController.h
+SOURCES += src/C/main.cpp src/C/CPPSimulationController.cpp
+HEADERS += src/C/CPPSimulationController.h
 RESOURCES += QML.qrc
