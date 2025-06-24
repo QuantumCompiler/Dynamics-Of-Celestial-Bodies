@@ -2,3 +2,5 @@
 *.o
 *main.app/
 Makefile
+moc_predefs.h
+moc_CPPSimulationController.cpp
