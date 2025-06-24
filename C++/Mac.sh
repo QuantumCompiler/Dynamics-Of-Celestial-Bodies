@@ -1,0 +1,1 @@
+make clean && qmake && make && ./main.app/Contents/MacOS/main
