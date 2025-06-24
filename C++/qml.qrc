@@ -1,8 +1,6 @@
 <RCC>
     <qresource>
         <file>src/QML/main.qml</file>
-        <file>src/QML/navigation.qml</file>
-        <file>src/QML/theme.qml</file>
         <file>src/JS/helpers.js</file>
     </qresource>
 </RCC>

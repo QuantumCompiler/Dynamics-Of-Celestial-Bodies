@@ -3,6 +3,5 @@ CONFIG   += c++17
 TEMPLATE  = app
 TARGET    = main                       
 
-SOURCES += src/C/main.cpp src/C/bridge.cpp
-HEADERS  += src/C/bridge.h
+SOURCES += src/C/main.cpp
 RESOURCES += QML.qrc
