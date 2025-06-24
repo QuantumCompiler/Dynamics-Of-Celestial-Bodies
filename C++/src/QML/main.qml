@@ -24,5 +24,11 @@ ApplicationWindow {
     Column {
         anchors.centerIn: parent
         spacing: 15
+
+        // C++ Implementation
+        Button {
+            text: "C++ Simulation"
+            onClicked: simController.runSimulation();
+        }
     }
 }
