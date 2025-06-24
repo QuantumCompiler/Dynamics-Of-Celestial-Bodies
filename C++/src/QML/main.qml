@@ -30,5 +30,11 @@ ApplicationWindow {
             text: "C++ Simulation"
             onClicked: simController.runSimulation();
         }
+
+        // Python Implementation
+        Button {
+            text: "Python Simulation"
+            onClicked: pySimController.callPython();
+        }
     }
 }
