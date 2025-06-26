@@ -1,6 +1,0 @@
-*.stash
-*.o
-*main.app/
-Makefile
-moc_*
-qrc_*
