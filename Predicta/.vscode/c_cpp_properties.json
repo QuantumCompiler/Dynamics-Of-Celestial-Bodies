@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "name": "macos-clang-arm64",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/usr/local/include",
+                "/opt/homebrew/include",
+                "${workspaceFolder}/lib/matplotlib-cpp",
+                "/opt/homebrew/lib/python3.14/site-packages/numpy/_core/include",
+                "/opt/homebrew/opt/python@3.14/Frameworks/Python.framework/Versions/3.14/include/python3.14",
+                "/opt/homebrew/opt/pytorch/include",
+                "/opt/homebrew/opt/pytorch/include/torch/csrc/api/include",
+                "/opt/homebrew/opt/nlohmann-json/include"
+            ],
+            "defines": [
+                "WITHOUT_NUMPY"
+            ],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "macos-clang-arm64",
+            "compilerArgs": [
+                "-std=c++17"
+            ]
+        }
+    ],
+    "version": 4
+}

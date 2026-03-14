@@ -1,0 +1,35 @@
+{
+    "configurations": [
+        {
+            "name": "linux-gcc-x64",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/lib/matplotlib-cpp",
+                "/usr/local/libtorch/include/torch/csrc/api/include",
+                "/usr/local/libtorch/include",
+                "/usr/include/nlohmann",
+                "/usr/include/python3.12"
+            ],
+            "defines": [
+                "WITHOUT_NUMPY",
+                "_GLIBCXX_USE_CXX11_ABI=1"
+            ],
+            "compilerPath": "/usr/bin/g++",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-x64",
+            "compilerArgs": [
+                "-std=c++17"
+            ],
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/**",
+                    "/usr/local/libtorch/include",
+                    "/usr/include"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        }
+    ],
+    "version": 4
+}
